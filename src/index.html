@@ -1,9 +1,36 @@
 <html>
-    <head>
-        <link href="index.css" rel="stylesheet">
-    </head>
+  <body>
+    <main>
+      <section class="pipeline">
+        <div class="pipeline__line"></div>
 
-    <main></main>
+        <perf-tile></perf-tile>
+
+        <a class="pipeline__item tile" href="#code">
+          <ion-icon name="code-slash-sharp"></ion-icon>
+          <span class="tile__text">Code</span>
+        </a>
+
+        <a class="pipeline__item tile" href="#transpilation">
+          <ion-icon name="shuffle-sharp"></ion-icon>
+          <span class="tile__text">Transpilation</span>
+        </a>
+
+        <a class="pipeline__item tile" href="#minification">
+          <ion-icon name="terminal-sharp"></ion-icon>
+          <span class="tile__text">Minification</span>
+        </a>
+
+        <a class="pipeline__item tile" href="#analysis">
+          <ion-icon name="analytics-sharp"></ion-icon>
+          <span class="tile__text">Analysis</span>
+        </a>
+      </section>
+    </main>
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
     <script async src="index.js"></script>
+  </body>
 </html>

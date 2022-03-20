@@ -1,0 +1,21 @@
+@use './variables' as *;
+@import './fonts.scss';
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: $color_background;
+  margin: 0;
+  overflow: hidden auto;
+  font-family: 'Varela Round', sans-serif;
+}
+
+a {
+  user-select: none;
+}
+
+ion-icon {
+  pointer-events: none;
+}

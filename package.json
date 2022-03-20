@@ -8,16 +8,17 @@
     "url": "git+https://github.com/ScarletFlash/perf.git"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "serve1": "esbuild ./src/index.ts --servedir=src --outdir=src --bundle",
-    "serve": "ts-node ./scripts/serve.ts",
+    "serve": "ts-node ./scripts/serve.script.ts",
+    "build": "ts-node ./scripts/build.script.ts",
     "prettier:check": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --check ./**/*.{json,js,ts}",
     "prettier:format": "prettier --loglevel log --config ./.prettierrc --ignore-path ./.prettierignore --write ./**/*.{json,js,ts}",
     "lint": "eslint --config ./.eslintrc ./src/**/*.ts",
     "lint:fix": "eslint --config ./.eslintrc ./src/**/*.ts --fix",
     "cspell:check": "cspell lint './src/**/*.*' --config cspell.json"
   },
-  "dependencies": {},
+  "dependencies": {
+    "ionicons": "^6.0.0"
+  },
   "devDependencies": {
     "cspell": "latest",
     "esbuild": "latest",

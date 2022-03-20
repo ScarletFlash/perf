@@ -24,7 +24,7 @@
     "sourceMap": false,
     "strict": true,
     "skipLibCheck": true,
-    "typeRoots": ["node_modules/@types"],
+    "typeRoots": ["node_modules/@types", "./src/declarations.d.ts"],
     "importsNotUsedAsValues": "error",
     "allowUnreachableCode": false
   }
