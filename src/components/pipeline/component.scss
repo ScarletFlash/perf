@@ -1,0 +1,28 @@
+@use './../../styles/variables' as *;
+
+.pipeline {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  &__item {
+    cursor: pointer;
+    padding: 0.5rem;
+    white-space: nowrap;
+  }
+
+  &__line {
+    position: absolute;
+    width: 100%;
+    height: 4px;
+
+    top: 50%;
+
+    background: rgba($color_main, 25%);
+    border-radius: 2px;
+    z-index: -1;
+  }
+}

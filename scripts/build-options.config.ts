@@ -15,5 +15,7 @@ export const buildOptions: BuildOptions = {
   outdir: resultBundleDirPath,
   entryPoints: [`${sourcesDirPath}/index.ts`],
   resolveExtensions: ['.ts', '.js', '.scss'],
-  plugins: [sassPlugin(sassPluginOptions)]
+  plugins: [sassPlugin(sassPluginOptions)],
+  platform: 'browser',
+  format: 'iife'
 };

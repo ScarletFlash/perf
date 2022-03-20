@@ -16,9 +16,6 @@
     "lint:fix": "eslint --config ./.eslintrc ./src/**/*.ts --fix",
     "cspell:check": "cspell lint './src/**/*.*' --config cspell.json"
   },
-  "dependencies": {
-    "ionicons": "^6.0.0"
-  },
   "devDependencies": {
     "cspell": "latest",
     "esbuild": "latest",
