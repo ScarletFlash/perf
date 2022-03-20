@@ -9,13 +9,16 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "esbuild ./src/index.ts --servedir=src --outdir=src --bundle",
+    "serve1": "esbuild ./src/index.ts --servedir=src --outdir=src --bundle",
+    "serve": "ts-node ./scripts/serve.ts",
     "prettier:check": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --check ./**/*.{json,js,ts}",
     "prettier:format": "prettier --loglevel log --config ./.prettierrc --ignore-path ./.prettierignore --write ./**/*.{json,js,ts}"
   },
   "devDependencies": {
     "esbuild": "latest",
+    "esbuild-sass-plugin": "latest",
     "prettier": "latest",
+    "ts-node": "latest",
     "typescript": "latest"
   }
 }

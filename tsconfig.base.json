@@ -1,0 +1,31 @@
+{
+  "exclude": ["node_modules"],
+  "compileOnSave": false,
+  "compilerOptions": {
+    "allowJs": false,
+    "checkJs": false,
+    "allowSyntheticDefaultImports": false,
+    "esModuleInterop": true,
+    "baseUrl": "./",
+    "declaration": false,
+    "downlevelIteration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "isolatedModules": false,
+    "locale": "en",
+    "moduleResolution": "Node",
+    "newLine": "lf",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "./dist",
+    "pretty": true,
+    "removeComments": true,
+    "sourceMap": false,
+    "strict": true,
+    "skipLibCheck": true,
+    "typeRoots": ["node_modules/@types"],
+    "importsNotUsedAsValues": "error",
+    "allowUnreachableCode": false
+  }
+}

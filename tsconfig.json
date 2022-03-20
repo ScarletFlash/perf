@@ -1,35 +1,3 @@
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "allowJs": false,
-    "checkJs": false,
-    "allowSyntheticDefaultImports": false,
-    "esModuleInterop": true,
-    "baseUrl": "./",
-    "declaration": false,
-    "downlevelIteration": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "lib": ["ESNext", "DOM"],
-    "importHelpers": true,
-    "isolatedModules": false,
-    "locale": "en",
-    "moduleResolution": "Node",
-    "newLine": "lf",
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "outDir": "./dist",
-    "pretty": true,
-    "removeComments": true,
-    "sourceMap": false,
-    "strict": true,
-    "skipLibCheck": true,
-    "typeRoots": ["node_modules/@types"],
-    "importsNotUsedAsValues": "error",
-    "allowUnreachableCode": false,
-    "target": "ESNext",
-    "module": "ESNext"
-  },
-  "exclude": ["node_modules"],
-  "include": ["src/index.ts"]
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.build.json" }]
 }
