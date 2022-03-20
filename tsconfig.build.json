@@ -4,6 +4,7 @@
   "compilerOptions": {
     "lib": ["ESNext"],
     "target": "ESNext",
-    "module": "NodeNext"
+    "module": "NodeNext",
+    "typeRoots": ["node_modules/@types"]
   }
 }

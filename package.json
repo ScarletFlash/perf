@@ -17,6 +17,7 @@
     "cspell:check": "cspell lint './src/**/*.*' --config cspell.json"
   },
   "devDependencies": {
+    "@types/node": "latest",
     "cspell": "latest",
     "esbuild": "latest",
     "esbuild-sass-plugin": "latest",
