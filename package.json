@@ -1,0 +1,21 @@
+{
+  "name": "perf",
+  "version": "0.0.0",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ScarletFlash/perf.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "esbuild ./src/index.ts --servedir=src --outdir=src --bundle",
+    "prettier:check": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --check ./**/*.{json,js,ts}",
+    "prettier:format": "prettier --loglevel log --config ./.prettierrc --ignore-path ./.prettierignore --write ./**/*.{json,js,ts}"
+  },
+  "devDependencies": {
+    "esbuild": "latest",
+    "prettier": "latest",
+    "typescript": "latest"
+  }
+}
