@@ -1,3 +1,6 @@
 {
+  "compilerOptions": {
+    "target": "ESNext"
+  },
   "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.build.json" }]
 }

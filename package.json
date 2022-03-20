@@ -12,11 +12,25 @@
     "serve1": "esbuild ./src/index.ts --servedir=src --outdir=src --bundle",
     "serve": "ts-node ./scripts/serve.ts",
     "prettier:check": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --check ./**/*.{json,js,ts}",
-    "prettier:format": "prettier --loglevel log --config ./.prettierrc --ignore-path ./.prettierignore --write ./**/*.{json,js,ts}"
+    "prettier:format": "prettier --loglevel log --config ./.prettierrc --ignore-path ./.prettierignore --write ./**/*.{json,js,ts}",
+    "lint": "eslint --config ./.eslintrc ./src/**/*.ts",
+    "lint:fix": "eslint --config ./.eslintrc ./src/**/*.ts --fix",
+    "cspell:check": "cspell lint './src/**/*.*' --config cspell.json"
   },
+  "dependencies": {},
   "devDependencies": {
+    "cspell": "latest",
     "esbuild": "latest",
     "esbuild-sass-plugin": "latest",
+    "eslint": "latest",
+    "eslint-config-prettier": "latest",
+    "eslint-plugin-ban": "latest",
+    "eslint-plugin-deprecation": "latest",
+    "eslint-plugin-editorconfig": "latest",
+    "eslint-plugin-import": "latest",
+    "eslint-plugin-jsdoc": "latest",
+    "eslint-plugin-prefer-arrow": "latest",
+    "eslint-plugin-prettier": "latest",
     "prettier": "latest",
     "ts-node": "latest",
     "typescript": "latest"
