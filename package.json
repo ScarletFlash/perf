@@ -16,6 +16,9 @@
     "lint:fix": "eslint --config ./.eslintrc ./src/**/*.ts --fix",
     "cspell:check": "cspell lint './src/**/*.*' --config cspell.json"
   },
+  "dependencies": {
+    "monaco-editor": "^0.33.0"
+  },
   "devDependencies": {
     "@types/node": "latest",
     "cspell": "latest",

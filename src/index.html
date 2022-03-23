@@ -2,13 +2,23 @@
   <body>
     <main>
       <perf-pipeline>
-        <perf-tile text="Code" icon="code-slash-sharp"></perf-tile>
-        <perf-tile text="Transpilation" icon="shuffle-sharp"></perf-tile>
-        <perf-tile text="Minification" icon="terminal-sharp"></perf-tile>
-        <perf-tile text="Analysis" icon="analytics-sharp"></perf-tile>
+        <a href="#code">
+          <perf-tile text="Code" icon="code-slash-sharp"></perf-tile>
+        </a>
+        <a href="#transpilation">
+          <perf-tile text="Transpilation" icon="shuffle-sharp"></perf-tile>
+        </a>
+        <a href="#minification">
+          <perf-tile text="Minification" icon="terminal-sharp"></perf-tile>
+        </a>
+        <a href="#analysis">
+          <perf-tile text="Analysis" icon="analytics-sharp"></perf-tile>
+        </a>
       </perf-pipeline>
 
-      <perf-current-route></perf-current-route>
+      <perf-current-route
+        selectors='["perf-route-code","perf-route-transpilation","perf-route-minification","perf-route-analysis"]'
+      ></perf-current-route>
     </main>
 
     <script type="module" src="https://unpkg.com/ionicons@6/dist/ionicons/ionicons.esm.js"></script>
