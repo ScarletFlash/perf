@@ -3,6 +3,7 @@ import { join } from 'path';
 export namespace Paths {
   export const scriptDirectory: string = __dirname;
   export const rootDirectory: string = join(__dirname, './../');
+  export const nodeModules: string = join(rootDirectory, './node_modules/');
 
   export const tsConfig: string = join(rootDirectory, './tsconfig.app.json');
 

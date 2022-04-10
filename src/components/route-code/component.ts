@@ -1,4 +1,5 @@
-import { editor } from 'monaco-editor';
+import { editor, Environment, Window } from 'monaco-editor';
+
 import type { WebComponentSelector } from '../../declarations/types/web-component-selector.type';
 import { isWebComponentSelector } from '../../utilities/is-web-component-selector.util';
 import componentStyles from './component.scss';
@@ -15,6 +16,19 @@ export class RouteCodeComponent extends HTMLElement {
 
   constructor() {
     super();
+
+    const environmentKey: keyof Window = 'MonacoEnvironment';
+    const environment: Environment = {
+      getWorkerUrl: (_moduleId: string, label: string): string => {
+        if (label === 'typescript' || label === 'javascript') {
+          return './ts.worker.bundle.js';
+        }
+        return './editor.worker.bundle.js';
+      }
+    };
+    Object.defineProperty(self, environmentKey, {
+      value: environment
+    });
 
     const shadowRoot: ShadowRoot = this.attachShadow({ mode: 'closed' });
 
