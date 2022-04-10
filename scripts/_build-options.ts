@@ -8,7 +8,6 @@ const sassPluginOptions: SassPluginOptions = {
 };
 
 /* eslint-disable @typescript-eslint/naming-convention */
-
 export const buildOptions: BuildOptions = {
   bundle: true,
   outdir: Paths.resultBundleDirectory,
