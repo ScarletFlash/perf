@@ -29,8 +29,6 @@ import { BuildUtilities } from './_utilities';
           recursive: true
         });
 
-        console.log(temporaryDirectoryPath);
-
         const serveOptions: ServeOptions = {
           servedir: temporaryDirectoryPath
         };
