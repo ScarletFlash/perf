@@ -1,4 +1,6 @@
-# PERF
+<p align="center">
+  <img width="128px" src="https://raw.githubusercontent.com/ScarletFlash/perf/main/src/assets/logo.svg" />
+</p>
 
 **Work is in progress, but you may follow the roadmap:**
 
