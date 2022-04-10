@@ -1,5 +1,6 @@
 import { Application } from './application';
 import { CurrentRouteComponent } from './components/current-route/component';
+import { FooterComponent } from './components/footer/component';
 import { HeaderComponent } from './components/header/component';
 import { PipelineComponent } from './components/pipeline/component';
 import { RouteAnalysisComponent } from './components/route-analysis/component';
@@ -12,6 +13,7 @@ new Application()
   .applyGlobalStyles()
   .registerComponents([
     HeaderComponent,
+    FooterComponent,
     TileComponent,
     PipelineComponent,
     CurrentRouteComponent,

@@ -19,3 +19,7 @@
 - [ ] :tada: **PUBLIC RELEASE**
 - [ ] :fire: Build-in snippet collection
 - [ ] :fire: External snippet executions
+
+<p align="center">
+  <img width="64px" src="https://raw.githubusercontent.com/ScarletFlash/perf/main/src/assets/logo_small.svg" />
+</p>

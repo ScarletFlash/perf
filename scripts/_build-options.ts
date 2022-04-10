@@ -4,7 +4,7 @@ import { Paths } from './_paths';
 
 const sassPluginOptions: SassPluginOptions = {
   type: 'css-text',
-  transform: (css: string) => css.replaceAll('\n', '').replaceAll(' ', '')
+  transform: (css: string) => css.replaceAll('\n', '')
 };
 
 /* eslint-disable @typescript-eslint/naming-convention */
