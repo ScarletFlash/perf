@@ -1,12 +1,6 @@
 import type { BuildOptions } from 'esbuild';
 import { sassPlugin, SassPluginOptions } from 'esbuild-sass-plugin';
-import { join } from 'path';
-
-const scriptDirectoryPath: string = __dirname;
-const rootDirPath: string = join(scriptDirectoryPath, './../');
-const sourcesDirPath: string = join(rootDirPath, './src');
-const resultBundleDirPath: string = join(rootDirPath, './dist');
-const tsConfigPath: string = join(rootDirPath, './tsconfig.app.json');
+import { Paths } from './_paths';
 
 const sassPluginOptions: SassPluginOptions = {
   type: 'css-text',
@@ -15,8 +9,8 @@ const sassPluginOptions: SassPluginOptions = {
 
 export const buildOptions: BuildOptions = {
   bundle: true,
-  outdir: resultBundleDirPath,
-  entryPoints: [`${sourcesDirPath}/index.ts`],
+  outdir: Paths.resultBundleDirectory,
+  entryPoints: [`${Paths.sourcesDirectory}/index.ts`],
   resolveExtensions: ['.ts', '.js', '.scss'],
   plugins: [sassPlugin(sassPluginOptions)],
   platform: 'browser',
@@ -25,7 +19,7 @@ export const buildOptions: BuildOptions = {
   minify: true,
   target: 'esnext',
   treeShaking: true,
-  tsconfig: tsConfigPath,
+  tsconfig: Paths.tsConfig,
   sourcemap: true,
   legalComments: 'external'
 };

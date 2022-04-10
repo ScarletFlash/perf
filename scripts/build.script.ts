@@ -1,18 +1,20 @@
 import { build } from 'esbuild';
-import { readFile, rm, writeFile } from 'fs/promises';
-import { join } from 'path';
-import { buildOptions } from './build-options.config';
+import { cp, readFile, rm, writeFile } from 'fs/promises';
+import { buildOptions } from './_build-options';
+import { Paths } from './_paths';
 
-const scriptDirectoryPath: string = __dirname;
+export async function buildScript(): Promise<void> {
+  await Promise.resolve()
+    .then(() => rm(Paths.resultBundleDirectory, { force: true, recursive: true }))
+    .then(() => build(buildOptions))
+    .then(() => readFile(Paths.rawHtmlEntryPoint, 'utf-8'))
+    .then((originalFileContent: string) => originalFileContent.replaceAll('.scss"', '.css"'))
+    .then((processedFileContent: string) => writeFile(Paths.resultHtmlEntryPoint, processedFileContent, 'utf-8'))
+    .then(() =>
+      cp(Paths.rawAssetsDirectory, Paths.resultAssetsDirectory, {
+        recursive: true
+      })
+    );
+}
 
-const sourcesPath: string = join(scriptDirectoryPath, './../src/');
-const distPath: string = join(scriptDirectoryPath, './../dist/');
-
-const rawHtmlEntryPointPath: string = join(sourcesPath, './index.html');
-const resultHtmlEntryPointPath: string = join(distPath, './index.html');
-
-rm(distPath, { force: true, recursive: true })
-  .then(() => build(buildOptions))
-  .then(() => readFile(rawHtmlEntryPointPath, 'utf-8'))
-  .then((originalFileContent: string) => originalFileContent.replaceAll('.scss"', '.css"'))
-  .then((processedFileContent: string) => writeFile(resultHtmlEntryPointPath, processedFileContent, 'utf-8'));
+(async () => await buildScript())();

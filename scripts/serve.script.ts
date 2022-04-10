@@ -1,15 +1,52 @@
 import { log } from 'console';
 import { serve, ServeOptions, ServeResult } from 'esbuild';
-import { join } from 'path';
-import { buildOptions } from './build-options.config';
+import { cp, FileChangeInfo, mkdtemp, rm, watch } from 'fs/promises';
+import { buildScript } from './build.script';
+import { buildOptions } from './_build-options';
+import { Paths } from './_paths';
+import { BuildUtilities } from './_utilities';
 
-const scriptDirectoryPath: string = __dirname;
-const sourcesDirPath: string = join(scriptDirectoryPath, './../dist');
+(async () => {
+  const abortController: AbortController = new AbortController();
+  const signal: AbortSignal = abortController.signal;
 
-const serveOptions: ServeOptions = {
-  servedir: sourcesDirPath
-};
+  const temporaryDirectoryPath: string = await mkdtemp('.serve-dir__');
+  const removeTemporaryDirectory: () => Promise<void> = async (): Promise<void> =>
+    await rm(temporaryDirectoryPath, {
+      recursive: true
+    });
+  try {
+    const watcher: AsyncIterable<FileChangeInfo<string>> = watch(Paths.sourcesDirectory, {
+      recursive: true,
+      signal
+    });
 
-serve(serveOptions, buildOptions).then(({ host, port }: ServeResult) => {
-  log(`Server is listening at http://${host}:${port}/`);
-});
+    const server: (event?: FileChangeInfo<string | Buffer>) => void = () => {
+      BuildUtilities.runDebounced(async () => {
+        await buildScript();
+
+        await cp(Paths.resultBundleDirectory, temporaryDirectoryPath, {
+          recursive: true
+        });
+
+        console.log(temporaryDirectoryPath);
+
+        const serveOptions: ServeOptions = {
+          servedir: temporaryDirectoryPath
+        };
+
+        await serve(serveOptions, { ...buildOptions, outdir: temporaryDirectoryPath }).then(
+          ({ host, port }: ServeResult) => log(`Server is listening at http://${host}:${port}/`)
+        );
+      });
+    };
+
+    server();
+
+    for await (const event of watcher) {
+      server(event);
+    }
+  } catch {
+    await removeTemporaryDirectory();
+  }
+})();
