@@ -17,7 +17,8 @@ export const buildOptions: BuildOptions = {
     'json.worker': `${Paths.nodeModules}/monaco-editor/esm/vs/language/json/json.worker`,
     'css.worker': `${Paths.nodeModules}/monaco-editor/esm/vs/language/css/css.worker`,
     'html.worker': `${Paths.nodeModules}/monaco-editor/esm/vs/language/html/html.worker`,
-    'ts.worker': `${Paths.nodeModules}/monaco-editor/esm/vs/language/typescript/ts.worker`
+    'ts.worker': `${Paths.nodeModules}/monaco-editor/esm/vs/language/typescript/ts.worker`,
+    'esbuild.wasm': `${Paths.nodeModules}/esbuild-wasm/esbuild.wasm`
   },
   entryNames: '[name].bundle',
   resolveExtensions: ['.ts', '.js', '.scss'],
@@ -33,7 +34,8 @@ export const buildOptions: BuildOptions = {
   legalComments: 'none',
   splitting: false,
   loader: {
-    '.ttf': 'file'
+    '.ttf': 'file',
+    '.wasm': 'binary'
   }
 };
 /* eslint-enable @typescript-eslint/naming-convention */

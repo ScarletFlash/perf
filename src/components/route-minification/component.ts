@@ -1,9 +1,12 @@
+import { initialize, InitializeOptions, transform, TransformResult } from 'esbuild-wasm/esm/browser';
 import type { WebComponentSelector } from '../../declarations/types/web-component-selector.type';
 import { isWebComponentSelector } from '../../utilities/is-web-component-selector.util';
 import componentStyles from './component.scss';
 
 export class RouteMinificationComponent extends HTMLElement {
   readonly #registeredSelectors: Set<WebComponentSelector> = new Set<WebComponentSelector>();
+
+  static #wasmModuleIsInitialized: boolean = false;
 
   public static readonly selector: WebComponentSelector = 'perf-route-minification';
 
@@ -14,6 +17,13 @@ export class RouteMinificationComponent extends HTMLElement {
   constructor() {
     super();
 
+    this.#initializeWasm().then(async () => {
+      console.log('initialized');
+
+      const result: TransformResult = await transform('const someMan = {name: "Richard"}; console.log(someMan);');
+      console.log({ result });
+    });
+
     const shadowRoot: ShadowRoot = this.attachShadow({ mode: 'closed' });
     const wrapperSectionElement: HTMLElement = document.createElement('section');
     const style: HTMLStyleElement = document.createElement('style');
@@ -22,6 +32,22 @@ export class RouteMinificationComponent extends HTMLElement {
 
     shadowRoot.appendChild(style);
     shadowRoot.appendChild(wrapperSectionElement);
+  }
+
+  async #initializeWasm(): Promise<void> {
+    return Promise.resolve().then(() => {
+      if (RouteMinificationComponent.#wasmModuleIsInitialized) {
+        return;
+      }
+
+      const initializeOptions: InitializeOptions = {
+        wasmURL: './esbuild.wasm.bundle.js',
+        worker: true
+      };
+      return initialize(initializeOptions).then(() => {
+        RouteMinificationComponent.#wasmModuleIsInitialized = true;
+      });
+    });
   }
 
   public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {

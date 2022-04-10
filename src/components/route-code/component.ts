@@ -16,19 +16,7 @@ export class RouteCodeComponent extends HTMLElement {
 
   constructor() {
     super();
-
-    const environmentKey: keyof Window = 'MonacoEnvironment';
-    const environment: Environment = {
-      getWorkerUrl: (_moduleId: string, label: string): string => {
-        if (label === 'typescript' || label === 'javascript') {
-          return './ts.worker.bundle.js';
-        }
-        return './editor.worker.bundle.js';
-      }
-    };
-    Object.defineProperty(self, environmentKey, {
-      value: environment
-    });
+    this.#setMonacoEnvironment();
 
     const shadowRoot: ShadowRoot = this.attachShadow({ mode: 'closed' });
 
@@ -45,6 +33,23 @@ export class RouteCodeComponent extends HTMLElement {
       value: "function hello() {\n\talert('Hello world!');\n}",
       language: 'javascript'
     });
+  }
+
+  #setMonacoEnvironment(): void {
+    const environmentKey: keyof Window = 'MonacoEnvironment';
+    if (!(environmentKey in self)) {
+      const environment: Environment = {
+        getWorkerUrl: (_moduleId: string, label: string): string => {
+          if (label === 'typescript' || label === 'javascript') {
+            return './ts.worker.bundle.js';
+          }
+          return './editor.worker.bundle.js';
+        }
+      };
+      Object.defineProperty(self, environmentKey, {
+        value: environment
+      });
+    }
   }
 
   public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
