@@ -6,5 +6,5 @@
   "dictionaries": ["en_us", "en-gb", "typescript", "node", "bash", "softwareTerms"],
   "dictionaryDefinitions": [],
   "import": [],
-  "words": []
+  "words": ["servedir", "outdir"]
 }

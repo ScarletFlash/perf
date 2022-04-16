@@ -1,17 +1,22 @@
 import { build } from 'esbuild';
 import { cp, readFile, rm, writeFile } from 'fs/promises';
+import { join } from 'path';
 import { buildOptions } from './_build-options';
 import { Paths } from './_paths';
 
-export async function buildScript(): Promise<void> {
+export async function buildScript(outputDirectoryPath?: string): Promise<void> {
+  const targetOutputDirectoryPath: string = outputDirectoryPath ?? Paths.resultBundleDirectory;
+  const targetIndexHtmlPath: string = join(targetOutputDirectoryPath, '/index.html');
+  const targetAssetsPath: string = join(targetOutputDirectoryPath, '/assets/');
+
   await Promise.resolve()
-    .then(() => rm(Paths.resultBundleDirectory, { force: true, recursive: true }))
-    .then(() => build(buildOptions))
+    .then(() => rm(targetOutputDirectoryPath, { force: true, recursive: true }))
+    .then(() => build({ ...buildOptions, outdir: targetOutputDirectoryPath }))
     .then(() => readFile(Paths.rawHtmlEntryPoint, 'utf-8'))
     .then((originalFileContent: string) => originalFileContent.replaceAll('.scss"', '.css"'))
-    .then((processedFileContent: string) => writeFile(Paths.resultHtmlEntryPoint, processedFileContent, 'utf-8'))
+    .then((processedFileContent: string) => writeFile(targetIndexHtmlPath, processedFileContent, 'utf-8'))
     .then(() =>
-      cp(Paths.rawAssetsDirectory, Paths.resultAssetsDirectory, {
+      cp(Paths.rawAssetsDirectory, targetAssetsPath, {
         recursive: true
       })
     );

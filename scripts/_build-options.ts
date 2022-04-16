@@ -8,9 +8,8 @@ const sassPluginOptions: SassPluginOptions = {
 };
 
 /* eslint-disable @typescript-eslint/naming-convention */
-export const buildOptions: BuildOptions = {
+export const buildOptions: Omit<BuildOptions, 'outdir'> = {
   bundle: true,
-  outdir: Paths.resultBundleDirectory,
   entryPoints: {
     index: `${Paths.sourcesDirectory}/index.ts`,
     'editor.worker': `${Paths.nodeModules}/monaco-editor/esm/vs/editor/editor.worker.js`,

@@ -1,8 +1,9 @@
 import { join } from 'path';
 
 export namespace Paths {
-  export const scriptDirectory: string = __dirname;
-  export const rootDirectory: string = join(__dirname, './../');
+  const scriptDirectory: string = __dirname;
+  const rootDirectory: string = join(scriptDirectory, './../');
+
   export const nodeModules: string = join(rootDirectory, './node_modules/');
 
   export const tsConfig: string = join(rootDirectory, './tsconfig.app.json');
@@ -11,8 +12,6 @@ export namespace Paths {
   export const resultBundleDirectory: string = join(rootDirectory, './dist');
 
   export const rawHtmlEntryPoint: string = join(sourcesDirectory, './index.html');
-  export const resultHtmlEntryPoint: string = join(resultBundleDirectory, './index.html');
 
   export const rawAssetsDirectory: string = join(sourcesDirectory, './assets/');
-  export const resultAssetsDirectory: string = join(resultBundleDirectory, './assets/');
 }
