@@ -1,11 +1,10 @@
 {
-  "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "lib": ["ESNext", "DOM"],
     "target": "ESNext",
     "module": "ESNext",
     "typeRoots": ["./src/declarations/third-party.d.ts"],
-    "composite": false,
+    "composite": true,
     "declaration": true,
     "paths": {
       "@widgets/*": ["./src/components/widgets/*/component.ts"],
