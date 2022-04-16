@@ -17,8 +17,8 @@
     "cspell:check": "cspell lint './src/**/*.*' --config cspell.json"
   },
   "dependencies": {
-    "esbuild-wasm": "^0.14.0",
-    "monaco-editor": "^0.30.0"
+    "esbuild-wasm": "0",
+    "monaco-editor": "0"
   },
   "devDependencies": {
     "@types/node": "latest",
