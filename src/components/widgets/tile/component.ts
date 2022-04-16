@@ -1,4 +1,4 @@
-import type { WebComponentSelector } from '../../declarations/types/web-component-selector.type';
+import type { WebComponentSelector } from '@declarations/types/web-component-selector.type';
 import componentStyles from './component.scss';
 
 export class TileComponent extends HTMLElement {

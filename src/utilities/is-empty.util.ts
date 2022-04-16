@@ -8,4 +8,6 @@ export function isEmpty(input: unknown): boolean {
   if (Array.isArray(input)) {
     return input.length === 0;
   }
+
+  return false;
 }

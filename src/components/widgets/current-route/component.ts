@@ -1,6 +1,6 @@
-import type { WebComponentSelector } from '../../declarations/types/web-component-selector.type';
-import { isEmpty } from '../../utilities/is-empty.util';
-import { isWebComponentSelector } from '../../utilities/is-web-component-selector.util';
+import type { WebComponentSelector } from '@declarations/types/web-component-selector.type';
+import { isEmpty } from '@utilities/is-empty.util';
+import { isWebComponentSelector } from '@utilities/is-web-component-selector.util';
 import componentStyles from './component.scss';
 
 export class CurrentRouteComponent extends HTMLElement {
@@ -29,7 +29,12 @@ export class CurrentRouteComponent extends HTMLElement {
     shadowRoot.appendChild(style);
     shadowRoot.appendChild(this.#wrapperSectionElement);
 
-    this.#hashChangeListener = ({ newURL }: HashChangeEvent) => {
+    this.#hashChangeListener = (event: Event): void => {
+      if (!(event instanceof HashChangeEvent)) {
+        return;
+      }
+
+      const { newURL }: HashChangeEvent = event;
       const targetHash: string = new URL(newURL).hash;
       if (this.#currentHash === targetHash) {
         return;
@@ -55,8 +60,9 @@ export class CurrentRouteComponent extends HTMLElement {
 
     resultValues.forEach((selector: WebComponentSelector) => this.#registeredSelectors.add(selector));
 
-    if (isEmpty(this.#currentHash)) {
-      this.#renderContentBySelector(resultValues.at(0));
+    const firstSelectorAvailable: string | undefined = resultValues.at(0);
+    if (isEmpty(this.#currentHash) && firstSelectorAvailable !== undefined) {
+      this.#renderContentBySelector(firstSelectorAvailable);
     }
   }
 
@@ -75,7 +81,7 @@ export class CurrentRouteComponent extends HTMLElement {
 
     const targetComponent: HTMLElement = document.createElement(targetComponentSelector);
     if (this.#wrapperSectionElement.childElementCount > 0) {
-      Array.from(this.#wrapperSectionElement.children).forEach((childElement: HTMLElement) => childElement.remove());
+      Array.from(this.#wrapperSectionElement.children).forEach((childElement: Element) => childElement.remove());
     }
     this.#wrapperSectionElement.appendChild(targetComponent);
   }

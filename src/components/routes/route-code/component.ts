@@ -1,7 +1,7 @@
 import { editor, Environment, Window } from 'monaco-editor';
 
-import type { WebComponentSelector } from '../../declarations/types/web-component-selector.type';
-import { isWebComponentSelector } from '../../utilities/is-web-component-selector.util';
+import type { WebComponentSelector } from '@declarations/types/web-component-selector.type';
+import { isWebComponentSelector } from '@utilities/is-web-component-selector.util';
 import componentStyles from './component.scss';
 
 export class RouteCodeComponent extends HTMLElement {

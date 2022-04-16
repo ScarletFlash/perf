@@ -1,11 +1,11 @@
-import type { WebComponentSelector } from '../../declarations/types/web-component-selector.type';
-import { isWebComponentSelector } from '../../utilities/is-web-component-selector.util';
+import type { WebComponentSelector } from '@declarations/types/web-component-selector.type';
+import { isWebComponentSelector } from '@utilities/is-web-component-selector.util';
 import componentStyles from './component.scss';
 
-export class RouteTranspilationComponent extends HTMLElement {
+export class RouteAnalysisComponent extends HTMLElement {
   readonly #registeredSelectors: Set<WebComponentSelector> = new Set<WebComponentSelector>();
 
-  public static readonly selector: WebComponentSelector = 'perf-route-transpilation';
+  public static readonly selector: WebComponentSelector = 'perf-route-analysis';
 
   public static get observedAttributes(): string[] {
     return ['selectors'];
@@ -30,7 +30,7 @@ export class RouteTranspilationComponent extends HTMLElement {
     }
 
     const resultValues: unknown = JSON.parse(newValue);
-    if (!RouteTranspilationComponent.#isCustomElementsSelectorsList(resultValues)) {
+    if (!RouteAnalysisComponent.#isCustomElementsSelectorsList(resultValues)) {
       throw new Error('[CurrentRouteComponent] selectors attribute contains invalid value');
     }
 

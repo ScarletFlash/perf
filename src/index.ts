@@ -1,13 +1,13 @@
+import { RouteAnalysisComponent } from '@routes/route-analysis';
+import { RouteCodeComponent } from '@routes/route-code';
+import { RouteMinificationComponent } from '@routes/route-minification';
+import { RouteTranspilationComponent } from '@routes/route-transpilation';
+import { CurrentRouteComponent } from '@widgets/current-route';
+import { FooterComponent } from '@widgets/footer';
+import { HeaderComponent } from '@widgets/header';
+import { PipelineComponent } from '@widgets/pipeline';
+import { TileComponent } from '@widgets/tile';
 import { Application } from './application';
-import { CurrentRouteComponent } from './components/current-route/component';
-import { FooterComponent } from './components/footer/component';
-import { HeaderComponent } from './components/header/component';
-import { PipelineComponent } from './components/pipeline/component';
-import { RouteAnalysisComponent } from './components/route-analysis/component';
-import { RouteCodeComponent } from './components/route-code/component';
-import { RouteMinificationComponent } from './components/route-minification/component';
-import { RouteTranspilationComponent } from './components/route-transpilation/component';
-import { TileComponent } from './components/tile/component';
 
 new Application()
   .applyGlobalStyles()
@@ -17,6 +17,7 @@ new Application()
     TileComponent,
     PipelineComponent,
     CurrentRouteComponent,
+
     RouteAnalysisComponent,
     RouteCodeComponent,
     RouteMinificationComponent,
