@@ -1,9 +1,11 @@
+import { AttributeListener } from '@declarations/interfaces/attribute-listener.interface';
+import { Disconnectable } from '@declarations/interfaces/disconnectable.interface';
 import type { WebComponentSelector } from '@declarations/types/web-component-selector.type';
 import { isEmpty } from '@utilities/is-empty.util';
 import { isWebComponentSelector } from '@utilities/is-web-component-selector.util';
 import componentStyles from './component.scss';
 
-export class CurrentRouteComponent extends HTMLElement {
+export class CurrentRouteComponent extends HTMLElement implements Disconnectable, AttributeListener {
   readonly #registeredSelectors: Set<WebComponentSelector> = new Set<WebComponentSelector>();
   readonly #wrapperSectionElement: HTMLElement;
   readonly #hashChangeListener: EventListener;

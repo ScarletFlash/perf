@@ -1,8 +1,9 @@
+import { AttributeListener } from '@declarations/interfaces/attribute-listener.interface';
 import type { WebComponentSelector } from '@declarations/types/web-component-selector.type';
 import { isWebComponentSelector } from '@utilities/is-web-component-selector.util';
 import componentStyles from './component.scss';
 
-export class RouteTranspilationComponent extends HTMLElement {
+export class RouteTranspilationComponent extends HTMLElement implements AttributeListener {
   readonly #registeredSelectors: Set<WebComponentSelector> = new Set<WebComponentSelector>();
 
   public static readonly selector: WebComponentSelector = 'perf-route-transpilation';

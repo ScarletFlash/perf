@@ -1,4 +1,7 @@
 @use './../../../styles/variables' as *;
+@use './../../../styles/mixins' as *;
+
+$width_marker: 16px;
 
 .pipeline {
   position: relative;
@@ -6,7 +9,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 
   &__item {
     cursor: pointer;
@@ -14,15 +17,26 @@
     white-space: nowrap;
   }
 
+  &__marker {
+    width: $width_marker;
+    height: $width_marker;
+
+    &_start {
+      border-radius: 50%;
+      background: $color_pipeline_elements;
+    }
+
+    &_end {
+      width: 0;
+      height: 0;
+      border-top: $width_marker / 2 solid transparent;
+      border-right: 0;
+      border-bottom: $width_marker / 2 solid transparent;
+      border-left: $width_marker solid $color_pipeline_elements;
+    }
+  }
+
   &__line {
-    position: absolute;
-    width: 100%;
-    height: 4px;
-
-    top: 50%;
-
-    background: rgba($color_main, 25%);
-    border-radius: 2px;
-    z-index: -1;
+    @include pipeline-line;
   }
 }
