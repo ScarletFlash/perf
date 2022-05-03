@@ -5,15 +5,17 @@ type ComponentConstructor = CustomElementConstructor & {
   selector: WebComponentSelector;
 };
 
+type ServiceConstructor = new () => object;
+
 export class Application {
-  public registerComponents(componentsConstructor: CustomElementConstructor[]): this {
+  public registerComponents(componentConstructors: CustomElementConstructor[]): this {
     const registry: CustomElementRegistry = customElements;
 
     const componentConstructorBySelector: Map<WebComponentSelector, ComponentConstructor> = new Map<
       WebComponentSelector,
       ComponentConstructor
     >(
-      componentsConstructor.map((componentConstructor: ComponentConstructor) => [
+      componentConstructors.map((componentConstructor: ComponentConstructor) => [
         componentConstructor.selector,
         componentConstructor
       ])
@@ -21,6 +23,16 @@ export class Application {
 
     componentConstructorBySelector.forEach((constructor: ComponentConstructor, selector: WebComponentSelector) =>
       registry.define(selector, constructor)
+    );
+
+    return this;
+  }
+
+  public bootstrapBackgroundServices(serviceConstructors: ServiceConstructor[]): this {
+    const runningServicesAccessKey: symbol = Symbol('running services access key');
+
+    globalThis[runningServicesAccessKey] = serviceConstructors.map(
+      (serviceConstructor: ServiceConstructor) => new serviceConstructor()
     );
 
     return this;

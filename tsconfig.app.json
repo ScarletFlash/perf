@@ -9,6 +9,7 @@
     "paths": {
       "@widgets/*": ["./src/components/widgets/*/component.ts"],
       "@routes/*": ["./src/components/routes/*/component.ts"],
+      "@services/*": ["./src/background-services/*.service.ts"],
       "@declarations/*": ["./src/declarations/*"],
       "@utilities/*": ["./src/utilities/*"]
     }
