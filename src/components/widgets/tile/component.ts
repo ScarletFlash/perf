@@ -1,9 +1,10 @@
 import { AttributeListener } from '@declarations/interfaces/attribute-listener.interface';
 import type { WebComponentSelector } from '@declarations/types/web-component-selector.type';
+import { IconComponent } from '@widgets/icon';
 import componentStyles from './component.scss';
 
 export class TileComponent extends HTMLElement implements AttributeListener {
-  readonly #iconElement: HTMLObjectElement = TileComponent.#getIconElement();
+  readonly #iconElement: HTMLElement = TileComponent.#getIconElement();
   readonly #textElement: HTMLSpanElement = TileComponent.#getTextElement();
 
   public static readonly selector: WebComponentSelector = 'perf-tile';
@@ -38,16 +39,13 @@ export class TileComponent extends HTMLElement implements AttributeListener {
     }
 
     if (name === 'icon') {
-      this.#iconElement.setAttribute('data', newValue);
-      this.#setIconColor(0xff0000);
+      this.#iconElement.setAttribute('src', newValue);
     }
 
     if (name === 'text') {
       this.#textElement.innerText = newValue;
     }
   }
-
-  #setIconColor(_colorHex: number): void {}
 
   static #getLineElement(): HTMLDivElement {
     const lineElement: HTMLDivElement = document.createElement('div');
@@ -61,13 +59,9 @@ export class TileComponent extends HTMLElement implements AttributeListener {
     return textElement;
   }
 
-  static #getIconElement(): HTMLObjectElement {
-    const iconsSizePx: number = 48;
-    const iconSizeStyle: string = `${iconsSizePx}px`;
-    const iconElement: HTMLObjectElement = document.createElement('object');
+  static #getIconElement(): HTMLElement {
+    const iconElement: HTMLElement = document.createElement(IconComponent.selector);
     iconElement.classList.add('tile__icon');
-    iconElement.setAttribute('width', iconSizeStyle);
-    iconElement.setAttribute('height', iconSizeStyle);
     return iconElement;
   }
 }

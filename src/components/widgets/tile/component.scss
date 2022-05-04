@@ -35,9 +35,7 @@
   }
 
   &__icon {
-    pointer-events: none;
-
-    color: $color_background;
-    border-radius: 4px;
+    width: 48px;
+    height: 48px;
   }
 }

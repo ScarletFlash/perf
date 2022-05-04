@@ -17,6 +17,7 @@ export class RouteCodeComponent extends HTMLElement implements Disconnectable, A
 
   constructor() {
     super();
+
     this.#setMonacoEnvironment();
 
     const shadowRoot: ShadowRoot = this.attachShadow({ mode: 'closed' });
