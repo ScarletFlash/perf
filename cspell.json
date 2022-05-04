@@ -20,7 +20,11 @@
   "import": [],
   "words": [
     "Disconnectable",
+    "esbuild",
+    "loglevel",
     "outdir",
+    "prettierignore",
+    "prettierrc",
     "servedir",
     "slotchange"
   ]
