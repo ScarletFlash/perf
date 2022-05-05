@@ -5,7 +5,9 @@ type ComponentConstructor = CustomElementConstructor & {
   selector: WebComponentSelector;
 };
 
-type ServiceConstructor = new () => object;
+type ServiceConstructor<T extends object = object> = new (...parameters: unknown[]) => T;
+
+const RUNNING_SERVICES_ACCESS_KEY: unique symbol = Symbol('running services access key');
 
 export class Application {
   public registerComponents(componentConstructors: CustomElementConstructor[]): this {
@@ -29,10 +31,11 @@ export class Application {
   }
 
   public bootstrapBackgroundServices(serviceConstructors: ServiceConstructor[]): this {
-    const runningServicesAccessKey: symbol = Symbol('running services access key');
-
-    globalThis[runningServicesAccessKey] = serviceConstructors.map(
-      (serviceConstructor: ServiceConstructor) => new serviceConstructor()
+    globalThis[RUNNING_SERVICES_ACCESS_KEY] = new Map<ServiceConstructor, object>(
+      serviceConstructors.map((serviceConstructor: ServiceConstructor) => [
+        serviceConstructor,
+        new serviceConstructor()
+      ])
     );
 
     return this;
@@ -43,5 +46,13 @@ export class Application {
     headStyleElement.innerHTML = globalStyles;
     document.head.appendChild(headStyleElement);
     return this;
+  }
+
+  public static getBackgroundService<T extends object>(serviceConstructor: ServiceConstructor<T>): T {
+    const runningServicesReference: unknown = globalThis[RUNNING_SERVICES_ACCESS_KEY];
+    if (runningServicesReference instanceof Map) {
+      return runningServicesReference.get(serviceConstructor);
+    }
+    return undefined;
   }
 }
