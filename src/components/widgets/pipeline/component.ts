@@ -1,6 +1,6 @@
+import { Application } from '@application';
 import type { WebComponentSelector } from '@declarations/types/web-component-selector.type';
 import { PipelineStateService } from '@services/pipeline-state';
-import { Application } from '../../../application';
 import componentStyles from './component.scss';
 
 const enum MarkerType {
@@ -36,8 +36,6 @@ export class PipelineComponent extends HTMLElement {
 
     shadowRoot.appendChild(style);
     shadowRoot.appendChild(wrapperSectionElement);
-
-    console.log(this.#pipelineService);
   }
 
   static #getMarkerElement(type: MarkerType): HTMLDivElement {

@@ -1,19 +1,7 @@
-const enum PipelineStatus {
-  Code = 'code',
-  Configuration = 'configuration',
-  Analysis = 'analysis'
-}
-
-interface RangeOptions {
-  min: number;
-  max: number;
-}
+import { PipelineStatus } from '@declarations/enums/pipeline-status.enum';
+import { getIntegerInRange } from '@utilities/get-integer-in-range.util';
 
 export class PipelineStateService {
-  constructor() {
-    console.log('running');
-  }
-
   readonly #percentageByState: Map<PipelineStatus, number> = new Map<PipelineStatus, number>([
     [PipelineStatus.Code, 25],
     [PipelineStatus.Configuration, 50],
@@ -41,23 +29,9 @@ export class PipelineStateService {
   }
 
   #setPercentage(percentage: number): void {
-    this.#currentPercentage = PipelineStateService.#getIntegerInRange(percentage, {
+    this.#currentPercentage = getIntegerInRange(percentage, {
       min: 0,
       max: 100
     });
-  }
-
-  static #getIntegerInRange(input: number, { min, max }: RangeOptions): number {
-    const roundedInteger: number = Math.round(input);
-
-    if (roundedInteger < min) {
-      return min;
-    }
-
-    if (roundedInteger > max) {
-      return max;
-    }
-
-    return roundedInteger;
   }
 }

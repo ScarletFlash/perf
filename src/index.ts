@@ -1,5 +1,8 @@
 import { ExecutionService } from '@services/execution';
 import { PipelineStateService } from '@services/pipeline-state';
+import { RoutingService } from '@services/routing';
+import { TitleService } from '@services/title';
+import { UrlService } from '@services/url';
 import { CurrentRouteComponent } from '@widgets/current-route';
 import { FooterComponent } from '@widgets/footer';
 import { HeaderComponent } from '@widgets/header';
@@ -10,7 +13,7 @@ import { Application } from './application';
 
 new Application()
   .applyGlobalStyles()
-  .bootstrapBackgroundServices([ExecutionService, PipelineStateService])
+  .bootstrapBackgroundServices([TitleService, UrlService, RoutingService, ExecutionService, PipelineStateService])
   .registerComponents([
     IconComponent,
     HeaderComponent,

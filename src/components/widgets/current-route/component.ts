@@ -1,22 +1,34 @@
-import { AttributeListener } from '@declarations/interfaces/attribute-listener.interface';
+import { Application } from '@application';
+import { Connectable } from '@declarations/interfaces/connectable.interface';
 import { Disconnectable } from '@declarations/interfaces/disconnectable.interface';
+import { Route } from '@declarations/interfaces/route.interface';
+import { OnHashChangeCallback } from '@declarations/types/on-hash-change-callback.type';
 import type { WebComponentSelector } from '@declarations/types/web-component-selector.type';
-import { isEmpty } from '@utilities/is-empty.util';
-import { isWebComponentSelector } from '@utilities/is-web-component-selector.util';
+import { RoutingService } from '@services/routing';
+import { TitleService } from '@services/title';
+import { UrlService } from '@services/url';
 import componentStyles from './component.scss';
 
-export class CurrentRouteComponent extends HTMLElement implements Disconnectable, AttributeListener {
-  readonly #registeredSelectors: Set<WebComponentSelector> = new Set<WebComponentSelector>();
-  readonly #wrapperSectionElement: HTMLElement;
-  readonly #hashChangeListener: EventListener;
+export class CurrentRouteComponent extends HTMLElement implements Connectable, Disconnectable {
+  readonly #urlService: UrlService = Application.getBackgroundService(UrlService);
+  readonly #routingService: RoutingService = Application.getBackgroundService(RoutingService);
+  readonly #titleService: TitleService = Application.getBackgroundService(TitleService);
 
-  #currentHash: string = '';
+  readonly #wrapperSectionElement: HTMLElement;
+
+  readonly #hashChangeListener: OnHashChangeCallback = (currentHash: string): void => {
+    const targetRoute: Route | undefined = this.#routingService.getRouteByUrlHash(currentHash);
+
+    if (targetRoute === undefined) {
+      this.#titleService.clearTitle();
+      throw new Error('[CurrentRouteComponent] page not found');
+    }
+
+    this.#titleService.setTitle(targetRoute.title);
+    this.#renderContentBySelector(targetRoute.componentSelector);
+  };
 
   public static readonly selector: WebComponentSelector = 'perf-current-route';
-
-  public static get observedAttributes(): string[] {
-    return ['selectors'];
-  }
 
   constructor() {
     super();
@@ -30,69 +42,21 @@ export class CurrentRouteComponent extends HTMLElement implements Disconnectable
 
     shadowRoot.appendChild(style);
     shadowRoot.appendChild(this.#wrapperSectionElement);
-
-    this.#hashChangeListener = (event: Event): void => {
-      if (!(event instanceof HashChangeEvent)) {
-        return;
-      }
-
-      const { newURL }: HashChangeEvent = event;
-      const targetHash: string = new URL(newURL).hash;
-      if (this.#currentHash === targetHash) {
-        return;
-      }
-      this.#currentHash = targetHash;
-
-      const targetComponentSelector: string = targetHash.replace('#', 'perf-route-');
-      this.#renderContentBySelector(targetComponentSelector);
-    };
-
-    window.addEventListener('hashchange', this.#hashChangeListener);
   }
 
-  public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
-    if (oldValue === newValue || name !== 'selectors') {
-      return;
-    }
-
-    const resultValues: unknown = JSON.parse(newValue);
-    if (!CurrentRouteComponent.#isCustomElementsSelectorsList(resultValues)) {
-      throw new Error('[CurrentRouteComponent] selectors attribute contains invalid value');
-    }
-
-    resultValues.forEach((selector: WebComponentSelector) => this.#registeredSelectors.add(selector));
-
-    const firstSelectorAvailable: string | undefined = resultValues.at(0);
-    if (isEmpty(this.#currentHash) && firstSelectorAvailable !== undefined) {
-      this.#renderContentBySelector(firstSelectorAvailable);
-    }
+  public connectedCallback(): void {
+    this.#urlService.subscribeToHashChanges(this.#hashChangeListener);
   }
 
   public disconnectedCallback(): void {
-    window.removeEventListener('hashchange', this.#hashChangeListener);
+    this.#urlService.unsubscribeFromHashChanges(this.#hashChangeListener);
   }
 
   #renderContentBySelector(targetComponentSelector: string): void {
-    if (!isWebComponentSelector(targetComponentSelector) || !this.#registeredSelectors.has(targetComponentSelector)) {
-      throw new Error(
-        `[CurrentRouteComponent] component with selector "${targetComponentSelector}" is not reachable. Available components are: "${Array.from(
-          this.#registeredSelectors
-        ).join('", "')}"`
-      );
-    }
-
     const targetComponent: HTMLElement = document.createElement(targetComponentSelector);
     if (this.#wrapperSectionElement.childElementCount > 0) {
       Array.from(this.#wrapperSectionElement.children).forEach((childElement: Element) => childElement.remove());
     }
     this.#wrapperSectionElement.appendChild(targetComponent);
-  }
-
-  static #isCustomElementsSelectorsList(serializedValue: unknown): serializedValue is WebComponentSelector[] {
-    if (!Array.isArray(serializedValue)) {
-      return false;
-    }
-
-    return serializedValue.every((valueItem: string) => isWebComponentSelector(valueItem));
   }
 }
