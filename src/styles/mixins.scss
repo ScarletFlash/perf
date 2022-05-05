@@ -1,10 +1,1 @@
 @use './variables' as *;
-
-@mixin pipeline-line($width: 80px) {
-  width: $width;
-  height: 1px;
-
-  background: $color_pipeline_elements;
-  border-radius: 2px;
-  z-index: -1;
-}

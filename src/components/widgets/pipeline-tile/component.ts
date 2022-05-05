@@ -20,13 +20,9 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
     const wrapperSectionElement: HTMLElement = document.createElement('section');
     const style: HTMLStyleElement = document.createElement('style');
 
-    const lineElement: HTMLElement = PipelineTileComponent.#getLineElement();
-
     wrapperSectionElement.classList.add('tile');
-    wrapperSectionElement.appendChild(lineElement);
     wrapperSectionElement.appendChild(this.#iconElement);
     wrapperSectionElement.appendChild(this.#textElement);
-    wrapperSectionElement.appendChild(lineElement.cloneNode());
     style.innerHTML = componentStyles;
 
     shadowRoot.appendChild(style);
@@ -45,12 +41,6 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
     if (name === 'text') {
       this.#textElement.innerText = newValue;
     }
-  }
-
-  static #getLineElement(): HTMLDivElement {
-    const lineElement: HTMLDivElement = document.createElement('div');
-    lineElement.classList.add('tile__line');
-    return lineElement;
   }
 
   static #getTextElement(): HTMLSpanElement {

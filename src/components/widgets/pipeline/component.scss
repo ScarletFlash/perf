@@ -2,7 +2,7 @@
 @use './../../../styles/variables' as *;
 @use './../../../styles/mixins' as *;
 
-$width_marker: 16px;
+$size_marker: 16px;
 
 .pipeline {
   position: relative;
@@ -10,7 +10,7 @@ $width_marker: 16px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
 
   &__item {
     cursor: pointer;
@@ -19,25 +19,42 @@ $width_marker: 16px;
   }
 
   &__marker {
-    width: $width_marker;
-    height: $width_marker;
+    position: absolute;
+    top: 0;
+
+    width: $size_marker;
+    height: $size_marker;
 
     &_start {
-      border-radius: 50%;
+      left: 0;
+
       background: $color_pipeline_elements;
     }
 
     &_end {
+      right: 0;
+
       width: 0;
       height: 0;
-      border-top: math.div($width-marker, 2) solid transparent;
+
+      border-top: math.div($size_marker, 2) solid transparent;
       border-right: 0;
-      border-bottom: math.div($width-marker, 2) solid transparent;
-      border-left: $width_marker solid $color_pipeline_elements;
+      border-bottom: math.div($size_marker, 2) solid transparent;
+      border-left: $size_marker solid $color_pipeline_elements;
     }
   }
 
   &__line {
-    @include pipeline-line;
+    $height_line: 1px;
+
+    position: absolute;
+    top: math.div($size_marker - $height_line, 2);
+
+    width: calc(100% - #{$size_marker * 2});
+    height: $height_line;
+
+    z-index: -1;
+    background: $color_pipeline_elements;
+    border-radius: 2px;
   }
 }
