@@ -1,6 +1,9 @@
 import { Application } from '@application';
+import { Route } from '@declarations/interfaces/route.interface';
 import type { WebComponentSelector } from '@declarations/types/web-component-selector.type';
 import { PipelineStateService } from '@services/pipeline-state';
+import { RoutingService } from '@services/routing';
+import { TileComponent } from '@widgets/tile';
 import componentStyles from './component.scss';
 
 const enum MarkerType {
@@ -9,11 +12,10 @@ const enum MarkerType {
 }
 
 export class PipelineComponent extends HTMLElement {
-  readonly #contentElement: HTMLSlotElement = document.createElement('slot');
-
   public static readonly selector: WebComponentSelector = 'perf-pipeline';
 
   readonly #pipelineService: PipelineStateService = Application.getBackgroundService(PipelineStateService);
+  readonly #routingService: RoutingService = Application.getBackgroundService(RoutingService);
 
   constructor() {
     super();
@@ -26,12 +28,26 @@ export class PipelineComponent extends HTMLElement {
 
     const startElement: HTMLDivElement = PipelineComponent.#getMarkerElement(MarkerType.Start);
     const endElement: HTMLDivElement = PipelineComponent.#getMarkerElement(MarkerType.End);
-    const lineComponent: HTMLDivElement = PipelineComponent.#getLineElement();
+    const lineAfterStartElement: HTMLDivElement = PipelineComponent.#getLineElement();
 
     wrapperSectionElement.appendChild(startElement);
-    wrapperSectionElement.appendChild(lineComponent);
-    wrapperSectionElement.appendChild(this.#contentElement);
-    wrapperSectionElement.appendChild(lineComponent.cloneNode());
+    wrapperSectionElement.appendChild(lineAfterStartElement);
+
+    this.#routingService.routes.forEach(({ urlHash, descriptionText, descriptionIconSrc }: Route) => {
+      const linkElement: HTMLElement = PipelineComponent.#getLinkElement();
+      linkElement.setAttribute('href', `#${urlHash}`);
+
+      const tileComponent: HTMLElement = PipelineComponent.#getTileComponent();
+      tileComponent.setAttribute('text', descriptionText);
+      tileComponent.setAttribute('icon', descriptionIconSrc);
+
+      const lineAfterTileElement: HTMLDivElement = PipelineComponent.#getLineElement();
+
+      linkElement.appendChild(tileComponent);
+      wrapperSectionElement.appendChild(linkElement);
+      wrapperSectionElement.appendChild(lineAfterTileElement);
+    });
+
     wrapperSectionElement.appendChild(endElement);
 
     shadowRoot.appendChild(style);
@@ -54,5 +70,15 @@ export class PipelineComponent extends HTMLElement {
     const lineElement: HTMLDivElement = document.createElement('div');
     lineElement.classList.add('pipeline__line');
     return lineElement;
+  }
+
+  static #getLinkElement(): HTMLElement {
+    const linkElement: HTMLAnchorElement = document.createElement('a');
+    return linkElement;
+  }
+
+  static #getTileComponent(): HTMLElement {
+    const tileComponent: HTMLElement = document.createElement(TileComponent.selector);
+    return tileComponent;
   }
 }
