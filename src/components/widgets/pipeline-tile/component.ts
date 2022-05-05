@@ -3,11 +3,11 @@ import type { WebComponentSelector } from '@declarations/types/web-component-sel
 import { IconComponent } from '@widgets/icon';
 import componentStyles from './component.scss';
 
-export class TileComponent extends HTMLElement implements AttributeListener {
-  readonly #iconElement: HTMLElement = TileComponent.#getIconElement();
-  readonly #textElement: HTMLSpanElement = TileComponent.#getTextElement();
+export class PipelineTileComponent extends HTMLElement implements AttributeListener {
+  readonly #iconElement: HTMLElement = PipelineTileComponent.#getIconElement();
+  readonly #textElement: HTMLSpanElement = PipelineTileComponent.#getTextElement();
 
-  public static readonly selector: WebComponentSelector = 'perf-tile';
+  public static readonly selector: WebComponentSelector = 'perf-pipeline-tile';
 
   public static get observedAttributes(): string[] {
     return ['text', 'icon'];
@@ -20,7 +20,7 @@ export class TileComponent extends HTMLElement implements AttributeListener {
     const wrapperSectionElement: HTMLElement = document.createElement('section');
     const style: HTMLStyleElement = document.createElement('style');
 
-    const lineElement: HTMLElement = TileComponent.#getLineElement();
+    const lineElement: HTMLElement = PipelineTileComponent.#getLineElement();
 
     wrapperSectionElement.classList.add('tile');
     wrapperSectionElement.appendChild(lineElement);
