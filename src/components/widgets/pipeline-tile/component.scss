@@ -30,10 +30,6 @@
     transform: translateX(-50%);
   }
 
-  &__line {
-    @include pipeline-line(80px);
-  }
-
   &__icon {
     width: 48px;
     height: 48px;

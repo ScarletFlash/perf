@@ -28,10 +28,11 @@ export class PipelineComponent extends HTMLElement {
 
     const startElement: HTMLDivElement = PipelineComponent.#getMarkerElement(MarkerType.Start);
     const endElement: HTMLDivElement = PipelineComponent.#getMarkerElement(MarkerType.End);
-    const lineAfterStartElement: HTMLDivElement = PipelineComponent.#getLineElement();
+    const lineElement: HTMLDivElement = PipelineComponent.#getLineElement();
 
     wrapperSectionElement.appendChild(startElement);
-    wrapperSectionElement.appendChild(lineAfterStartElement);
+
+    wrapperSectionElement.appendChild(lineElement);
 
     this.#routingService.routes.forEach(({ urlHash, descriptionText, descriptionIconSrc }: Route) => {
       const linkElement: HTMLElement = PipelineComponent.#getLinkElement();
@@ -41,11 +42,8 @@ export class PipelineComponent extends HTMLElement {
       tileComponent.setAttribute('text', descriptionText);
       tileComponent.setAttribute('icon', descriptionIconSrc);
 
-      const lineAfterTileElement: HTMLDivElement = PipelineComponent.#getLineElement();
-
       linkElement.appendChild(tileComponent);
       wrapperSectionElement.appendChild(linkElement);
-      wrapperSectionElement.appendChild(lineAfterTileElement);
     });
 
     wrapperSectionElement.appendChild(endElement);
