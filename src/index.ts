@@ -8,7 +8,7 @@ import { FooterComponent } from '@widgets/footer';
 import { HeaderComponent } from '@widgets/header';
 import { IconComponent } from '@widgets/icon';
 import { PipelineComponent } from '@widgets/pipeline';
-import { TileComponent } from '@widgets/tile';
+import { PipelineTileComponent } from '@widgets/pipeline-tile';
 import { Application } from './application';
 
 new Application()
@@ -18,7 +18,7 @@ new Application()
     IconComponent,
     HeaderComponent,
     FooterComponent,
-    TileComponent,
+    PipelineTileComponent,
     PipelineComponent,
     CurrentRouteComponent
 

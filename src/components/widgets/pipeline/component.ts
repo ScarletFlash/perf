@@ -3,7 +3,7 @@ import { Route } from '@declarations/interfaces/route.interface';
 import type { WebComponentSelector } from '@declarations/types/web-component-selector.type';
 import { PipelineStateService } from '@services/pipeline-state';
 import { RoutingService } from '@services/routing';
-import { TileComponent } from '@widgets/tile';
+import { PipelineTileComponent } from '@widgets/pipeline-tile';
 import componentStyles from './component.scss';
 
 const enum MarkerType {
@@ -78,7 +78,7 @@ export class PipelineComponent extends HTMLElement {
   }
 
   static #getTileComponent(): HTMLElement {
-    const tileComponent: HTMLElement = document.createElement(TileComponent.selector);
+    const tileComponent: HTMLElement = document.createElement(PipelineTileComponent.selector);
     return tileComponent;
   }
 }
