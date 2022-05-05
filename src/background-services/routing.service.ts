@@ -30,7 +30,6 @@ export class RoutingService {
   }
 
   public getRouteByUrlHash(hash: string): Route | undefined {
-    console.log({ hash });
     return RoutingService.#routes.find(({ urlHash }: Route) => urlHash.toLowerCase() === hash.toLowerCase());
   }
 }

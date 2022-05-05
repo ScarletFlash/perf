@@ -17,7 +17,8 @@ export class CurrentRouteComponent extends HTMLElement implements Connectable, D
   readonly #wrapperSectionElement: HTMLElement;
 
   readonly #hashChangeListener: OnHashChangeCallback = (currentHash: string): void => {
-    const targetRoute: Route | undefined = this.#routingService.getRouteByUrlHash(currentHash);
+    const targetRoute: Route | undefined =
+      this.#routingService.getRouteByUrlHash(currentHash) ?? this.#routingService.routes.at(0);
 
     if (targetRoute === undefined) {
       this.#titleService.clearTitle();
@@ -25,6 +26,7 @@ export class CurrentRouteComponent extends HTMLElement implements Connectable, D
     }
 
     this.#titleService.setTitle(targetRoute.title);
+    this.#urlService.setHash(targetRoute.urlHash);
     this.#renderContentBySelector(targetRoute.componentSelector);
   };
 
