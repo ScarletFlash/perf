@@ -34,6 +34,10 @@ $size_marker: $height_pipeline-background-elements;
 
   width: 100%;
   max-width: 800px;
+
+  &__item {
+    flex-grow: 1;
+  }
 }
 
 .background {
