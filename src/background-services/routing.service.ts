@@ -16,21 +16,21 @@ export class RoutingService {
     {
       componentSelector: 'perf-route-code',
       title: '🧑‍💻',
-      urlHash: 'code',
+      urlHash: '#code',
       descriptionIconSrc: '/assets/images/code-tile-icon.svg',
       descriptionText: 'Code'
     },
     {
       componentSelector: 'perf-route-configuration',
       title: '🛠️',
-      urlHash: 'configuration',
+      urlHash: '#configuration',
       descriptionIconSrc: '/assets/images/transformation-tile-icon.svg',
       descriptionText: 'Configuration'
     },
     {
       componentSelector: 'perf-route-analysis',
       title: '🧪',
-      urlHash: 'analysis',
+      urlHash: '#analysis',
       descriptionIconSrc: '/assets/images/analysis-tile-icon.svg',
       descriptionText: 'Analysis'
     }
@@ -53,7 +53,6 @@ export class RoutingService {
       this.#onRouteChangeCallbacks.forEach((callback: OnRouteChangeCallback) => callback(this.#currentRoute));
     };
 
-    console.log({ url: this.#urlService });
     this.#urlService.subscribeToHashChanges(onHashChange);
   }
 

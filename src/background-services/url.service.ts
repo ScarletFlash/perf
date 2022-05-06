@@ -45,7 +45,7 @@ export class UrlService {
   }
 
   #handleHashChange(): void {
-    const targetHash: string = new URL(globalThis.location.href).hash.toLowerCase().replace('#', '');
+    const targetHash: string = new URL(globalThis.location.href).hash.toLowerCase();
     if (this.#currentHash === targetHash) {
       return;
     }
