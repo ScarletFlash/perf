@@ -4,7 +4,6 @@ import { IconComponent } from '@widgets/icon';
 import componentStyles from './component.scss';
 
 export class PipelineTileComponent extends HTMLElement implements AttributeListener {
-  readonly #linkElement: HTMLAnchorElement = PipelineTileComponent.#getLinkElement();
   readonly #tileElement: HTMLElement = PipelineTileComponent.#getTileElement();
   readonly #iconElement: HTMLElement = PipelineTileComponent.#getIconElement();
   readonly #textElement: HTMLSpanElement = PipelineTileComponent.#getTextElement();
@@ -33,12 +32,10 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
     this.#tileElement.appendChild(this.#iconElement);
     this.#tileElement.appendChild(this.#textElement);
 
-    this.#linkElement.appendChild(this.#tileElement);
-
     style.innerHTML = componentStyles;
 
     shadowRoot.appendChild(style);
-    shadowRoot.appendChild(this.#linkElement);
+    shadowRoot.appendChild(this.#tileElement);
   }
 
   public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
@@ -60,7 +57,7 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
     }
 
     if (name === 'url') {
-      this.#linkElement.setAttribute('href', newValue);
+      this.#tileElement.setAttribute('href', newValue);
       this.#url = newValue;
     }
   }
@@ -77,13 +74,8 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
       : this.#tileElement.classList.remove(activeModifierName);
   }
 
-  static #getLinkElement(): HTMLAnchorElement {
-    const linkElement: HTMLAnchorElement = document.createElement('a');
-    return linkElement;
-  }
-
   static #getTileElement(): HTMLElement {
-    const tileElement: HTMLElement = document.createElement('section');
+    const tileElement: HTMLAnchorElement = document.createElement('a');
     tileElement.classList.add('tile');
     return tileElement;
   }
