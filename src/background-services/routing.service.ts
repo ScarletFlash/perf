@@ -2,6 +2,7 @@ import { Application } from '@application';
 import { Route } from '@declarations/interfaces/route.interface';
 import { OnHashChangeCallback } from '@declarations/types/on-hash-change-callback.type';
 import { OnRouteChangeCallback } from '@declarations/types/on-route-change-callback.type';
+import { UrlHash } from '@declarations/types/url-hash.type';
 import { TitleService } from './title.service';
 import { UrlService } from './url.service';
 
@@ -41,7 +42,7 @@ export class RoutingService {
   }
 
   constructor() {
-    const onHashChange: OnHashChangeCallback = (currentHash: string) => {
+    const onHashChange: OnHashChangeCallback = (currentHash: UrlHash) => {
       const foundRoute: Route | undefined = this.getRouteByUrlHash(currentHash);
       const targetRoute: Route = foundRoute === undefined ? RoutingService.#routes.at(0) : foundRoute;
       if (this.#currentRoute === targetRoute) {
@@ -56,7 +57,7 @@ export class RoutingService {
     this.#urlService.subscribeToHashChanges(onHashChange);
   }
 
-  public getRouteByUrlHash(hash: string): Route | undefined {
+  public getRouteByUrlHash(hash: UrlHash): Route | undefined {
     return RoutingService.#routes.find(({ urlHash }: Route) => urlHash.toLowerCase() === hash.toLowerCase());
   }
 
