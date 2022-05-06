@@ -24,16 +24,15 @@ export class PipelineComponent extends HTMLElement {
     const style: HTMLStyleElement = document.createElement('style');
     style.innerHTML = componentStyles;
 
-    const wrapperSectionElement: HTMLElement = PipelineComponent.#getWrapperElement();
-
+    const backgroundElement: HTMLElement = PipelineComponent.#getBackgroundElement();
     const startElement: HTMLDivElement = PipelineComponent.#getMarkerElement(MarkerType.Start);
-    const endElement: HTMLDivElement = PipelineComponent.#getMarkerElement(MarkerType.End);
+    backgroundElement.appendChild(startElement);
     const lineElement: HTMLDivElement = PipelineComponent.#getLineElement();
+    backgroundElement.appendChild(lineElement);
+    const endElement: HTMLDivElement = PipelineComponent.#getMarkerElement(MarkerType.End);
+    backgroundElement.appendChild(endElement);
 
-    wrapperSectionElement.appendChild(startElement);
-
-    wrapperSectionElement.appendChild(lineElement);
-
+    const contentElement: HTMLElement = PipelineComponent.#getContentElement();
     this.#routingService.routes.forEach(({ urlHash, descriptionText, descriptionIconSrc }: Route) => {
       const linkElement: HTMLElement = PipelineComponent.#getLinkElement();
       linkElement.setAttribute('href', `#${urlHash}`);
@@ -43,35 +42,50 @@ export class PipelineComponent extends HTMLElement {
       tileComponent.setAttribute('icon', descriptionIconSrc);
 
       linkElement.appendChild(tileComponent);
-      wrapperSectionElement.appendChild(linkElement);
+      contentElement.appendChild(linkElement);
     });
 
-    wrapperSectionElement.appendChild(endElement);
+    const pipelineElement: HTMLElement = PipelineComponent.#getPipelineElement();
+    pipelineElement.appendChild(backgroundElement);
+    pipelineElement.appendChild(contentElement);
 
     shadowRoot.appendChild(style);
-    shadowRoot.appendChild(wrapperSectionElement);
+    shadowRoot.appendChild(pipelineElement);
+  }
+
+  static #getPipelineElement(): HTMLElement {
+    const contentElement: HTMLElement = document.createElement('section');
+    contentElement.classList.add('pipeline');
+    return contentElement;
+  }
+
+  static #getContentElement(): HTMLElement {
+    const contentElement: HTMLElement = document.createElement('section');
+    contentElement.classList.add('pipeline__content', 'content');
+    return contentElement;
+  }
+
+  static #getBackgroundElement(): HTMLElement {
+    const backgroundElement: HTMLElement = document.createElement('section');
+    backgroundElement.classList.add('pipeline__background', 'background');
+    return backgroundElement;
   }
 
   static #getMarkerElement(type: MarkerType): HTMLDivElement {
     const markerElement: HTMLDivElement = document.createElement('div');
-    markerElement.classList.add('pipeline__marker', String(`pipeline__marker_${type}`).toLowerCase());
+    markerElement.classList.add('background__marker', String(`background__marker_${type}`).toLowerCase());
     return markerElement;
-  }
-
-  static #getWrapperElement(): HTMLElement {
-    const wrapperElement: HTMLElement = document.createElement('section');
-    wrapperElement.classList.add('pipeline');
-    return wrapperElement;
   }
 
   static #getLineElement(): HTMLDivElement {
     const lineElement: HTMLDivElement = document.createElement('div');
-    lineElement.classList.add('pipeline__line');
+    lineElement.classList.add('background__line');
     return lineElement;
   }
 
   static #getLinkElement(): HTMLElement {
     const linkElement: HTMLAnchorElement = document.createElement('a');
+    linkElement.classList.add('content__item');
     return linkElement;
   }
 
