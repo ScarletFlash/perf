@@ -22,8 +22,7 @@ new Application()
     PipelineComponent,
     CurrentRouteComponent
 
-    // RouteAnalysisComponent,
     // RouteCodeComponent,
-    // RouteMinificationComponent,
-    // RouteTranspilationComponent
+    // RouteConfigurationComponent,
+    // RouteAnalysisComponent,
   ]);
