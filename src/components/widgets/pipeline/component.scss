@@ -1,6 +1,7 @@
 @use 'sass:math';
 @use './../../../styles/variables' as *;
 @use './../../../styles/mixins' as *;
+@import './../../../styles/global';
 
 $size_marker: $height_pipeline-background-elements;
 
@@ -16,13 +17,15 @@ $size_marker: $height_pipeline-background-elements;
 
   &__content {
     position: static;
+    padding: 0 1rem;
   }
 
   &__background {
     position: absolute;
     z-index: -1;
-
     top: 0;
+
+    padding: 0 1rem;
   }
 }
 
@@ -36,7 +39,7 @@ $size_marker: $height_pipeline-background-elements;
   max-width: 800px;
 
   &__item {
-    flex-grow: 1;
+    width: math.div(100%, 3);
   }
 }
 

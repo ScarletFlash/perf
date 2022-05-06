@@ -12,7 +12,8 @@
       "@services/*": ["./src/background-services/*.service.ts"],
       "@declarations/*": ["./src/declarations/*"],
       "@utilities/*": ["./src/utilities/*"],
-      "@application": ["./src/application.ts"]
+      "@application": ["./src/application.ts"],
+      "@styles/variables": ["./src/styles/variables.ts"]
     }
   }
 }

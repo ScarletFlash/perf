@@ -1,1 +1,1 @@
-export type UrlHash = `#${string}`;
+export type UrlHash = `#${string}` | '';
