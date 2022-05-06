@@ -1,5 +1,4 @@
 @use './../../../styles/variables' as *;
-@import './../../../styles/global';
 
 .editor-container {
   position: relative;
@@ -8,4 +7,7 @@
   height: 100%;
 
   overflow: hidden;
+
+  font-family: monospace;
+  font-size: unset;
 }
