@@ -1,7 +1,7 @@
 import { AttributeListener } from '@declarations/interfaces/attribute-listener.interface';
 import { Disconnectable } from '@declarations/interfaces/disconnectable.interface';
 import { PerfComponentSelector } from '@declarations/types/perf-component-selector.type';
-import { isWebComponentSelector } from '@utilities/is-web-component-selector.util';
+import { isPerfComponentSelector } from '@utilities/is-perf-component-selector.util';
 import { editor, Environment, Window } from 'monaco-editor';
 import componentStyles from './component.scss';
 
@@ -76,6 +76,6 @@ export class RouteCodeComponent extends HTMLElement implements Disconnectable, A
       return false;
     }
 
-    return serializedValue.every((valueItem: string) => isWebComponentSelector(valueItem));
+    return serializedValue.every((valueItem: string) => isPerfComponentSelector(valueItem));
   }
 }

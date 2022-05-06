@@ -1,6 +1,6 @@
 import { AttributeListener } from '@declarations/interfaces/attribute-listener.interface';
 import { PerfComponentSelector } from '@declarations/types/perf-component-selector.type';
-import { isWebComponentSelector } from '@utilities/is-web-component-selector.util';
+import { isPerfComponentSelector } from '@utilities/is-perf-component-selector.util';
 import componentStyles from './component.scss';
 
 export class RouteTranspilationComponent extends HTMLElement implements AttributeListener {
@@ -43,6 +43,6 @@ export class RouteTranspilationComponent extends HTMLElement implements Attribut
       return false;
     }
 
-    return serializedValue.every((valueItem: string) => isWebComponentSelector(valueItem));
+    return serializedValue.every((valueItem: string) => isPerfComponentSelector(valueItem));
   }
 }
