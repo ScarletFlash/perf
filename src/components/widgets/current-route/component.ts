@@ -2,32 +2,18 @@ import { Application } from '@application';
 import { Connectable } from '@declarations/interfaces/connectable.interface';
 import { Disconnectable } from '@declarations/interfaces/disconnectable.interface';
 import { Route } from '@declarations/interfaces/route.interface';
-import { OnHashChangeCallback } from '@declarations/types/on-hash-change-callback.type';
+import { OnRouteChangeCallback } from '@declarations/types/on-route-change-callback.type';
 import type { WebComponentSelector } from '@declarations/types/web-component-selector.type';
 import { RoutingService } from '@services/routing';
-import { TitleService } from '@services/title';
-import { UrlService } from '@services/url';
 import componentStyles from './component.scss';
 
 export class CurrentRouteComponent extends HTMLElement implements Connectable, Disconnectable {
-  readonly #urlService: UrlService = Application.getBackgroundService(UrlService);
   readonly #routingService: RoutingService = Application.getBackgroundService(RoutingService);
-  readonly #titleService: TitleService = Application.getBackgroundService(TitleService);
 
   readonly #wrapperSectionElement: HTMLElement;
 
-  readonly #hashChangeListener: OnHashChangeCallback = (currentHash: string): void => {
-    const targetRoute: Route | undefined =
-      this.#routingService.getRouteByUrlHash(currentHash) ?? this.#routingService.routes.at(0);
-
-    if (targetRoute === undefined) {
-      this.#titleService.clearTitle();
-      throw new Error('[CurrentRouteComponent] page not found');
-    }
-
-    this.#titleService.setTitle(targetRoute.title);
-    this.#urlService.setHash(targetRoute.urlHash);
-    this.#renderContentBySelector(targetRoute.componentSelector);
+  readonly #routeChangeListener: OnRouteChangeCallback = (currentRoute: Route): void => {
+    this.#renderContentBySelector(currentRoute.componentSelector);
   };
 
   public static readonly selector: WebComponentSelector = 'perf-current-route';
@@ -47,11 +33,11 @@ export class CurrentRouteComponent extends HTMLElement implements Connectable, D
   }
 
   public connectedCallback(): void {
-    this.#urlService.subscribeToHashChanges(this.#hashChangeListener);
+    this.#routingService.subscribeToRouteChanges(this.#routeChangeListener);
   }
 
   public disconnectedCallback(): void {
-    this.#urlService.unsubscribeFromHashChanges(this.#hashChangeListener);
+    this.#routingService.unsubscribeFromRouteChanges(this.#routeChangeListener);
   }
 
   #renderContentBySelector(targetComponentSelector: string): void {
