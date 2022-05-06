@@ -44,13 +44,14 @@ export class RoutingService {
   constructor() {
     const onHashChange: OnHashChangeCallback = (currentHash: UrlHash) => {
       const foundRoute: Route | undefined = this.getRouteByUrlHash(currentHash);
-      const targetRoute: Route = foundRoute === undefined ? RoutingService.#routes.at(0) : foundRoute;
+      const targetRoute: Route | undefined = foundRoute === undefined ? RoutingService.#routes.at(0) : foundRoute;
       if (this.#currentRoute === targetRoute) {
         return;
       }
 
       this.#currentRoute = targetRoute;
       this.#titleService.setTitle(targetRoute.title);
+      this.#urlService.setHash(targetRoute.urlHash);
       this.#onRouteChangeCallbacks.forEach((callback: OnRouteChangeCallback) => callback(this.#currentRoute));
     };
 

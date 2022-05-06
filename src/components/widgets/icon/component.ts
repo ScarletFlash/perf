@@ -3,7 +3,7 @@ import { PerfComponentSelector } from '@declarations/types/perf-component-select
 import componentStyles from './component.scss';
 
 export class IconComponent extends HTMLElement implements AttributeListener {
-  #colorStyle: string = '';
+  #colorStyle: string = 'initial';
   #svgElement: SVGElement | undefined;
 
   readonly #objectElement: HTMLObjectElement = IconComponent.#getIconElement();
@@ -35,8 +35,13 @@ export class IconComponent extends HTMLElement implements AttributeListener {
     }
 
     if (name === 'color') {
-      this.#setNewColor(newValue);
+      this.setNewColor(newValue);
     }
+  }
+
+  public setNewColor(newValue: string): void {
+    this.#colorStyle = newValue;
+    this.#synchronizeColorWithEmbeddedIcon();
   }
 
   #synchronizeColorWithEmbeddedIcon(): void {
@@ -45,11 +50,6 @@ export class IconComponent extends HTMLElement implements AttributeListener {
     }
 
     this.#svgElement.setAttribute('style', `color: ${this.#colorStyle}`);
-  }
-
-  #setNewColor(newValue: string): void {
-    this.#colorStyle = newValue;
-    this.#synchronizeColorWithEmbeddedIcon();
   }
 
   #setNewIcon(newIconPath: string): void {

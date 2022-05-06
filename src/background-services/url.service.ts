@@ -3,7 +3,7 @@ import { UrlHash } from '@declarations/types/url-hash.type';
 import { isUrlHash } from '@utilities/is-url-hash.util';
 
 export class UrlService {
-  #currentHash: UrlHash;
+  #currentHash: UrlHash | undefined;
   #onHashChangeCallbacks: Set<OnHashChangeCallback> = new Set<OnHashChangeCallback>();
 
   readonly #hashChangeListener: EventListener = (): void => {
@@ -15,12 +15,12 @@ export class UrlService {
   };
 
   constructor() {
-    globalThis.addEventListener('hashchange', this.#hashChangeListener, {
+    globalThis.addEventListener('load', this.#loadListener, {
+      once: true,
       passive: true
     });
 
-    globalThis.addEventListener('load', this.#loadListener, {
-      once: true,
+    globalThis.addEventListener('hashchange', this.#hashChangeListener, {
       passive: true
     });
   }
@@ -31,6 +31,17 @@ export class UrlService {
 
   public unsubscribeFromHashChanges(callback: OnHashChangeCallback): void {
     this.#onHashChangeCallbacks.delete(callback);
+  }
+
+  public setHash(targetHash: UrlHash): void {
+    if (this.#currentHash === targetHash) {
+      return;
+    }
+
+    const resultUrl: URL = new URL(globalThis.location.href);
+    resultUrl.hash = targetHash;
+
+    globalThis.location.replace(resultUrl);
   }
 
   #handleHashChange(): void {

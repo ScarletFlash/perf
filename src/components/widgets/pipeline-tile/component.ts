@@ -1,11 +1,12 @@
 import { AttributeListener } from '@declarations/interfaces/attribute-listener.interface';
 import { PerfComponentSelector } from '@declarations/types/perf-component-selector.type';
+import { $color_active, $color_main } from '@styles/variables';
 import { IconComponent } from '@widgets/icon';
 import componentStyles from './component.scss';
 
 export class PipelineTileComponent extends HTMLElement implements AttributeListener {
   readonly #tileElement: HTMLElement = PipelineTileComponent.#getTileElement();
-  readonly #iconElement: HTMLElement = PipelineTileComponent.#getIconElement();
+  readonly #iconComponent: IconComponent = PipelineTileComponent.#getIconElement();
   readonly #textElement: HTMLSpanElement = PipelineTileComponent.#getTextElement();
 
   #isActive: boolean = false;
@@ -29,7 +30,7 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
     const markerElement: HTMLElement = PipelineTileComponent.#getMarkerElement();
 
     this.#tileElement.appendChild(markerElement);
-    this.#tileElement.appendChild(this.#iconElement);
+    this.#tileElement.appendChild(this.#iconComponent);
     this.#tileElement.appendChild(this.#textElement);
 
     style.innerHTML = componentStyles;
@@ -44,7 +45,7 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
     }
 
     if (name === 'icon') {
-      this.#iconElement.setAttribute('src', newValue);
+      this.#iconComponent.setAttribute('src', newValue);
     }
 
     if (name === 'text') {
@@ -68,10 +69,15 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
     }
 
     this.#isActive = targetState;
+
     const activeModifierName: string = 'tile_active';
-    this.#isActive
-      ? this.#tileElement.classList.add(activeModifierName)
-      : this.#tileElement.classList.remove(activeModifierName);
+    if (this.#isActive) {
+      this.#tileElement.classList.add(activeModifierName);
+      this.#iconComponent.setNewColor($color_active);
+      return;
+    }
+    this.#tileElement.classList.remove(activeModifierName);
+    this.#iconComponent.setNewColor($color_main);
   }
 
   static #getTileElement(): HTMLElement {
@@ -86,10 +92,13 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
     return textElement;
   }
 
-  static #getIconElement(): HTMLElement {
-    const iconElement: HTMLElement = document.createElement(IconComponent.selector);
-    iconElement.classList.add('tile__icon');
-    return iconElement;
+  static #getIconElement(): IconComponent {
+    const iconComponent: HTMLElement = document.createElement(IconComponent.selector);
+    iconComponent.classList.add('tile__icon');
+    if (iconComponent instanceof IconComponent) {
+      return iconComponent;
+    }
+    throw new Error('[PipelineTileComponent] IconComponent creation is failed');
   }
 
   static #getMarkerElement(): HTMLElement {
