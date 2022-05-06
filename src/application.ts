@@ -31,12 +31,13 @@ export class Application {
   }
 
   public bootstrapBackgroundServices(serviceConstructors: ServiceConstructor[]): this {
-    globalThis[RUNNING_SERVICES_ACCESS_KEY] = new Map<ServiceConstructor, object>(
-      serviceConstructors.map((serviceConstructor: ServiceConstructor) => [
-        serviceConstructor,
-        new serviceConstructor()
-      ])
-    );
+    const serviceByConstructor: Map<ServiceConstructor, object> = new Map<ServiceConstructor, object>();
+    globalThis[RUNNING_SERVICES_ACCESS_KEY] = serviceByConstructor;
+
+    serviceConstructors.forEach((serviceConstructor: ServiceConstructor) => {
+      const instance: object = new serviceConstructor();
+      serviceByConstructor.set(serviceConstructor, instance);
+    });
 
     return this;
   }
