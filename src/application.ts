@@ -1,8 +1,8 @@
-import type { WebComponentSelector } from './declarations/types/web-component-selector.type';
+import { PerfComponentSelector } from '@declarations/types/perf-component-selector.type';
 import globalStyles from './index.scss';
 
 type ComponentConstructor = CustomElementConstructor & {
-  selector: WebComponentSelector;
+  selector: PerfComponentSelector;
 };
 
 type ServiceConstructor<T extends object = object> = new (...parameters: unknown[]) => T;
@@ -13,8 +13,8 @@ export class Application {
   public registerComponents(componentConstructors: CustomElementConstructor[]): this {
     const registry: CustomElementRegistry = customElements;
 
-    const componentConstructorBySelector: Map<WebComponentSelector, ComponentConstructor> = new Map<
-      WebComponentSelector,
+    const componentConstructorBySelector: Map<PerfComponentSelector, ComponentConstructor> = new Map<
+      PerfComponentSelector,
       ComponentConstructor
     >(
       componentConstructors.map((componentConstructor: ComponentConstructor) => [
@@ -23,7 +23,7 @@ export class Application {
       ])
     );
 
-    componentConstructorBySelector.forEach((constructor: ComponentConstructor, selector: WebComponentSelector) =>
+    componentConstructorBySelector.forEach((constructor: ComponentConstructor, selector: PerfComponentSelector) =>
       registry.define(selector, constructor)
     );
 

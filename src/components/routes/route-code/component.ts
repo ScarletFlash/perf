@@ -1,15 +1,15 @@
 import { AttributeListener } from '@declarations/interfaces/attribute-listener.interface';
 import { Disconnectable } from '@declarations/interfaces/disconnectable.interface';
-import type { WebComponentSelector } from '@declarations/types/web-component-selector.type';
+import { PerfComponentSelector } from '@declarations/types/perf-component-selector.type';
 import { isWebComponentSelector } from '@utilities/is-web-component-selector.util';
 import { editor, Environment, Window } from 'monaco-editor';
 import componentStyles from './component.scss';
 
 export class RouteCodeComponent extends HTMLElement implements Disconnectable, AttributeListener {
-  readonly #registeredSelectors: Set<WebComponentSelector> = new Set<WebComponentSelector>();
+  readonly #registeredSelectors: Set<PerfComponentSelector> = new Set<PerfComponentSelector>();
   readonly #editor: editor.IStandaloneCodeEditor;
 
-  public static readonly selector: WebComponentSelector = 'perf-route-code';
+  public static readonly selector: PerfComponentSelector = 'perf-route-code';
 
   public static get observedAttributes(): string[] {
     return ['selectors'];
@@ -64,14 +64,14 @@ export class RouteCodeComponent extends HTMLElement implements Disconnectable, A
       throw new Error('[CurrentRouteComponent] selectors attribute contains invalid value');
     }
 
-    resultValues.forEach((selector: WebComponentSelector) => this.#registeredSelectors.add(selector));
+    resultValues.forEach((selector: PerfComponentSelector) => this.#registeredSelectors.add(selector));
   }
 
   public disconnectedCallback(): void {
     this.#editor.dispose();
   }
 
-  static #isCustomElementsSelectorsList(serializedValue: unknown): serializedValue is WebComponentSelector[] {
+  static #isCustomElementsSelectorsList(serializedValue: unknown): serializedValue is PerfComponentSelector[] {
     if (!Array.isArray(serializedValue)) {
       return false;
     }

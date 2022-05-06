@@ -1,5 +1,5 @@
 import { AttributeListener } from '@declarations/interfaces/attribute-listener.interface';
-import type { WebComponentSelector } from '@declarations/types/web-component-selector.type';
+import { PerfComponentSelector } from '@declarations/types/perf-component-selector.type';
 import { IconComponent } from '@widgets/icon';
 import componentStyles from './component.scss';
 
@@ -15,7 +15,7 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
     return this.#url;
   }
 
-  public static readonly selector: WebComponentSelector = 'perf-pipeline-tile';
+  public static readonly selector: PerfComponentSelector = 'perf-pipeline-tile';
 
   public static get observedAttributes(): string[] {
     return ['text', 'icon', 'isActive', 'url'];

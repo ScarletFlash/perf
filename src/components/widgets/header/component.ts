@@ -1,8 +1,8 @@
-import type { WebComponentSelector } from '@declarations/types/web-component-selector.type';
+import { PerfComponentSelector } from '@declarations/types/perf-component-selector.type';
 import componentStyles from './component.scss';
 
 export class HeaderComponent extends HTMLElement {
-  public static readonly selector: WebComponentSelector = 'perf-header';
+  public static readonly selector: PerfComponentSelector = 'perf-header';
 
   constructor() {
     super();

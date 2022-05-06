@@ -1,5 +1,5 @@
 import { AttributeListener } from '@declarations/interfaces/attribute-listener.interface';
-import type { WebComponentSelector } from '@declarations/types/web-component-selector.type';
+import { PerfComponentSelector } from '@declarations/types/perf-component-selector.type';
 import componentStyles from './component.scss';
 
 export class IconComponent extends HTMLElement implements AttributeListener {
@@ -8,7 +8,7 @@ export class IconComponent extends HTMLElement implements AttributeListener {
 
   readonly #objectElement: HTMLObjectElement = IconComponent.#getIconElement();
 
-  public static readonly selector: WebComponentSelector = 'perf-icon';
+  public static readonly selector: PerfComponentSelector = 'perf-icon';
 
   public static get observedAttributes(): string[] {
     return ['src', 'color'];
