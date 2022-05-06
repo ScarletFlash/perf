@@ -69,7 +69,7 @@ export class IconComponent extends HTMLElement implements AttributeListener {
 
   static #getIconElement(): HTMLObjectElement {
     const iconElement: HTMLObjectElement = document.createElement('object');
-    iconElement.classList.add('.icon');
+    iconElement.classList.add('icon');
     iconElement.setAttribute('width', '100%');
     iconElement.setAttribute('height', '100%');
     return iconElement;
