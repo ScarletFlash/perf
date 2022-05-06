@@ -68,8 +68,6 @@ export class RouteCodeComponent extends HTMLElement implements Disconnectable, A
   }
 
   public disconnectedCallback(): void {
-    console.log(this.#editor.getValue());
-
     this.#editor.dispose();
   }
 

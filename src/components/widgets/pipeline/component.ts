@@ -1,5 +1,8 @@
 import { Application } from '@application';
+import { Connectable } from '@declarations/interfaces/connectable.interface';
+import { Disconnectable } from '@declarations/interfaces/disconnectable.interface';
 import { Route } from '@declarations/interfaces/route.interface';
+import { OnRouteChangeCallback } from '@declarations/types/on-route-change-callback.type';
 import type { WebComponentSelector } from '@declarations/types/web-component-selector.type';
 import { PipelineStateService } from '@services/pipeline-state';
 import { RoutingService } from '@services/routing';
@@ -11,13 +14,20 @@ const enum MarkerType {
   End = 'End'
 }
 
-export class PipelineComponent extends HTMLElement {
+export class PipelineComponent extends HTMLElement implements Connectable, Disconnectable {
   public static readonly selector: WebComponentSelector = 'perf-pipeline';
 
   readonly #pipelineService: PipelineStateService = Application.getBackgroundService(PipelineStateService);
   readonly #routingService: RoutingService = Application.getBackgroundService(RoutingService);
 
-  readonly #routes: Route[] = this.#routingService.routes;
+  readonly #tiles: PipelineTileComponent[];
+
+  readonly #routeChangeListener: OnRouteChangeCallback = (currentRoute: Route): void => {
+    this.#tiles.forEach((tile: PipelineTileComponent) => {
+      const isTargetTile: boolean = tile.url === currentRoute.urlHash;
+      tile.setActivationState(isTargetTile);
+    });
+  };
 
   constructor() {
     super();
@@ -35,17 +45,17 @@ export class PipelineComponent extends HTMLElement {
     backgroundElement.appendChild(endElement);
 
     const contentElement: HTMLElement = PipelineComponent.#getContentElement();
-    this.#routes.forEach(({ urlHash, descriptionText, descriptionIconSrc }: Route) => {
-      const linkElement: HTMLElement = PipelineComponent.#getLinkElement();
-      linkElement.setAttribute('href', `#${urlHash}`);
+    this.#tiles = this.#routingService.routes.map(({ urlHash, descriptionText, descriptionIconSrc }: Route) => {
+      const tileComponent: PipelineTileComponent = PipelineComponent.#getTileComponent();
 
-      const tileComponent: HTMLElement = PipelineComponent.#getTileComponent();
       tileComponent.setAttribute('text', descriptionText);
       tileComponent.setAttribute('icon', descriptionIconSrc);
+      tileComponent.setAttribute('url', urlHash);
 
-      linkElement.appendChild(tileComponent);
-      contentElement.appendChild(linkElement);
+      return tileComponent;
     });
+
+    this.#tiles.forEach((tileComponent: HTMLElement) => contentElement.appendChild(tileComponent));
 
     const pipelineElement: HTMLElement = PipelineComponent.#getPipelineElement();
     pipelineElement.appendChild(backgroundElement);
@@ -53,6 +63,14 @@ export class PipelineComponent extends HTMLElement {
 
     shadowRoot.appendChild(style);
     shadowRoot.appendChild(pipelineElement);
+  }
+
+  public connectedCallback(): void {
+    this.#routingService.subscribeToRouteChanges(this.#routeChangeListener);
+  }
+
+  public disconnectedCallback(): void {
+    this.#routingService.unsubscribeFromRouteChanges(this.#routeChangeListener);
   }
 
   static #getPipelineElement(): HTMLElement {
@@ -85,14 +103,12 @@ export class PipelineComponent extends HTMLElement {
     return lineElement;
   }
 
-  static #getLinkElement(): HTMLElement {
-    const linkElement: HTMLAnchorElement = document.createElement('a');
-    linkElement.classList.add('content__item');
-    return linkElement;
-  }
-
-  static #getTileComponent(): HTMLElement {
+  static #getTileComponent(): PipelineTileComponent {
     const tileComponent: HTMLElement = document.createElement(PipelineTileComponent.selector);
-    return tileComponent;
+    tileComponent.classList.add('content__item');
+    if (tileComponent instanceof PipelineTileComponent) {
+      return tileComponent;
+    }
+    throw new Error('[PipelineComponent] PipelineTileComponent creation is failed');
   }
 }

@@ -4,14 +4,21 @@ import { IconComponent } from '@widgets/icon';
 import componentStyles from './component.scss';
 
 export class PipelineTileComponent extends HTMLElement implements AttributeListener {
+  readonly #linkElement: HTMLAnchorElement = PipelineTileComponent.#getLinkElement();
   readonly #tileElement: HTMLElement = PipelineTileComponent.#getTileElement();
   readonly #iconElement: HTMLElement = PipelineTileComponent.#getIconElement();
   readonly #textElement: HTMLSpanElement = PipelineTileComponent.#getTextElement();
 
+  #isActive: boolean = false;
+  #url: string = '';
+  public get url(): string {
+    return this.#url;
+  }
+
   public static readonly selector: WebComponentSelector = 'perf-pipeline-tile';
 
   public static get observedAttributes(): string[] {
-    return ['text', 'icon', 'isActive'];
+    return ['text', 'icon', 'isActive', 'url'];
   }
 
   constructor() {
@@ -25,10 +32,13 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
     this.#tileElement.appendChild(markerElement);
     this.#tileElement.appendChild(this.#iconElement);
     this.#tileElement.appendChild(this.#textElement);
+
+    this.#linkElement.appendChild(this.#tileElement);
+
     style.innerHTML = componentStyles;
 
     shadowRoot.appendChild(style);
-    shadowRoot.appendChild(this.#tileElement);
+    shadowRoot.appendChild(this.#linkElement);
   }
 
   public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
@@ -45,15 +55,31 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
     }
 
     if (name === 'isActive') {
-      this.#setTileState(Boolean(newValue));
+      const targetState: boolean = Boolean(newValue);
+      this.setActivationState(targetState);
+    }
+
+    if (name === 'url') {
+      this.#linkElement.setAttribute('href', newValue);
+      this.#url = newValue;
     }
   }
 
-  #setTileState(isActive: boolean) {
+  public setActivationState(targetState: boolean) {
+    if (this.#isActive === targetState) {
+      return;
+    }
+
+    this.#isActive = targetState;
     const activeModifierName: string = 'tile_active';
-    isActive
+    this.#isActive
       ? this.#tileElement.classList.add(activeModifierName)
       : this.#tileElement.classList.remove(activeModifierName);
+  }
+
+  static #getLinkElement(): HTMLAnchorElement {
+    const linkElement: HTMLAnchorElement = document.createElement('a');
+    return linkElement;
   }
 
   static #getTileElement(): HTMLElement {
