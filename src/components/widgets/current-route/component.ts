@@ -3,7 +3,7 @@ import { Connectable } from '@declarations/interfaces/connectable.interface';
 import { Disconnectable } from '@declarations/interfaces/disconnectable.interface';
 import { Route } from '@declarations/interfaces/route.interface';
 import { OnRouteChangeCallback } from '@declarations/types/on-route-change-callback.type';
-import type { WebComponentSelector } from '@declarations/types/web-component-selector.type';
+import { PerfComponentSelector } from '@declarations/types/perf-component-selector.type';
 import { RoutingService } from '@services/routing';
 import componentStyles from './component.scss';
 
@@ -16,7 +16,7 @@ export class CurrentRouteComponent extends HTMLElement implements Connectable, D
     this.#renderContentBySelector(currentRoute.componentSelector);
   };
 
-  public static readonly selector: WebComponentSelector = 'perf-current-route';
+  public static readonly selector: PerfComponentSelector = 'perf-current-route';
 
   constructor() {
     super();

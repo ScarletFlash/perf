@@ -1,8 +1,8 @@
-import type { WebComponentSelector } from '@declarations/types/web-component-selector.type';
+import { PerfComponentSelector } from '@declarations/types/perf-component-selector.type';
 import componentStyles from './component.scss';
 
 export class FooterComponent extends HTMLElement {
-  public static readonly selector: WebComponentSelector = 'perf-footer';
+  public static readonly selector: PerfComponentSelector = 'perf-footer';
 
   constructor() {
     super();

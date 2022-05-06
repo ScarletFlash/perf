@@ -3,7 +3,7 @@ import { Connectable } from '@declarations/interfaces/connectable.interface';
 import { Disconnectable } from '@declarations/interfaces/disconnectable.interface';
 import { Route } from '@declarations/interfaces/route.interface';
 import { OnRouteChangeCallback } from '@declarations/types/on-route-change-callback.type';
-import type { WebComponentSelector } from '@declarations/types/web-component-selector.type';
+import { PerfComponentSelector } from '@declarations/types/perf-component-selector.type';
 import { PipelineStateService } from '@services/pipeline-state';
 import { RoutingService } from '@services/routing';
 import { PipelineTileComponent } from '@widgets/pipeline-tile';
@@ -15,7 +15,7 @@ const enum MarkerType {
 }
 
 export class PipelineComponent extends HTMLElement implements Connectable, Disconnectable {
-  public static readonly selector: WebComponentSelector = 'perf-pipeline';
+  public static readonly selector: PerfComponentSelector = 'perf-pipeline';
 
   readonly #pipelineService: PipelineStateService = Application.getBackgroundService(PipelineStateService);
   readonly #routingService: RoutingService = Application.getBackgroundService(RoutingService);
