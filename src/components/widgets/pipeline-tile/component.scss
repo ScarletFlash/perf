@@ -1,4 +1,5 @@
 @use 'sass:math';
+@use 'sass:color';
 @use './../../../styles/variables' as *;
 @use './../../../styles/mixins' as *;
 
@@ -13,6 +14,16 @@
   cursor: pointer;
   padding: 0 12px 12px;
 
+  background: transparent;
+  border-radius: 2px;
+
+  &,
+  &__marker {
+    transition-duration: 0.075s;
+    transition-timing-function: ease-in;
+    transition-property: background;
+  }
+
   &__marker {
     $size_marker: 10px;
 
@@ -22,10 +33,6 @@
     margin: math.div($height_pipeline-background-elements - $size_marker, 2) 0;
 
     background: $color_pipeline_elements;
-
-    transition-duration: 0.075s;
-    transition-timing-function: ease-in;
-    transition-property: transform, background;
   }
 
   &__text {
@@ -38,13 +45,20 @@
   }
 
   &__icon {
-    $size_icon: 48px;
+    $size_icon: 24px;
 
     width: $size_icon;
     height: $size_icon;
+
+    padding: 6px 0 0 0;
   }
 
-  &:hover &__marker {
+  &:hover &__marker,
+  &_active &__marker {
     background: $color_active;
+  }
+
+  &:hover {
+    background: rgba($color_pipeline_elements, 0.2);
   }
 }

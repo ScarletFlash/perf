@@ -17,6 +17,8 @@ export class PipelineComponent extends HTMLElement {
   readonly #pipelineService: PipelineStateService = Application.getBackgroundService(PipelineStateService);
   readonly #routingService: RoutingService = Application.getBackgroundService(RoutingService);
 
+  readonly #routes: Route[] = this.#routingService.routes;
+
   constructor() {
     super();
 
@@ -33,7 +35,7 @@ export class PipelineComponent extends HTMLElement {
     backgroundElement.appendChild(endElement);
 
     const contentElement: HTMLElement = PipelineComponent.#getContentElement();
-    this.#routingService.routes.forEach(({ urlHash, descriptionText, descriptionIconSrc }: Route) => {
+    this.#routes.forEach(({ urlHash, descriptionText, descriptionIconSrc }: Route) => {
       const linkElement: HTMLElement = PipelineComponent.#getLinkElement();
       linkElement.setAttribute('href', `#${urlHash}`);
 
