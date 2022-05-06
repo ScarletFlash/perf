@@ -1,2 +1,8 @@
 @use './../../../styles/variables' as *;
 @import './../../../styles/global';
+
+.route-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
