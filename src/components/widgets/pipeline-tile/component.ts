@@ -20,7 +20,10 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
     const wrapperSectionElement: HTMLElement = document.createElement('section');
     const style: HTMLStyleElement = document.createElement('style');
 
+    const markerElement: HTMLElement = PipelineTileComponent.#getMarkerElement();
+
     wrapperSectionElement.classList.add('tile');
+    wrapperSectionElement.appendChild(markerElement);
     wrapperSectionElement.appendChild(this.#iconElement);
     wrapperSectionElement.appendChild(this.#textElement);
     style.innerHTML = componentStyles;
@@ -53,5 +56,11 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
     const iconElement: HTMLElement = document.createElement(IconComponent.selector);
     iconElement.classList.add('tile__icon');
     return iconElement;
+  }
+
+  static #getMarkerElement(): HTMLElement {
+    const markerElement: HTMLElement = document.createElement('div');
+    markerElement.classList.add('tile__marker');
+    return markerElement;
   }
 }
