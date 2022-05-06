@@ -1,6 +1,5 @@
 import { PerfComponentSelector } from '@declarations/types/perf-component-selector.type';
-
-type UrlHash = `#${string}`;
+import { UrlHash } from '@declarations/types/url-hash.type';
 
 export interface Route {
   title: string;

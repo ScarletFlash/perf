@@ -1,7 +1,9 @@
 import { OnHashChangeCallback } from '@declarations/types/on-hash-change-callback.type';
+import { UrlHash } from '@declarations/types/url-hash.type';
+import { isUrlHash } from '@utilities/is-url-hash.util';
 
 export class UrlService {
-  #currentHash: string;
+  #currentHash: UrlHash;
   #onHashChangeCallbacks: Set<OnHashChangeCallback> = new Set<OnHashChangeCallback>();
 
   readonly #hashChangeListener: EventListener = (): void => {
@@ -23,19 +25,6 @@ export class UrlService {
     });
   }
 
-  public setHash(targetHash: string): void {
-    if (this.#currentHash === targetHash) {
-      return;
-    }
-
-    const sanitizedHash: string = `#${targetHash.replace('#', '').toLowerCase()}`;
-
-    const resultUrl: URL = new URL(globalThis.location.href);
-    resultUrl.hash = sanitizedHash;
-
-    globalThis.location.replace(resultUrl);
-  }
-
   public subscribeToHashChanges(callback: OnHashChangeCallback): void {
     this.#onHashChangeCallbacks.add(callback);
   }
@@ -46,9 +35,15 @@ export class UrlService {
 
   #handleHashChange(): void {
     const targetHash: string = new URL(globalThis.location.href).hash.toLowerCase();
+
+    if (!isUrlHash(targetHash)) {
+      throw new Error('[UrlService] targetHash is not UrlHash');
+    }
+
     if (this.#currentHash === targetHash) {
       return;
     }
+
     this.#currentHash = targetHash;
     this.#onHashChangeCallbacks.forEach((callback: OnHashChangeCallback) => callback(this.#currentHash));
   }
