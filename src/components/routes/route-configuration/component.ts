@@ -1,15 +1,12 @@
 import { AttributeListener } from '@declarations/interfaces/attribute-listener.interface';
 import { PerfComponentSelector } from '@declarations/types/perf-component-selector.type';
 import { isPerfComponentSelector } from '@utilities/is-perf-component-selector.util';
-import { initialize, InitializeOptions, transform, TransformResult } from 'esbuild-wasm/esm/browser';
 import componentStyles from './component.scss';
 
-export class RouteMinificationComponent extends HTMLElement implements AttributeListener {
+export class RouteConfigurationComponent extends HTMLElement implements AttributeListener {
   readonly #registeredSelectors: Set<PerfComponentSelector> = new Set<PerfComponentSelector>();
 
-  static #wasmModuleIsInitialized: boolean = false;
-
-  public static readonly selector: PerfComponentSelector = 'perf-route-minification';
+  public static readonly selector: PerfComponentSelector = 'perf-route-configuration';
 
   public static get observedAttributes(): string[] {
     return ['selectors'];
@@ -17,13 +14,6 @@ export class RouteMinificationComponent extends HTMLElement implements Attribute
 
   constructor() {
     super();
-
-    this.#initializeWasm().then(async () => {
-      console.log('initialized');
-
-      const result: TransformResult = await transform('const someMan = {name: "Richard"}; console.log(someMan);');
-      console.log({ result });
-    });
 
     const shadowRoot: ShadowRoot = this.attachShadow({ mode: 'closed' });
     const wrapperSectionElement: HTMLElement = document.createElement('section');
@@ -35,29 +25,13 @@ export class RouteMinificationComponent extends HTMLElement implements Attribute
     shadowRoot.appendChild(wrapperSectionElement);
   }
 
-  async #initializeWasm(): Promise<void> {
-    return Promise.resolve().then(() => {
-      if (RouteMinificationComponent.#wasmModuleIsInitialized) {
-        return;
-      }
-
-      const initializeOptions: InitializeOptions = {
-        wasmURL: './esbuild.wasm.bundle.js',
-        worker: true
-      };
-      return initialize(initializeOptions).then(() => {
-        RouteMinificationComponent.#wasmModuleIsInitialized = true;
-      });
-    });
-  }
-
   public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
     if (oldValue === newValue || name !== 'selectors') {
       return;
     }
 
     const resultValues: unknown = JSON.parse(newValue);
-    if (!RouteMinificationComponent.#isCustomElementsSelectorsList(resultValues)) {
+    if (!RouteConfigurationComponent.#isCustomElementsSelectorsList(resultValues)) {
       throw new Error('[CurrentRouteComponent] selectors attribute contains invalid value');
     }
 
