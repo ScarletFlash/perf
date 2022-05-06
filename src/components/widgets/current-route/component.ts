@@ -9,8 +9,7 @@ import componentStyles from './component.scss';
 
 export class CurrentRouteComponent extends HTMLElement implements Connectable, Disconnectable {
   readonly #routingService: RoutingService = Application.getBackgroundService(RoutingService);
-
-  readonly #wrapperSectionElement: HTMLElement;
+  readonly #wrapperSectionElement: HTMLElement = CurrentRouteComponent.#getRouteContainerElement();
 
   readonly #routeChangeListener: OnRouteChangeCallback = (currentRoute: Route): void => {
     this.#renderContentBySelector(currentRoute.componentSelector);
@@ -22,10 +21,8 @@ export class CurrentRouteComponent extends HTMLElement implements Connectable, D
     super();
 
     const shadowRoot: ShadowRoot = this.attachShadow({ mode: 'closed' });
-    this.#wrapperSectionElement = document.createElement('section');
 
     const style: HTMLStyleElement = document.createElement('style');
-
     style.innerHTML = componentStyles;
 
     shadowRoot.appendChild(style);
@@ -46,5 +43,11 @@ export class CurrentRouteComponent extends HTMLElement implements Connectable, D
       Array.from(this.#wrapperSectionElement.children).forEach((childElement: Element) => childElement.remove());
     }
     this.#wrapperSectionElement.appendChild(targetComponent);
+  }
+
+  static #getRouteContainerElement(): HTMLElement {
+    const routeContainerElement: HTMLElement = document.createElement('section');
+    routeContainerElement.classList.add('route-container');
+    return routeContainerElement;
   }
 }

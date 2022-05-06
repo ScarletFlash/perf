@@ -1,7 +1,24 @@
 @use './styles/variables' as *;
 @import './styles/global';
 
-main {
+$height_navigation: 88px;
+
+.main {
   width: 100%;
   height: calc(100% - #{$height_header + $height_footer});
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+
+  &__navigation {
+    width: 100%;
+    height: $height_navigation;
+  }
+
+  &__content {
+    width: 100%;
+    height: calc(100% - #{$height_navigation});
+  }
 }

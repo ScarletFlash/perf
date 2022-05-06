@@ -1,3 +1,4 @@
+import { RouteCodeComponent } from '@routes/route-code';
 import { ExecutionService } from '@services/execution';
 import { PipelineStateService } from '@services/pipeline-state';
 import { RoutingService } from '@services/routing';
@@ -20,9 +21,9 @@ new Application()
     FooterComponent,
     PipelineTileComponent,
     PipelineComponent,
-    CurrentRouteComponent
+    CurrentRouteComponent,
 
-    // RouteCodeComponent,
+    RouteCodeComponent
     // RouteConfigurationComponent,
     // RouteAnalysisComponent,
   ]);
