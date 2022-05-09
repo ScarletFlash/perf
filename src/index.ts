@@ -1,6 +1,5 @@
 import { RouteCodeComponent } from '@routes/route-code';
 import { ExecutionService } from '@services/execution';
-import { PipelineStateService } from '@services/pipeline-state';
 import { RoutingService } from '@services/routing';
 import { TitleService } from '@services/title';
 import { UrlService } from '@services/url';
@@ -15,14 +14,7 @@ import { Application } from './application';
 
 new Application()
   .applyGlobalStyles()
-  .bootstrapBackgroundServices([
-    TitleService,
-    UrlService,
-    RoutingService,
-    ExecutionService,
-    PipelineStateService,
-    WindowResizingService
-  ])
+  .bootstrapBackgroundServices([TitleService, UrlService, RoutingService, ExecutionService, WindowResizingService])
   .registerComponents([
     IconComponent,
     HeaderComponent,

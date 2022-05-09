@@ -1,10 +1,15 @@
-import { Application } from '@application';
-import { PipelineStateService } from './pipeline-state.service';
-
 export class ExecutionService {
-  readonly #pipelineService: PipelineStateService = Application.getBackgroundService(PipelineStateService);
+  #sourceCode: string = '';
 
-  constructor() {
-    console.log('running');
+  public setSourceCode(code: string): void {
+    if (code === this.#sourceCode) {
+      return;
+    }
+
+    this.#sourceCode = code;
+  }
+
+  public getTranspiled(): string {
+    return '';
   }
 }
