@@ -4,6 +4,7 @@ import { PipelineStateService } from '@services/pipeline-state';
 import { RoutingService } from '@services/routing';
 import { TitleService } from '@services/title';
 import { UrlService } from '@services/url';
+import { WindowResizingService } from '@services/window-resizing';
 import { CurrentRouteComponent } from '@widgets/current-route';
 import { FooterComponent } from '@widgets/footer';
 import { HeaderComponent } from '@widgets/header';
@@ -14,7 +15,14 @@ import { Application } from './application';
 
 new Application()
   .applyGlobalStyles()
-  .bootstrapBackgroundServices([TitleService, UrlService, RoutingService, ExecutionService, PipelineStateService])
+  .bootstrapBackgroundServices([
+    TitleService,
+    UrlService,
+    RoutingService,
+    ExecutionService,
+    PipelineStateService,
+    WindowResizingService
+  ])
   .registerComponents([
     IconComponent,
     HeaderComponent,

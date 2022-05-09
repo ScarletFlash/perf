@@ -1,6 +1,9 @@
+import { Application } from '@application';
 import { Connectable } from '@declarations/interfaces/connectable.interface';
 import { Disconnectable } from '@declarations/interfaces/disconnectable.interface';
+import { OnWindowSizeChangeCallback } from '@declarations/types/on-window-size-change-callback.type';
 import { PerfComponentSelector } from '@declarations/types/perf-component-selector.type';
+import { WindowResizingService } from '@services/window-resizing';
 import componentStyles from './component.scss';
 import { Editor } from './editor';
 
@@ -10,6 +13,11 @@ export class RouteCodeComponent extends HTMLElement implements Connectable, Disc
   public static readonly selector: PerfComponentSelector = 'perf-route-code';
 
   readonly #editor: Editor = new Editor(this.#editorContainer);
+  readonly #windowResizingService: WindowResizingService = Application.getBackgroundService(WindowResizingService);
+
+  readonly #onWindowSizeChangesListener: OnWindowSizeChangeCallback = () => {
+    this.#editor.refreshSize();
+  };
 
   constructor() {
     super();
@@ -25,10 +33,12 @@ export class RouteCodeComponent extends HTMLElement implements Connectable, Disc
 
   public connectedCallback(): void {
     this.#editor.create();
+    this.#windowResizingService.subscribeToWindowSizeChanges(this.#onWindowSizeChangesListener);
   }
 
   public disconnectedCallback(): void {
     this.#editor.destroy();
+    this.#windowResizingService.unsubscribeFromWindowSizeChanges(this.#onWindowSizeChangesListener);
   }
 
   static #getEditorContainerElement(): HTMLElement {

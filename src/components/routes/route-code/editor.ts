@@ -29,6 +29,7 @@ for (let index = 0; index < dataSet.length; index++) {
     `,
     language: 'typescript',
     autoDetectHighContrast: false,
+    automaticLayout: false,
     theme: 'vs-dark',
     minimap: {
       enabled: false
@@ -49,7 +50,8 @@ for (let index = 0; index < dataSet.length; index++) {
     renderLineHighlightOnlyWhenFocus: true,
     disableMonospaceOptimizations: true,
     tabSize: 2,
-    insertSpaces: true
+    insertSpaces: true,
+    fontFamily: 'monospace'
   };
 
   readonly #containerElement: HTMLElement;
@@ -64,12 +66,17 @@ for (let index = 0; index < dataSet.length; index++) {
       throw new Error('Editor is already running');
     }
 
+    editor.remeasureFonts();
     this.#monacoEditor = editor.create(this.#containerElement, this.#monacoEditorOptions);
   }
 
   public destroy(): void {
     this.#monacoEditor.dispose();
     this.#monacoEditor = null;
+  }
+
+  public refreshSize(): void {
+    this.#monacoEditor.layout();
   }
 
   static #setMonacoEnvironmentSettings(): void {
