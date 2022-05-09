@@ -17,7 +17,7 @@ export const buildOptions: Omit<BuildOptions, 'outdir'> = {
     'css.worker': `${Paths.nodeModules}/monaco-editor/esm/vs/language/css/css.worker`,
     'html.worker': `${Paths.nodeModules}/monaco-editor/esm/vs/language/html/html.worker`,
     'ts.worker': `${Paths.nodeModules}/monaco-editor/esm/vs/language/typescript/ts.worker`,
-    'esbuild.wasm': `${Paths.nodeModules}/esbuild-wasm/esbuild.wasm`
+    'esbuild.worker': `${Paths.nodeModules}/esbuild-wasm/esm/browser.min.js`
   },
   entryNames: '[name].bundle',
   resolveExtensions: ['.ts', '.js', '.scss'],
@@ -31,10 +31,6 @@ export const buildOptions: Omit<BuildOptions, 'outdir'> = {
   tsconfig: Paths.tsConfig,
   sourcemap: true,
   legalComments: 'none',
-  splitting: false,
-  loader: {
-    '.ttf': 'file',
-    '.wasm': 'binary'
-  }
+  splitting: false
 };
 /* eslint-enable @typescript-eslint/naming-convention */

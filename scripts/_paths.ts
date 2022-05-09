@@ -14,4 +14,6 @@ export namespace Paths {
   export const rawHtmlEntryPoint: string = join(sourcesDirectory, './index.html');
 
   export const rawAssetsDirectory: string = join(sourcesDirectory, './assets/');
+
+  export const esBuildWasm: string = join(nodeModules, './esbuild-wasm/esbuild.wasm');
 }
