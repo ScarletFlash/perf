@@ -7,6 +7,7 @@ import { Paths } from './_paths';
 export async function buildScript(outputDirectoryPath?: string): Promise<void> {
   const targetOutputDirectoryPath: string = outputDirectoryPath ?? Paths.resultBundleDirectory;
   const targetIndexHtmlPath: string = join(targetOutputDirectoryPath, '/index.html');
+  const targetEsBuildWasmPath: string = join(targetOutputDirectoryPath, '/esbuild.wasm');
   const targetAssetsPath: string = join(targetOutputDirectoryPath, '/assets/');
 
   await Promise.resolve()
@@ -19,7 +20,8 @@ export async function buildScript(outputDirectoryPath?: string): Promise<void> {
       cp(Paths.rawAssetsDirectory, targetAssetsPath, {
         recursive: true
       })
-    );
+    )
+    .then(() => cp(Paths.esBuildWasm, targetEsBuildWasmPath));
 }
 
 (async () => await buildScript())();

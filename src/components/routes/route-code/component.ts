@@ -1,4 +1,5 @@
 import { Application } from '@application';
+import { Editor } from '@declarations/classes/editor.class';
 import { Connectable } from '@declarations/interfaces/connectable.interface';
 import { Disconnectable } from '@declarations/interfaces/disconnectable.interface';
 import { OnEditorValueChangeCallback } from '@declarations/types/on-editor-value-change-callback.type';
@@ -7,7 +8,6 @@ import { PerfComponentSelector } from '@declarations/types/perf-component-select
 import { ExecutionService } from '@services/execution';
 import { WindowResizingService } from '@services/window-resizing';
 import componentStyles from './component.scss';
-import { Editor } from './editor';
 
 export class RouteCodeComponent extends HTMLElement implements Connectable, Disconnectable {
   readonly #editorContainer: HTMLElement = RouteCodeComponent.#getEditorContainerElement();
