@@ -1,32 +1,6 @@
 {
+  "extends": "./tsconfig.base.json",
   "exclude": ["node_modules"],
   "compileOnSave": false,
-  "compilerOptions": {
-    "allowJs": false,
-    "allowSyntheticDefaultImports": false,
-    "allowUnreachableCode": false,
-    "baseUrl": "./",
-    "checkJs": false,
-    "declaration": false,
-    "downlevelIteration": true,
-    "emitDecoratorMetadata": true,
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "importsNotUsedAsValues": "error",
-    "isolatedModules": false,
-    "locale": "en",
-    "moduleResolution": "Node",
-    "newLine": "lf",
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "outDir": "./dist",
-    "pretty": true,
-    "removeComments": true,
-    "skipLibCheck": true,
-    "sourceMap": false,
-    "strict": true,
-    "target": "ESNext"
-  },
   "references": [{ "path": "./tsconfig.browser.json" }, { "path": "./tsconfig.node.json" }]
 }
