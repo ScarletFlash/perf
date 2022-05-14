@@ -1,7 +1,7 @@
-import type { Route } from '@declarations/interfaces/route.interface';
-import type { OnHashChangeCallback } from '@declarations/types/on-hash-change-callback.type';
-import type { OnRouteChangeCallback } from '@declarations/types/on-route-change-callback.type';
-import type { UrlHash } from '@declarations/types/url-hash.type';
+import type { Route } from '@application/declarations/interfaces/route.interface';
+import type { OnHashChangeCallback } from '@application/declarations/types/on-hash-change-callback.type';
+import type { OnRouteChangeCallback } from '@application/declarations/types/on-route-change-callback.type';
+import type { UrlHash } from '@application/declarations/types/url-hash.type';
 import { Application } from '@framework/application';
 import { TitleService } from './title.service';
 import { UrlService } from './url.service';

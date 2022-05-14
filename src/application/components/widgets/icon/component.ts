@@ -1,4 +1,4 @@
-import type { AttributeListener } from '@declarations/interfaces/attribute-listener.interface';
+import type { AttributeListener } from '@application/declarations/interfaces/attribute-listener.interface';
 import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
 import componentStyles from './component.scss';
 

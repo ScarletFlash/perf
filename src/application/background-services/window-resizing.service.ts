@@ -1,4 +1,4 @@
-import type { OnWindowSizeChangeCallback } from '@declarations/types/on-window-size-change-callback.type';
+import type { OnWindowSizeChangeCallback } from '@application/declarations/types/on-window-size-change-callback.type';
 
 export class WindowResizingService {
   readonly #onWindowSizeChangeCallbacks: Set<OnWindowSizeChangeCallback> = new Set<OnWindowSizeChangeCallback>();

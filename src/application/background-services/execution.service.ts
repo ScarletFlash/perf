@@ -1,5 +1,5 @@
-import { Executor } from '@declarations/classes/executor.class';
-import { Transpiler } from '@declarations/classes/transpiler.class';
+import { Executor } from '@application/declarations/classes/executor.class';
+import { Transpiler } from '@application/declarations/classes/transpiler.class';
 
 export class ExecutionService {
   #sourceCode: string = '';
