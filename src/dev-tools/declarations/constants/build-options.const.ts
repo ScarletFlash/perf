@@ -1,6 +1,6 @@
 import type { BuildOptions } from 'esbuild';
 import { sassPlugin, SassPluginOptions } from 'esbuild-sass-plugin';
-import { Paths } from './_paths';
+import { Paths } from './paths.const';
 
 const sassPluginOptions: SassPluginOptions = {
   type: 'css-text',

@@ -8,8 +8,8 @@
     "url": "git+https://github.com/ScarletFlash/perf.git"
   },
   "scripts": {
-    "serve": "ts-node ./scripts/serve.script.ts",
-    "build": "ts-node ./scripts/build.script.ts",
+    "serve": "ts-node ./src/dev-tools/serve.tool.ts",
+    "build": "ts-node ./src/dev-tools/build.tool.ts",
     "prettier:check": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --check ./**/*.{json,js,ts}",
     "prettier:format": "prettier --loglevel log --config ./.prettierrc --ignore-path ./.prettierignore --write ./**/*.{json,js,ts}",
     "lint": "eslint --config ./.eslintrc ./src/**/*.ts",

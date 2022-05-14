@@ -1,10 +1,11 @@
 {
+  "include": ["./src/application/**/*.ts", "./src/framework/**/*.ts"],
   "compilerOptions": {
     "lib": ["ESNext", "DOM"],
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Node",
-    "typeRoots": ["./src/declarations/third-party.d.ts"],
+    "typeRoots": ["./src/application/declarations/third-party.d.ts"],
     "composite": true,
     "declaration": true,
     "paths": {

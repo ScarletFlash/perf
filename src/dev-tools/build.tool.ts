@@ -1,8 +1,8 @@
 import { build } from 'esbuild';
 import { cp, readFile, rm, writeFile } from 'fs/promises';
 import { join } from 'path';
-import { buildOptions } from './_build-options';
-import { Paths } from './_paths';
+import { buildOptions } from './declarations/constants/build-options.const';
+import { Paths } from './declarations/constants/paths.const';
 
 export async function buildScript(outputDirectoryPath?: string): Promise<void> {
   const targetOutputDirectoryPath: string = outputDirectoryPath ?? Paths.resultBundleDirectory;
