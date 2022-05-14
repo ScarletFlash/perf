@@ -47,6 +47,7 @@ export class UrlService {
   #handleHashChange(): void {
     const targetHash: string = new URL(globalThis.location.href).hash.toLowerCase();
 
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!isUrlHash(targetHash)) {
       throw new Error('[UrlService] targetHash is not UrlHash');
     }
