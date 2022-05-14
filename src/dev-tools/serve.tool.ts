@@ -3,10 +3,10 @@ import { BuildOptions, serve, ServeOptions, ServeResult } from 'esbuild';
 import { FileChangeInfo, mkdtemp, rm, watch } from 'fs/promises';
 import { stdin } from 'process';
 import { emitKeypressEvents } from 'readline';
-import { buildScript } from './build.script';
-import { buildOptions as commonBuildOptions } from './_build-options';
-import { Paths } from './_paths';
-import { BuildUtilities } from './_utilities';
+import { buildScript } from './build.tool';
+import { buildOptions as commonBuildOptions } from './declarations/constants/build-options.const';
+import { Paths } from './declarations/constants/paths.const';
+import { runDebounced } from './utilities/run-debounced.util';
 
 type ServerFunction = (event?: FileChangeInfo<string | Buffer>) => void;
 
@@ -42,7 +42,7 @@ function isKeyPressEvent(event: unknown): event is KeyPressEvent {
 
     let activeServer: ServeResult | undefined;
     const server: ServerFunction = () => {
-      BuildUtilities.runDebounced(async () => {
+      runDebounced(async () => {
         const bundleDirectoryPath: string = temporaryDirectoryPath;
         await buildScript(bundleDirectoryPath);
 

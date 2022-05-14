@@ -28,5 +28,5 @@
     "strict": true,
     "target": "ESNext"
   },
-  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.build.json" }]
+  "references": [{ "path": "./tsconfig.browser.json" }, { "path": "./tsconfig.node.json" }]
 }

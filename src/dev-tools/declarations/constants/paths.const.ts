@@ -1,12 +1,12 @@
 import { join } from 'path';
 
 export namespace Paths {
-  const scriptDirectory: string = __dirname;
-  const rootDirectory: string = join(scriptDirectory, './../');
+  const currentFileDirectory: string = __dirname;
+  const rootDirectory: string = join(currentFileDirectory, './../../../../');
 
   export const nodeModules: string = join(rootDirectory, './node_modules/');
 
-  export const tsConfig: string = join(rootDirectory, './tsconfig.app.json');
+  export const tsConfig: string = join(rootDirectory, './tsconfig.browser.json');
 
   export const sourcesDirectory: string = join(rootDirectory, './src');
   export const applicationSourcesDirectory: string = join(sourcesDirectory, './application');

@@ -1,11 +1,14 @@
 {
-  "include": ["./scripts/*.ts"],
+  "include": ["./src/dev-tools/**/*.ts"],
   "compilerOptions": {
     "lib": ["ESNext"],
     "target": "ESNext",
     "module": "NodeNext",
     "typeRoots": ["node_modules/@types"],
     "composite": true,
-    "declaration": true
+    "declaration": true,
+    "paths": {
+      "@dev-tools/*": ["./src/dev-tools/*"]
+    }
   }
 }
