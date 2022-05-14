@@ -2,11 +2,9 @@ import { WorkerProgramBuilder } from './worker-program-builder.class';
 
 export class Executor {
   #activeWorker: Worker | null = null;
-  #activeWorkerScriptUrl: string | null;
+  #activeWorkerScriptUrl: string | null = null;
 
   readonly #workerProgramBuilder: WorkerProgramBuilder = new WorkerProgramBuilder();
-
-  constructor() {}
 
   public run(code: string): void {
     const scriptFile: Blob = this.#workerProgramBuilder.getResultScript(code);
@@ -15,6 +13,7 @@ export class Executor {
       name: 'execution-worker',
       type: 'module'
     });
+    // eslint-disable-next-line no-console
     this.#activeWorker.onmessage = (messageEvent: MessageEvent) => console.log(messageEvent.data);
   }
 

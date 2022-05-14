@@ -1,18 +1,14 @@
-import { AttributeListener } from '@declarations/interfaces/attribute-listener.interface';
-import { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
+import type { AttributeListener } from '@declarations/interfaces/attribute-listener.interface';
+import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
 import componentStyles from './component.scss';
 
 export class IconComponent extends HTMLElement implements AttributeListener {
-  #colorStyle: string = 'initial';
-  #svgElement: SVGElement | undefined;
-
-  readonly #objectElement: HTMLObjectElement = IconComponent.#getIconElement();
-
   public static readonly selector: PerfComponentSelector = 'perf-icon';
 
-  public static get observedAttributes(): string[] {
-    return ['src', 'color'];
-  }
+  #colorStyle: string = 'initial';
+  #svgElement: SVGElement | null = null;
+
+  readonly #objectElement: HTMLObjectElement = IconComponent.#getIconElement();
 
   constructor() {
     super();
@@ -23,6 +19,18 @@ export class IconComponent extends HTMLElement implements AttributeListener {
 
     shadowRoot.appendChild(style);
     shadowRoot.appendChild(this.#objectElement);
+  }
+
+  public static get observedAttributes(): string[] {
+    return ['src', 'color'];
+  }
+
+  static #getIconElement(): HTMLObjectElement {
+    const iconElement: HTMLObjectElement = document.createElement('object');
+    iconElement.classList.add('icon');
+    iconElement.setAttribute('width', '100%');
+    iconElement.setAttribute('height', '100%');
+    return iconElement;
   }
 
   public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
@@ -45,7 +53,7 @@ export class IconComponent extends HTMLElement implements AttributeListener {
   }
 
   #synchronizeColorWithEmbeddedIcon(): void {
-    if (this.#svgElement === undefined) {
+    if (this.#svgElement === null) {
       return;
     }
 
@@ -60,18 +68,21 @@ export class IconComponent extends HTMLElement implements AttributeListener {
       passive: true
     };
     const onLoadListener: EventListener = () => {
-      const embeddedDocument: Document = this.#objectElement.getSVGDocument();
-      this.#svgElement = embeddedDocument.querySelector('svg');
+      const embeddedDocument: Document | null = this.#objectElement.getSVGDocument();
+      const invalidIconError: Error = new Error('[IconComponent] embedded icon is invalid');
+
+      if (embeddedDocument === null) {
+        throw invalidIconError;
+      }
+
+      const svgElement: SVGElement | null = embeddedDocument.querySelector('svg');
+      if (!(embeddedDocument instanceof SVGElement)) {
+        throw invalidIconError;
+      }
+
+      this.#svgElement = svgElement;
       this.#synchronizeColorWithEmbeddedIcon();
     };
     this.#objectElement.addEventListener('load', onLoadListener, listenerOptions);
-  }
-
-  static #getIconElement(): HTMLObjectElement {
-    const iconElement: HTMLObjectElement = document.createElement('object');
-    iconElement.classList.add('icon');
-    iconElement.setAttribute('width', '100%');
-    iconElement.setAttribute('height', '100%');
-    return iconElement;
   }
 }

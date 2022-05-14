@@ -1,4 +1,4 @@
-import { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
+import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
 
 type ComponentConstructor = CustomElementConstructor & {
   selector: PerfComponentSelector;
@@ -9,6 +9,14 @@ type ServiceConstructor<T extends object = object> = new (...parameters: unknown
 const RUNNING_SERVICES_ACCESS_KEY: unique symbol = Symbol('running services access key');
 
 export class Application {
+  public static getBackgroundService<T extends object>(serviceConstructor: ServiceConstructor<T>): T {
+    const runningServicesReference: unknown = globalThis[RUNNING_SERVICES_ACCESS_KEY];
+    if (runningServicesReference instanceof Map) {
+      return runningServicesReference.get(serviceConstructor);
+    }
+    return undefined;
+  }
+
   public registerComponents(componentConstructors: CustomElementConstructor[]): this {
     const registry: CustomElementRegistry = customElements;
 
@@ -46,13 +54,5 @@ export class Application {
     headStyleElement.innerHTML = globalStyles;
     document.head.appendChild(headStyleElement);
     return this;
-  }
-
-  public static getBackgroundService<T extends object>(serviceConstructor: ServiceConstructor<T>): T {
-    const runningServicesReference: unknown = globalThis[RUNNING_SERVICES_ACCESS_KEY];
-    if (runningServicesReference instanceof Map) {
-      return runningServicesReference.get(serviceConstructor);
-    }
-    return undefined;
   }
 }

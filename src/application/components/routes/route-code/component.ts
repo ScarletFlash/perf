@@ -1,30 +1,22 @@
 import { Editor } from '@declarations/classes/editor.class';
-import { Connectable } from '@declarations/interfaces/connectable.interface';
-import { Disconnectable } from '@declarations/interfaces/disconnectable.interface';
-import { OnEditorValueChangeCallback } from '@declarations/types/on-editor-value-change-callback.type';
-import { OnWindowSizeChangeCallback } from '@declarations/types/on-window-size-change-callback.type';
+import type { Connectable } from '@declarations/interfaces/connectable.interface';
+import type { Disconnectable } from '@declarations/interfaces/disconnectable.interface';
+import type { OnEditorValueChangeCallback } from '@declarations/types/on-editor-value-change-callback.type';
+import type { OnWindowSizeChangeCallback } from '@declarations/types/on-window-size-change-callback.type';
 import { Application } from '@framework/application';
-import { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
+import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
 import { ExecutionService } from '@services/execution';
 import { WindowResizingService } from '@services/window-resizing';
 import componentStyles from './component.scss';
 
 export class RouteCodeComponent extends HTMLElement implements Connectable, Disconnectable {
-  readonly #editorContainer: HTMLElement = RouteCodeComponent.#getEditorContainerElement();
-
   public static readonly selector: PerfComponentSelector = 'perf-route-code';
+
+  readonly #editorContainer: HTMLElement = RouteCodeComponent.#getEditorContainerElement();
 
   readonly #editor: Editor = new Editor(this.#editorContainer);
   readonly #windowResizingService: WindowResizingService = Application.getBackgroundService(WindowResizingService);
   readonly #executionService: ExecutionService = Application.getBackgroundService(ExecutionService);
-
-  readonly #onWindowSizeChangesListener: OnWindowSizeChangeCallback = () => {
-    this.#editor.refreshSize();
-  };
-
-  readonly #onEditorValueChangesListener: OnEditorValueChangeCallback = (code: string) => {
-    this.#executionService.setSourceCode(code);
-  };
 
   constructor() {
     super();
@@ -38,6 +30,20 @@ export class RouteCodeComponent extends HTMLElement implements Connectable, Disc
     shadowRoot.appendChild(this.#editorContainer);
   }
 
+  static #getEditorContainerElement(): HTMLElement {
+    const sectionElement: HTMLElement = document.createElement('section');
+    sectionElement.classList.add('editor-container');
+    return sectionElement;
+  }
+
+  readonly #onWindowSizeChangesListener: OnWindowSizeChangeCallback = () => {
+    this.#editor.refreshSize();
+  };
+
+  readonly #onEditorValueChangesListener: OnEditorValueChangeCallback = (code: string) => {
+    this.#executionService.setSourceCode(code);
+  };
+
   public connectedCallback(): void {
     this.#editor.create();
     this.#editor.subscribeToValueChanges(this.#onEditorValueChangesListener);
@@ -48,11 +54,5 @@ export class RouteCodeComponent extends HTMLElement implements Connectable, Disc
     this.#editor.destroy();
     this.#editor.unsubscribeFromValueChanges(this.#onEditorValueChangesListener);
     this.#windowResizingService.unsubscribeFromWindowSizeChanges(this.#onWindowSizeChangesListener);
-  }
-
-  static #getEditorContainerElement(): HTMLElement {
-    const sectionElement: HTMLElement = document.createElement('section');
-    sectionElement.classList.add('editor-container');
-    return sectionElement;
   }
 }

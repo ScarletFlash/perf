@@ -1,4 +1,5 @@
-import { initialize, transform, TransformResult } from 'esbuild-wasm';
+import type { TransformResult } from 'esbuild-wasm';
+import { initialize, transform } from 'esbuild-wasm';
 
 export class Transpiler {
   #isInitialized: boolean = false;
