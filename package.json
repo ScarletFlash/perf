@@ -8,13 +8,17 @@
     "url": "git+https://github.com/ScarletFlash/perf.git"
   },
   "scripts": {
-    "serve": "ts-node ./src/dev-tools/serve.tool.ts",
+    "🏗️": "Generate Bundle",
     "build": "ts-node ./src/dev-tools/build.tool.ts",
-    "prettier:check": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --check ./**/*.{json,js,ts}",
-    "prettier:format": "prettier --loglevel log --config ./.prettierrc --ignore-path ./.prettierignore --write ./**/*.{json,js,ts}",
-    "lint": "eslint --config ./.eslintrc ./src/**/*.ts",
-    "lint:fix": "eslint --config ./.eslintrc ./src/**/*.ts --fix",
-    "cspell:check": "cspell lint './src/**/*.*' --config cspell.json"
+    "🌐": "Run Dev Server",
+    "serve": "ts-node ./src/dev-tools/serve.tool.ts",
+    "🧪": "Check Source Code",
+    "check:eslint": "eslint './src/**/*.ts' --config ./.eslintrc",
+    "check:prettier": "prettier --loglevel log --config ./.prettierrc --ignore-path ./.prettierignore --write ./**/*.{json,js,ts}",
+    "check:cspell": "cspell lint './src/**/*.*' --config cspell.json",
+    "check": "npm run check:eslint && npm run check:prettier && npm run check:cspell",
+    "⚒️": "Other",
+    "autofix": "eslint './src/**/*' --config ./.eslintrc --fix"
   },
   "dependencies": {
     "esbuild-wasm": "0",
