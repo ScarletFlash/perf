@@ -1,8 +1,10 @@
-import { PerformanceReport } from '@declarations/interfaces/performance-report.interface';
+import type { PerformanceReport } from '@declarations/interfaces/performance-report.interface';
 import { arrayHas2Elements } from '@utilities/array-has-2-elements.util';
 
 globalThis.SourceCodeMark = class Mark {
-  public static embeddedScriptPosition(): void {}
+  public static embeddedScriptPosition(): void {
+    return;
+  }
 };
 
 interface ScriptParts {
@@ -17,10 +19,24 @@ interface IterationMarkNames {
 }
 
 export class WorkerProgramBuilder {
+  static get #scriptParts(): ScriptParts {
+    const rawScriptSourceCode: string = WorkerProgramBuilder.#rawScript.toString();
+    const scriptParts: string[] = `(${rawScriptSourceCode})()`.split(
+      'globalThis.SourceCodeMark.embeddedScriptPosition()'
+    );
+
+    if (!arrayHas2Elements(scriptParts)) {
+      throw new Error('[WorkerProgramBuilder] invalid script splitting result');
+    }
+
+    const [beforeMark, afterMark]: [string, string] = scriptParts;
+    return { beforeMark, afterMark };
+  }
+
   static readonly #rawScript: VoidFunction = () => {
     class WorkerProgram {
       constructor() {
-        const iterations: number[] = new Array(100).fill(null).map((_, index: number) => index);
+        const iterations: number[] = new Array(100).fill(null).map((_: void, index: number) => index);
         const iterationsMarks: IterationMarkNames[] = iterations.map((index: number) =>
           WorkerProgram.#getIterationMarks(index)
         );
@@ -48,10 +64,6 @@ export class WorkerProgramBuilder {
         postMessage(performanceReport);
       }
 
-      #run(): void {
-        globalThis.SourceCodeMark.embeddedScriptPosition();
-      }
-
       static #getIterationMarks(iteration: number): IterationMarkNames {
         return {
           iteration,
@@ -59,24 +71,14 @@ export class WorkerProgramBuilder {
           afterRun: `${iteration}__after-run`
         };
       }
+
+      #run(): void {
+        globalThis.SourceCodeMark.embeddedScriptPosition();
+      }
     }
 
     new WorkerProgram();
   };
-
-  static get #scriptParts(): ScriptParts {
-    const rawScriptSourceCode: string = WorkerProgramBuilder.#rawScript.toString();
-    const scriptParts: string[] = `(${rawScriptSourceCode})()`.split(
-      'globalThis.SourceCodeMark.embeddedScriptPosition()'
-    );
-
-    if (!arrayHas2Elements(scriptParts)) {
-      throw new Error('[WorkerProgramBuilder] invalid script splitting result');
-    }
-
-    const [beforeMark, afterMark]: [string, string] = scriptParts;
-    return { beforeMark, afterMark };
-  }
 
   public getResultScript(code: string): Blob {
     const { beforeMark, afterMark }: ScriptParts = WorkerProgramBuilder.#scriptParts;

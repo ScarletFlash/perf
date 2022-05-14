@@ -1,21 +1,17 @@
-import { Connectable } from '@declarations/interfaces/connectable.interface';
-import { Disconnectable } from '@declarations/interfaces/disconnectable.interface';
-import { Route } from '@declarations/interfaces/route.interface';
-import { OnRouteChangeCallback } from '@declarations/types/on-route-change-callback.type';
+import type { Connectable } from '@declarations/interfaces/connectable.interface';
+import type { Disconnectable } from '@declarations/interfaces/disconnectable.interface';
+import type { Route } from '@declarations/interfaces/route.interface';
+import type { OnRouteChangeCallback } from '@declarations/types/on-route-change-callback.type';
 import { Application } from '@framework/application';
-import { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
+import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
 import { RoutingService } from '@services/routing';
 import componentStyles from './component.scss';
 
 export class CurrentRouteComponent extends HTMLElement implements Connectable, Disconnectable {
+  public static readonly selector: PerfComponentSelector = 'perf-current-route';
+
   readonly #routingService: RoutingService = Application.getBackgroundService(RoutingService);
   readonly #wrapperSectionElement: HTMLElement = CurrentRouteComponent.#getRouteContainerElement();
-
-  readonly #routeChangeListener: OnRouteChangeCallback = (currentRoute: Route): void => {
-    this.#renderContentBySelector(currentRoute.componentSelector);
-  };
-
-  public static readonly selector: PerfComponentSelector = 'perf-current-route';
 
   constructor() {
     super();
@@ -28,6 +24,16 @@ export class CurrentRouteComponent extends HTMLElement implements Connectable, D
     shadowRoot.appendChild(style);
     shadowRoot.appendChild(this.#wrapperSectionElement);
   }
+
+  static #getRouteContainerElement(): HTMLElement {
+    const routeContainerElement: HTMLElement = document.createElement('section');
+    routeContainerElement.classList.add('route-container');
+    return routeContainerElement;
+  }
+
+  readonly #routeChangeListener: OnRouteChangeCallback = (currentRoute: Route): void => {
+    this.#renderContentBySelector(currentRoute.componentSelector);
+  };
 
   public connectedCallback(): void {
     this.#routingService.subscribeToRouteChanges(this.#routeChangeListener);
@@ -43,11 +49,5 @@ export class CurrentRouteComponent extends HTMLElement implements Connectable, D
       Array.from(this.#wrapperSectionElement.children).forEach((childElement: Element) => childElement.remove());
     }
     this.#wrapperSectionElement.appendChild(targetComponent);
-  }
-
-  static #getRouteContainerElement(): HTMLElement {
-    const routeContainerElement: HTMLElement = document.createElement('section');
-    routeContainerElement.classList.add('route-container');
-    return routeContainerElement;
   }
 }

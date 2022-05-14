@@ -15,10 +15,10 @@
     "🧪": "Check Source Code",
     "check:eslint": "eslint './src/**/*.ts' --config ./.eslintrc",
     "check:prettier": "prettier --loglevel log --config ./.prettierrc --ignore-path ./.prettierignore --write ./**/*.{json,js,ts}",
-    "check:cspell": "cspell lint './src/**/*.*' --config cspell.json",
+    "check:cspell": "cspell lint './src/**/*.*.ts' --config cspell.json",
     "check": "npm run check:eslint && npm run check:prettier && npm run check:cspell",
     "⚒️": "Other",
-    "autofix": "eslint './src/**/*' --config ./.eslintrc --fix"
+    "autofix": "eslint './src/**/*.ts' --config ./.eslintrc --fix"
   },
   "dependencies": {
     "esbuild-wasm": "0",
@@ -26,6 +26,8 @@
   },
   "devDependencies": {
     "@types/node": "latest",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
     "cspell": "latest",
     "esbuild": "latest",
     "esbuild-sass-plugin": "latest",

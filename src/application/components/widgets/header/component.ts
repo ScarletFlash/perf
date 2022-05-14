@@ -1,4 +1,4 @@
-import { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
+import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
 import componentStyles from './component.scss';
 
 export class HeaderComponent extends HTMLElement {

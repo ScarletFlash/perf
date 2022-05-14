@@ -1,5 +1,6 @@
 import type { BuildOptions } from 'esbuild';
-import { sassPlugin, SassPluginOptions } from 'esbuild-sass-plugin';
+import type { SassPluginOptions } from 'esbuild-sass-plugin';
+import { sassPlugin } from 'esbuild-sass-plugin';
 import { Paths } from './paths.const';
 
 const sassPluginOptions: SassPluginOptions = {

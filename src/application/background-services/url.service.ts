@@ -1,18 +1,10 @@
-import { OnHashChangeCallback } from '@declarations/types/on-hash-change-callback.type';
-import { UrlHash } from '@declarations/types/url-hash.type';
+import type { OnHashChangeCallback } from '@declarations/types/on-hash-change-callback.type';
+import type { UrlHash } from '@declarations/types/url-hash.type';
 import { isUrlHash } from '@utilities/is-url-hash.util';
 
 export class UrlService {
   #currentHash: UrlHash | undefined;
   #onHashChangeCallbacks: Set<OnHashChangeCallback> = new Set<OnHashChangeCallback>();
-
-  readonly #hashChangeListener: EventListener = (): void => {
-    this.#handleHashChange();
-  };
-
-  readonly #loadListener: EventListener = (): void => {
-    this.#handleHashChange();
-  };
 
   constructor() {
     globalThis.addEventListener('load', this.#loadListener, {
@@ -24,6 +16,14 @@ export class UrlService {
       passive: true
     });
   }
+
+  readonly #hashChangeListener: EventListener = (): void => {
+    this.#handleHashChange();
+  };
+
+  readonly #loadListener: EventListener = (): void => {
+    this.#handleHashChange();
+  };
 
   public subscribeToHashChanges(callback: OnHashChangeCallback): void {
     this.#onHashChangeCallbacks.add(callback);
@@ -56,6 +56,6 @@ export class UrlService {
     }
 
     this.#currentHash = targetHash;
-    this.#onHashChangeCallbacks.forEach((callback: OnHashChangeCallback) => callback(this.#currentHash));
+    this.#onHashChangeCallbacks.forEach((callback: OnHashChangeCallback) => callback(targetHash));
   }
 }

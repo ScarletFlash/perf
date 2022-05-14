@@ -1,9 +1,9 @@
-import { Connectable } from '@declarations/interfaces/connectable.interface';
-import { Disconnectable } from '@declarations/interfaces/disconnectable.interface';
-import { Route } from '@declarations/interfaces/route.interface';
-import { OnRouteChangeCallback } from '@declarations/types/on-route-change-callback.type';
+import type { Connectable } from '@declarations/interfaces/connectable.interface';
+import type { Disconnectable } from '@declarations/interfaces/disconnectable.interface';
+import type { Route } from '@declarations/interfaces/route.interface';
+import type { OnRouteChangeCallback } from '@declarations/types/on-route-change-callback.type';
 import { Application } from '@framework/application';
-import { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
+import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
 import { RoutingService } from '@services/routing';
 import { PipelineTileComponent } from '@widgets/pipeline-tile';
 import componentStyles from './component.scss';
@@ -19,13 +19,6 @@ export class PipelineComponent extends HTMLElement implements Connectable, Disco
   readonly #routingService: RoutingService = Application.getBackgroundService(RoutingService);
 
   readonly #tiles: PipelineTileComponent[];
-
-  readonly #routeChangeListener: OnRouteChangeCallback = (currentRoute: Route): void => {
-    this.#tiles.forEach((tile: PipelineTileComponent) => {
-      const isTargetTile: boolean = tile.url === currentRoute.urlHash;
-      tile.setActivationState(isTargetTile);
-    });
-  };
 
   constructor() {
     super();
@@ -61,14 +54,6 @@ export class PipelineComponent extends HTMLElement implements Connectable, Disco
 
     shadowRoot.appendChild(style);
     shadowRoot.appendChild(pipelineElement);
-  }
-
-  public connectedCallback(): void {
-    this.#routingService.subscribeToRouteChanges(this.#routeChangeListener);
-  }
-
-  public disconnectedCallback(): void {
-    this.#routingService.unsubscribeFromRouteChanges(this.#routeChangeListener);
   }
 
   static #getPipelineElement(): HTMLElement {
@@ -108,5 +93,20 @@ export class PipelineComponent extends HTMLElement implements Connectable, Disco
       return tileComponent;
     }
     throw new Error('[PipelineComponent] PipelineTileComponent creation is failed');
+  }
+
+  readonly #routeChangeListener: OnRouteChangeCallback = (currentRoute: Route): void => {
+    this.#tiles.forEach((tile: PipelineTileComponent) => {
+      const isTargetTile: boolean = tile.url === currentRoute.urlHash;
+      tile.setActivationState(isTargetTile);
+    });
+  };
+
+  public connectedCallback(): void {
+    this.#routingService.subscribeToRouteChanges(this.#routeChangeListener);
+  }
+
+  public disconnectedCallback(): void {
+    this.#routingService.unsubscribeFromRouteChanges(this.#routeChangeListener);
   }
 }

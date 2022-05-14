@@ -1,18 +1,12 @@
-import { Route } from '@declarations/interfaces/route.interface';
-import { OnHashChangeCallback } from '@declarations/types/on-hash-change-callback.type';
-import { OnRouteChangeCallback } from '@declarations/types/on-route-change-callback.type';
-import { UrlHash } from '@declarations/types/url-hash.type';
+import type { Route } from '@declarations/interfaces/route.interface';
+import type { OnHashChangeCallback } from '@declarations/types/on-hash-change-callback.type';
+import type { OnRouteChangeCallback } from '@declarations/types/on-route-change-callback.type';
+import type { UrlHash } from '@declarations/types/url-hash.type';
 import { Application } from '@framework/application';
 import { TitleService } from './title.service';
 import { UrlService } from './url.service';
 
 export class RoutingService {
-  readonly #urlService: UrlService = Application.getBackgroundService(UrlService);
-  readonly #titleService: TitleService = Application.getBackgroundService(TitleService);
-
-  readonly #onRouteChangeCallbacks: Set<OnRouteChangeCallback> = new Set<OnRouteChangeCallback>();
-  #currentRoute: Route | undefined;
-
   static readonly #routes: Route[] = [
     {
       componentSelector: 'perf-route-code',
@@ -37,9 +31,11 @@ export class RoutingService {
     }
   ];
 
-  public get routes(): Route[] {
-    return RoutingService.#routes;
-  }
+  readonly #urlService: UrlService = Application.getBackgroundService(UrlService);
+  readonly #titleService: TitleService = Application.getBackgroundService(TitleService);
+
+  readonly #onRouteChangeCallbacks: Set<OnRouteChangeCallback> = new Set<OnRouteChangeCallback>();
+  #currentRoute: Route | undefined;
 
   constructor() {
     const onHashChange: OnHashChangeCallback = (currentHash: UrlHash) => {
@@ -56,6 +52,10 @@ export class RoutingService {
     };
 
     this.#urlService.subscribeToHashChanges(onHashChange);
+  }
+
+  public get routes(): Route[] {
+    return RoutingService.#routes;
   }
 
   public getRouteByUrlHash(hash: UrlHash): Route | undefined {

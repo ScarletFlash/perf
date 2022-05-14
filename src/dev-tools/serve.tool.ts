@@ -1,6 +1,8 @@
 import { log } from 'console';
-import { BuildOptions, serve, ServeOptions, ServeResult } from 'esbuild';
-import { FileChangeInfo, mkdtemp, rm, watch } from 'fs/promises';
+import type { BuildOptions, ServeOptions, ServeResult } from 'esbuild';
+import { serve } from 'esbuild';
+import type { FileChangeInfo } from 'fs/promises';
+import { mkdtemp, rm, watch } from 'fs/promises';
 import { stdin } from 'process';
 import { emitKeypressEvents } from 'readline';
 import { buildScript } from './build.tool';

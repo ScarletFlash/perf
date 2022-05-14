@@ -1,25 +1,18 @@
-import { AttributeListener } from '@declarations/interfaces/attribute-listener.interface';
-import { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
+import type { AttributeListener } from '@declarations/interfaces/attribute-listener.interface';
+import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
 import { $color_active, $color_main } from '@styles/variables';
 import { IconComponent } from '@widgets/icon';
 import componentStyles from './component.scss';
 
 export class PipelineTileComponent extends HTMLElement implements AttributeListener {
+  public static readonly selector: PerfComponentSelector = 'perf-pipeline-tile';
+
   readonly #tileElement: HTMLElement = PipelineTileComponent.#getTileElement();
   readonly #iconComponent: IconComponent = PipelineTileComponent.#getIconElement();
   readonly #textElement: HTMLSpanElement = PipelineTileComponent.#getTextElement();
 
   #isActive: boolean = false;
   #url: string = '';
-  public get url(): string {
-    return this.#url;
-  }
-
-  public static readonly selector: PerfComponentSelector = 'perf-pipeline-tile';
-
-  public static get observedAttributes(): string[] {
-    return ['text', 'icon', 'isActive', 'url'];
-  }
 
   constructor() {
     super();
@@ -39,45 +32,12 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
     shadowRoot.appendChild(this.#tileElement);
   }
 
-  public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
-    if (oldValue === newValue) {
-      return;
-    }
-
-    if (name === 'icon') {
-      this.#iconComponent.setAttribute('src', newValue);
-    }
-
-    if (name === 'text') {
-      this.#textElement.innerText = newValue;
-    }
-
-    if (name === 'isActive') {
-      const targetState: boolean = Boolean(newValue);
-      this.setActivationState(targetState);
-    }
-
-    if (name === 'url') {
-      this.#tileElement.setAttribute('href', newValue);
-      this.#url = newValue;
-    }
+  public static get observedAttributes(): string[] {
+    return ['text', 'icon', 'isActive', 'url'];
   }
 
-  public setActivationState(targetState: boolean) {
-    if (this.#isActive === targetState) {
-      return;
-    }
-
-    this.#isActive = targetState;
-
-    const activeModifierName: string = 'tile_active';
-    if (this.#isActive) {
-      this.#tileElement.classList.add(activeModifierName);
-      this.#iconComponent.setNewColor($color_active);
-      return;
-    }
-    this.#tileElement.classList.remove(activeModifierName);
-    this.#iconComponent.setNewColor($color_main);
+  public get url(): string {
+    return this.#url;
   }
 
   static #getTileElement(): HTMLElement {
@@ -105,5 +65,46 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
     const markerElement: HTMLElement = document.createElement('div');
     markerElement.classList.add('tile__marker');
     return markerElement;
+  }
+
+  public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
+    if (oldValue === newValue) {
+      return;
+    }
+
+    if (name === 'icon') {
+      this.#iconComponent.setAttribute('src', newValue);
+    }
+
+    if (name === 'text') {
+      this.#textElement.innerText = newValue;
+    }
+
+    if (name === 'isActive') {
+      const targetState: boolean = Boolean(newValue);
+      this.setActivationState(targetState);
+    }
+
+    if (name === 'url') {
+      this.#tileElement.setAttribute('href', newValue);
+      this.#url = newValue;
+    }
+  }
+
+  public setActivationState(targetState: boolean): void {
+    if (this.#isActive === targetState) {
+      return;
+    }
+
+    this.#isActive = targetState;
+
+    const activeModifierName: string = 'tile_active';
+    if (this.#isActive) {
+      this.#tileElement.classList.add(activeModifierName);
+      this.#iconComponent.setNewColor($color_active);
+      return;
+    }
+    this.#tileElement.classList.remove(activeModifierName);
+    this.#iconComponent.setNewColor($color_main);
   }
 }
