@@ -10,12 +10,8 @@
     "composite": true,
     "declaration": true,
     "paths": {
-      "@widgets/*": ["./src/application/components/widgets/*/component.ts"],
-      "@routes/*": ["./src/application/components/routes/*/component.ts"],
-      "@services/*": ["./src/application/background-services/*.service.ts"],
-      "@declarations/*": ["./src/application/declarations/*"],
-      "@utilities/*": ["./src/application/utilities/*"],
       "@framework/*": ["./src/framework/*"],
+      "@application/*": ["./src/application/*"],
       "@styles/variables": ["./src/application/styles/variables.ts"]
     }
   }

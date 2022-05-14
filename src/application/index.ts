@@ -1,16 +1,16 @@
 import { Application } from '@framework/application';
-import { RouteCodeComponent } from '@routes/route-code';
-import { ExecutionService } from '@services/execution';
-import { RoutingService } from '@services/routing';
-import { TitleService } from '@services/title';
-import { UrlService } from '@services/url';
-import { WindowResizingService } from '@services/window-resizing';
-import { CurrentRouteComponent } from '@widgets/current-route';
-import { FooterComponent } from '@widgets/footer';
-import { HeaderComponent } from '@widgets/header';
-import { IconComponent } from '@widgets/icon';
-import { PipelineComponent } from '@widgets/pipeline';
-import { PipelineTileComponent } from '@widgets/pipeline-tile';
+import { ExecutionService } from './background-services/execution.service';
+import { RoutingService } from './background-services/routing.service';
+import { TitleService } from './background-services/title.service';
+import { UrlService } from './background-services/url.service';
+import { WindowResizingService } from './background-services/window-resizing.service';
+import { RouteCodeComponent } from './components/routes/route-code/component';
+import { CurrentRouteComponent } from './components/widgets/current-route/component';
+import { FooterComponent } from './components/widgets/footer/component';
+import { HeaderComponent } from './components/widgets/header/component';
+import { IconComponent } from './components/widgets/icon/component';
+import { PipelineTileComponent } from './components/widgets/pipeline-tile/component';
+import { PipelineComponent } from './components/widgets/pipeline/component';
 import globalStyles from './index.scss';
 
 new Application()

@@ -1,10 +1,10 @@
-import type { Connectable } from '@declarations/interfaces/connectable.interface';
-import type { Disconnectable } from '@declarations/interfaces/disconnectable.interface';
-import type { Route } from '@declarations/interfaces/route.interface';
-import type { OnRouteChangeCallback } from '@declarations/types/on-route-change-callback.type';
+import { RoutingService } from '@application/background-services/routing.service';
+import type { Connectable } from '@application/declarations/interfaces/connectable.interface';
+import type { Disconnectable } from '@application/declarations/interfaces/disconnectable.interface';
+import type { Route } from '@application/declarations/interfaces/route.interface';
+import type { OnRouteChangeCallback } from '@application/declarations/types/on-route-change-callback.type';
 import { Application } from '@framework/application';
 import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
-import { RoutingService } from '@services/routing';
 import componentStyles from './component.scss';
 
 export class CurrentRouteComponent extends HTMLElement implements Connectable, Disconnectable {

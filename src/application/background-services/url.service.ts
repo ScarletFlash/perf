@@ -1,6 +1,6 @@
-import type { OnHashChangeCallback } from '@declarations/types/on-hash-change-callback.type';
-import type { UrlHash } from '@declarations/types/url-hash.type';
-import { isUrlHash } from '@utilities/is-url-hash.util';
+import type { OnHashChangeCallback } from '@application/declarations/types/on-hash-change-callback.type';
+import type { UrlHash } from '@application/declarations/types/url-hash.type';
+import { isUrlHash } from '@application/utilities/is-url-hash.util';
 
 export class UrlService {
   #currentHash: UrlHash | undefined;

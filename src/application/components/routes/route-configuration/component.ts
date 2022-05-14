@@ -1,6 +1,6 @@
-import type { AttributeListener } from '@declarations/interfaces/attribute-listener.interface';
+import type { AttributeListener } from '@application/declarations/interfaces/attribute-listener.interface';
+import { isPerfComponentSelector } from '@application/utilities/is-perf-component-selector.util';
 import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
-import { isPerfComponentSelector } from '@utilities/is-perf-component-selector.util';
 import componentStyles from './component.scss';
 
 export class RouteConfigurationComponent extends HTMLElement implements AttributeListener {

@@ -1,7 +1,7 @@
-import type { AttributeListener } from '@declarations/interfaces/attribute-listener.interface';
+import type { AttributeListener } from '@application/declarations/interfaces/attribute-listener.interface';
 import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
 import { $color_active, $color_main } from '@styles/variables';
-import { IconComponent } from '@widgets/icon';
+import { IconComponent } from './../icon/component';
 import componentStyles from './component.scss';
 
 export class PipelineTileComponent extends HTMLElement implements AttributeListener {

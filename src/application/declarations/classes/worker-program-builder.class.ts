@@ -1,5 +1,5 @@
-import type { PerformanceReport } from '@declarations/interfaces/performance-report.interface';
-import { arrayHas2Elements } from '@utilities/array-has-2-elements.util';
+import { arrayHas2Elements } from '@application/utilities/array-has-2-elements.util';
+import type { PerformanceReport } from '../interfaces/performance-report.interface';
 
 globalThis.SourceCodeMark = class Mark {
   public static embeddedScriptPosition(): void {

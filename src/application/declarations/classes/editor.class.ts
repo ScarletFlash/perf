@@ -1,5 +1,5 @@
-import type { OnEditorValueChangeCallback } from '@declarations/types/on-editor-value-change-callback.type';
 import { editor } from 'monaco-editor';
+import type { OnEditorValueChangeCallback } from './../types/on-editor-value-change-callback.type';
 
 export class Editor {
   static #monacoEditorEnvironmentSettingsAreDefined: boolean = false;
