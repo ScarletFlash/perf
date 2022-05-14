@@ -9,11 +9,11 @@ export namespace Paths {
   export const tsConfig: string = join(rootDirectory, './tsconfig.app.json');
 
   export const sourcesDirectory: string = join(rootDirectory, './src');
+  export const applicationSourcesDirectory: string = join(sourcesDirectory, './application');
   export const resultBundleDirectory: string = join(rootDirectory, './dist');
 
-  export const rawHtmlEntryPoint: string = join(sourcesDirectory, './index.html');
-
-  export const rawAssetsDirectory: string = join(sourcesDirectory, './assets/');
+  export const rawHtmlEntryPoint: string = join(applicationSourcesDirectory, './index.html');
+  export const rawAssetsDirectory: string = join(applicationSourcesDirectory, './assets/');
 
   export const esBuildWasm: string = join(nodeModules, './esbuild-wasm/esbuild.wasm');
 }
