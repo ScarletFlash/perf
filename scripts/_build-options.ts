@@ -11,7 +11,7 @@ const sassPluginOptions: SassPluginOptions = {
 export const buildOptions: Omit<BuildOptions, 'outdir'> = {
   bundle: true,
   entryPoints: {
-    index: `${Paths.sourcesDirectory}/index.ts`,
+    index: `${Paths.applicationSourcesDirectory}/index.ts`,
     'editor.worker': `${Paths.nodeModules}/monaco-editor/esm/vs/editor/editor.worker.js`,
     'json.worker': `${Paths.nodeModules}/monaco-editor/esm/vs/language/json/json.worker`,
     'css.worker': `${Paths.nodeModules}/monaco-editor/esm/vs/language/css/css.worker`,
