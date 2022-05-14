@@ -25,6 +25,7 @@ export class WorkerProgramBuilder {
       'globalThis.SourceCodeMark.embeddedScriptPosition()'
     );
 
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!arrayHas2Elements(scriptParts)) {
       throw new Error('[WorkerProgramBuilder] invalid script splitting result');
     }

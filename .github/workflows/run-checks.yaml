@@ -1,0 +1,71 @@
+name: Run Checks
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  install_dependencies:
+    name: Install Dependencies
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: 'npm'
+    - name: Install dependencies by lockfile
+      run: npm ci
+    - name: Pack prepared workspace to archive
+      run: tar --totals --create --file workspace.tar ./
+    - name: Share prepared workspace with other jobs
+      uses: actions/upload-artifact@v3
+      with:
+        name: workspace
+        path: workspace.tar
+
+  run_eslint:
+    name: Run ESlint Checks
+    runs-on: ubuntu-latest
+    needs: [install_dependencies]
+    steps:
+    - name: Download prepared workspace
+      uses: actions/download-artifact@v3
+      with:
+        name: workspace
+    - name: Restore workspace from archive
+      run: tar --totals --extract --file workspace.tar && rm --force workspace.tar
+    - name: Run ESlint
+      run: npm run check:eslint
+
+  run_prettier:
+    name: Run Prettier Checks
+    runs-on: ubuntu-latest
+    needs: [install_dependencies]
+    steps:
+    - name: Download prepared workspace
+      uses: actions/download-artifact@v3
+      with:
+        name: workspace
+    - name: Restore workspace from archive
+      run: tar --totals --extract --file workspace.tar && rm --force workspace.tar
+    - name: Run Prettier
+      run: npm run check:prettier
+
+  run_cspell:
+    name: Run cSpell Checks
+    runs-on: ubuntu-latest
+    needs: [install_dependencies]
+    steps:
+    - name: Download prepared workspace
+      uses: actions/download-artifact@v3
+      with:
+        name: workspace
+    - name: Restore workspace from archive
+      run: tar --totals --extract --file workspace.tar && rm --force workspace.tar
+    - name: Run cSpell
+      run: npm run check:cspell
