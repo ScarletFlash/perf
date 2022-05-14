@@ -1,31 +1,10 @@
 {
   "version": "0.2",
   "language": "en",
-  "ignoreRegExpList": [
-    "CStyleComment"
-  ],
-  "ignorePaths": [
-    "**/node_modules/**",
-    "**/dist/**"
-  ],
-  "dictionaries": [
-    "en_us",
-    "en-gb",
-    "typescript",
-    "node",
-    "bash",
-    "softwareTerms"
-  ],
+  "ignoreRegExpList": ["CStyleComment"],
+  "ignorePaths": ["**/node_modules/**", "**/dist/**"],
+  "dictionaries": ["en_us", "en-gb", "typescript", "node", "bash", "softwareTerms"],
   "dictionaryDefinitions": [],
   "import": [],
-  "words": [
-    "Disconnectable",
-    "esbuild",
-    "loglevel",
-    "outdir",
-    "prettierignore",
-    "prettierrc",
-    "servedir",
-    "slotchange"
-  ]
+  "words": ["Disconnectable", "esbuild", "loglevel", "outdir", "prettierignore", "prettierrc", "servedir", "slotchange"]
 }
