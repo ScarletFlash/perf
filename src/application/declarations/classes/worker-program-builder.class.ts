@@ -1,7 +1,7 @@
 import { arrayHas2Elements } from '@application/utilities/array-has-2-elements.util';
 import type { PerformanceReport } from '../interfaces/performance-report.interface';
 
-globalThis.SourceCodeMark = class Mark {
+(globalThis as any).SourceCodeMark = class Mark {
   public static embeddedScriptPosition(): void {
     return;
   }
@@ -48,19 +48,23 @@ export class WorkerProgramBuilder {
           performance.mark(afterRun);
         });
 
-        const performanceReport: PerformanceReport = iterationsMarks
-          .map(({ iteration, beforeRun, afterRun }: IterationMarkNames) => {
+        const durationByIteration: [number, number][] = iterationsMarks.map(
+          ({ iteration, beforeRun, afterRun }: IterationMarkNames) => {
             const measure: PerformanceMeasure = performance.measure(`${iteration}__measure`, beforeRun, afterRun);
             return [iteration, measure.duration];
-          })
-          .reduce((accumulatedValue: PerformanceReport, [iteration, executionTimeMs]: [number, number]) => {
+          }
+        );
+        const performanceReport: PerformanceReport = durationByIteration.reduce(
+          (accumulatedValue: PerformanceReport, [iteration, executionTimeMs]: [number, number]): PerformanceReport => {
             const incomingReportPart: PerformanceReport = {
               [iteration]: {
                 executionTimeMs
               }
             };
             return Object.assign(accumulatedValue, incomingReportPart);
-          }, {});
+          },
+          {}
+        );
 
         postMessage(performanceReport);
       }
@@ -74,7 +78,7 @@ export class WorkerProgramBuilder {
       }
 
       #run(): void {
-        globalThis.SourceCodeMark.embeddedScriptPosition();
+        (globalThis as any).SourceCodeMark.embeddedScriptPosition();
       }
     }
 

@@ -35,7 +35,7 @@ export class RoutingService {
   readonly #titleService: TitleService = Application.getBackgroundService(TitleService);
 
   readonly #onRouteChangeCallbacks: Set<OnRouteChangeCallback> = new Set<OnRouteChangeCallback>();
-  #currentRoute: Route | undefined;
+  #currentRoute: Route | undefined = undefined;
 
   constructor() {
     const onHashChange: OnHashChangeCallback = (currentHash: UrlHash) => {
@@ -46,9 +46,14 @@ export class RoutingService {
       }
 
       this.#currentRoute = targetRoute;
+
+      if (targetRoute === undefined) {
+        throw new Error('[RoutingService] target route not found');
+      }
+
       this.#titleService.setTitle(targetRoute.title);
       this.#urlService.setHash(targetRoute.urlHash);
-      this.#onRouteChangeCallbacks.forEach((callback: OnRouteChangeCallback) => callback(this.#currentRoute));
+      this.#onRouteChangeCallbacks.forEach((callback: OnRouteChangeCallback) => callback(targetRoute));
     };
 
     this.#urlService.subscribeToHashChanges(onHashChange);

@@ -24,6 +24,8 @@
     "skipLibCheck": true,
     "sourceMap": false,
     "strict": true,
-    "target": "ESNext"
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "disableReferencedProjectLoad": true
   }
 }

@@ -19,6 +19,7 @@
   "dictionaryDefinitions": [],
   "import": [],
   "words": [
+    "autofix",
     "Disconnectable",
     "esbuild",
     "iife",

@@ -121,8 +121,9 @@ for (let index = 0; index < dataSet.length; index++) {
 
     const currentContentKey: string = '____________________________temporary-property____________________________';
 
-    if (currentContent !== this[currentContentKey]) {
-      this[currentContentKey] = currentContent;
+    // would be deleted as soon as I manage setting monaco up
+    if (currentContent !== (this as any)[currentContentKey]) {
+      (this as any)[currentContentKey] = currentContent;
       this.#monacoEditor.setValue(currentContent);
     }
   }
