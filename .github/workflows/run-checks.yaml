@@ -69,3 +69,31 @@ jobs:
       run: tar --totals --extract --file workspace.tar && rm --force workspace.tar
     - name: Run cSpell
       run: npm run check:cspell
+
+  run_compiler_node:
+    name: Run TypeScript Compiler Checks (Node)
+    runs-on: ubuntu-latest
+    needs: [install_dependencies]
+    steps:
+    - name: Download prepared workspace
+      uses: actions/download-artifact@v3
+      with:
+        name: workspace
+    - name: Restore workspace from archive
+      run: tar --totals --extract --file workspace.tar && rm --force workspace.tar
+    - name: Run TypeScript compiler
+      run: npm run check:compiler:node
+
+  run_compiler_browser:
+    name: Run TypeScript Compiler Checks (Browser)
+    runs-on: ubuntu-latest
+    needs: [install_dependencies]
+    steps:
+    - name: Download prepared workspace
+      uses: actions/download-artifact@v3
+      with:
+        name: workspace
+    - name: Restore workspace from archive
+      run: tar --totals --extract --file workspace.tar && rm --force workspace.tar
+    - name: Run TypeScript compiler
+      run: npm run check:compiler:browser

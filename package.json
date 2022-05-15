@@ -16,7 +16,9 @@
     "check:eslint": "eslint './src/**/*.ts' --config ./.eslintrc",
     "check:prettier": "prettier --loglevel log --config ./.prettierrc --ignore-path ./.prettierignore --write ./**/*.{json,js,ts}",
     "check:cspell": "cspell lint './src/**/*.*.ts' --config cspell.json",
-    "check": "npm run check:eslint && npm run check:prettier && npm run check:cspell",
+    "check:compiler:browser": "tsc --project tsconfig.browser.json --noEmit",
+    "check:compiler:node": "tsc --project tsconfig.node.json --noEmit",
+    "check": "npm run check:eslint && npm run check:prettier && npm run check:cspell && npm run check:compiler:browser && npm run check:compiler:node",
     "⚒️": "Other",
     "autofix": "eslint './src/**/*.ts' --config ./.eslintrc --fix"
   },
