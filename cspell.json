@@ -28,6 +28,7 @@
     "outdir",
     "prettierignore",
     "prettierrc",
+    "registerables",
     "servedir",
     "slotchange"
   ]

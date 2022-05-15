@@ -4,6 +4,7 @@ import { RoutingService } from './background-services/routing.service';
 import { TitleService } from './background-services/title.service';
 import { UrlService } from './background-services/url.service';
 import { WindowResizingService } from './background-services/window-resizing.service';
+import { RouteAnalysisComponent } from './components/routes/route-analysis/component';
 import { RouteCodeComponent } from './components/routes/route-code/component';
 import { CurrentRouteComponent } from './components/widgets/current-route/component';
 import { FooterComponent } from './components/widgets/footer/component';
@@ -24,7 +25,7 @@ new Application()
     PipelineComponent,
     CurrentRouteComponent,
 
-    RouteCodeComponent
+    RouteCodeComponent,
     // RouteConfigurationComponent,
-    // RouteAnalysisComponent,
+    RouteAnalysisComponent
   ]);

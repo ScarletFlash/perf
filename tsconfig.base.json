@@ -26,6 +26,6 @@
     "strict": true,
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "disableReferencedProjectLoad": true
+    "disableReferencedProjectLoad": false
   }
 }

@@ -1,48 +1,93 @@
-import type { AttributeListener } from '@application/declarations/interfaces/attribute-listener.interface';
-import { isPerfComponentSelector } from '@application/utilities/is-perf-component-selector.util';
+import { ExecutionService } from '@application/background-services/execution.service';
+import { WindowResizingService } from '@application/background-services/window-resizing.service';
+import { BarChart } from '@application/declarations/classes/bar-chart.class';
+import type { Connectable } from '@application/declarations/interfaces/connectable.interface';
+import type { Disconnectable } from '@application/declarations/interfaces/disconnectable.interface';
+import type { OnWindowSizeChangeCallback } from '@application/declarations/types/on-window-size-change-callback.type';
+import { Application } from '@framework/application';
 import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
 import componentStyles from './component.scss';
 
-export class RouteAnalysisComponent extends HTMLElement implements AttributeListener {
+export class RouteAnalysisComponent extends HTMLElement implements Connectable, Disconnectable {
   public static readonly selector: PerfComponentSelector = 'perf-route-analysis';
 
-  readonly #registeredSelectors: Set<PerfComponentSelector> = new Set<PerfComponentSelector>();
+  readonly #chartsContainer: HTMLElement = RouteAnalysisComponent.#getChartsContainerElement();
+
+  readonly #runButton: HTMLButtonElement = RouteAnalysisComponent.#getButtonElement(
+    'Run code and get report in console'
+  );
+
+  readonly #chartCanvas: HTMLCanvasElement = RouteAnalysisComponent.#getChartCanvasElement();
+  #barChart: BarChart | undefined = undefined;
+  readonly #windowResizingService: WindowResizingService = Application.getBackgroundService(WindowResizingService);
+
+  readonly #executionService: ExecutionService = Application.getBackgroundService(ExecutionService);
 
   constructor() {
     super();
 
     const shadowRoot: ShadowRoot = this.attachShadow({ mode: 'closed' });
-    const wrapperSectionElement: HTMLElement = document.createElement('section');
     const style: HTMLStyleElement = document.createElement('style');
-
     style.innerHTML = componentStyles;
 
+    this.#chartsContainer.appendChild(this.#chartCanvas);
+
     shadowRoot.appendChild(style);
-    shadowRoot.appendChild(wrapperSectionElement);
+    shadowRoot.appendChild(this.#chartsContainer);
+    shadowRoot.appendChild(this.#runButton);
   }
 
-  public static get observedAttributes(): string[] {
-    return ['selectors'];
+  static #getChartCanvasElement(): HTMLCanvasElement {
+    const canvasElement: HTMLCanvasElement = document.createElement('canvas');
+    return canvasElement;
   }
 
-  static #isCustomElementsSelectorsList(serializedValue: unknown): serializedValue is PerfComponentSelector[] {
-    if (!Array.isArray(serializedValue)) {
-      return false;
-    }
-
-    return serializedValue.every((valueItem: string) => isPerfComponentSelector(valueItem));
+  static #getChartsContainerElement(): HTMLElement {
+    const containerElement: HTMLElement = document.createElement('section');
+    containerElement.classList.add('charts-container');
+    return containerElement;
   }
 
-  public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
-    if (oldValue === newValue || name !== 'selectors') {
+  static #getButtonElement(text: string): HTMLButtonElement {
+    const buttonElement: HTMLButtonElement = document.createElement('button');
+    buttonElement.innerText = text;
+    return buttonElement;
+  }
+
+  readonly #onWindowSizeChangesListener: OnWindowSizeChangeCallback = () => {
+    if (this.#barChart === undefined) {
       return;
     }
 
-    const resultValues: unknown = JSON.parse(newValue);
-    if (!RouteAnalysisComponent.#isCustomElementsSelectorsList(resultValues)) {
-      throw new Error('[CurrentRouteComponent] selectors attribute contains invalid value');
+    this.#barChart.resize();
+  };
+
+  readonly #onRunButtonClickListener: EventListener = () => {
+    this.#executionService
+      .transpile()
+      .then(() => this.#executionService.generateExecutionReport())
+      .then(() => {
+        // eslint-disable-next-line no-console
+        console.log(this.#executionService.performanceReport);
+      });
+  };
+
+  public connectedCallback(): void {
+    this.#barChart = new BarChart(this.#chartCanvas);
+    this.#barChart.resize();
+    this.#windowResizingService.subscribeToWindowSizeChanges(this.#onWindowSizeChangesListener);
+
+    this.#runButton.addEventListener('click', this.#onRunButtonClickListener);
+  }
+
+  public disconnectedCallback(): void {
+    this.#runButton.removeEventListener('click', this.#onRunButtonClickListener);
+
+    if (this.#barChart === undefined) {
+      return;
     }
 
-    resultValues.forEach((selector: PerfComponentSelector) => this.#registeredSelectors.add(selector));
+    this.#barChart.destroy();
+    this.#windowResizingService.unsubscribeFromWindowSizeChanges(this.#onWindowSizeChangesListener);
   }
 }
