@@ -23,6 +23,7 @@
     "autofix": "eslint './src/**/*.ts' --config ./.eslintrc --fix"
   },
   "dependencies": {
+    "chart.js": "3",
     "esbuild-wasm": "0",
     "monaco-editor": "0"
   },
