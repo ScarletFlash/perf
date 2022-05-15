@@ -43,12 +43,9 @@ export class Application {
   public bootstrapBackgroundServices(serviceConstructors: ServiceConstructor[]): this {
     const context: ContextWithRegistry = getContextWithRunningServicesAccessKey();
 
-    const serviceByConstructor: Map<ServiceConstructor, object> = new Map<ServiceConstructor, object>();
-    context[RUNNING_SERVICES_ACCESS_KEY] = serviceByConstructor;
-
     serviceConstructors.forEach((serviceConstructor: ServiceConstructor) => {
       const instance: object = new serviceConstructor();
-      serviceByConstructor.set(serviceConstructor, instance);
+      context[RUNNING_SERVICES_ACCESS_KEY].set(serviceConstructor, instance);
     });
 
     return this;
