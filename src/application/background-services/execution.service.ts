@@ -5,7 +5,9 @@ import type { PerformanceReport } from '@application/declarations/interfaces/per
 export class ExecutionService {
   #sourceCode: string = '';
   #transpiledCode: string = '';
-  #performanceReport: PerformanceReport = {};
+  #performanceReport: PerformanceReport = {
+    executionTimeMs: []
+  };
 
   readonly #transpiler: Transpiler = new Transpiler();
   readonly #executor: Executor = new Executor();

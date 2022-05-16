@@ -3,6 +3,7 @@ import { WindowResizingService } from '@application/background-services/window-r
 import { BarChart } from '@application/declarations/classes/bar-chart.class';
 import type { Connectable } from '@application/declarations/interfaces/connectable.interface';
 import type { Disconnectable } from '@application/declarations/interfaces/disconnectable.interface';
+import type { PerformanceReport } from '@application/declarations/interfaces/performance-report.interface';
 import type { OnWindowSizeChangeCallback } from '@application/declarations/types/on-window-size-change-callback.type';
 import { Application } from '@framework/application';
 import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
@@ -67,8 +68,28 @@ export class RouteAnalysisComponent extends HTMLElement implements Connectable, 
       .transpile()
       .then(() => this.#executionService.generateExecutionReport())
       .then(() => {
+        if (this.#barChart === undefined) {
+          throw new Error('[RouteAnalysisComponent] Bar chart creation failed');
+        }
+
+        const { executionTimeMs }: PerformanceReport = this.#executionService.performanceReport;
         // eslint-disable-next-line no-console
-        console.log(this.#executionService.performanceReport);
+        console.log({ executionTimeMs });
+
+        this.#barChart.setValue([
+          {
+            label: 'Execution Time (ms)',
+            data: executionTimeMs,
+            backgroundColor: ['rgba(255, 159, 64, 0.2)'],
+            borderColor: ['rgba(255, 159, 64, 1)'],
+            borderWidth: 1
+          }
+        ]);
+
+        const labels: string[] = executionTimeMs.map((_: number, index: number) => String(index + 1));
+        this.#barChart.setLabels(labels);
+
+        this.#barChart.refresh();
       });
   };
 
