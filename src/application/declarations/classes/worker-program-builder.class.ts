@@ -48,23 +48,16 @@ export class WorkerProgramBuilder {
           performance.mark(afterRun);
         });
 
-        const durationByIteration: [number, number][] = iterationsMarks.map(
+        const executionTimeMs: number[] = iterationsMarks.map(
           ({ iteration, beforeRun, afterRun }: IterationMarkNames) => {
             const measure: PerformanceMeasure = performance.measure(`${iteration}__measure`, beforeRun, afterRun);
-            return [iteration, measure.duration];
+            return measure.duration;
           }
         );
-        const performanceReport: PerformanceReport = durationByIteration.reduce(
-          (accumulatedValue: PerformanceReport, [iteration, executionTimeMs]: [number, number]): PerformanceReport => {
-            const incomingReportPart: PerformanceReport = {
-              [iteration]: {
-                executionTimeMs
-              }
-            };
-            return Object.assign(accumulatedValue, incomingReportPart);
-          },
-          {}
-        );
+
+        const performanceReport: PerformanceReport = {
+          executionTimeMs
+        };
 
         postMessage(performanceReport);
       }

@@ -1,3 +1,3 @@
 export interface PerformanceReport {
-  [index: number]: { executionTimeMs: number };
+  executionTimeMs: number[];
 }

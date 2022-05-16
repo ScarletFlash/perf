@@ -5,9 +5,6 @@ export function isPerformanceReport(input: unknown): input is PerformanceReport 
     return false;
   }
 
-  return Object.entries(input).every(([key, value]: [string, unknown]) => {
-    const hasIterationIndex: boolean = !Number.isNaN(Number.parseInt(key, 10));
-    const hasReportItem: boolean = typeof value === 'object';
-    return hasIterationIndex && hasReportItem;
-  });
+  const requiredReportKeys: Set<keyof PerformanceReport> = new Set<keyof PerformanceReport>(['executionTimeMs']);
+  return Array.from(requiredReportKeys).every((key: keyof PerformanceReport) => key in input);
 }
