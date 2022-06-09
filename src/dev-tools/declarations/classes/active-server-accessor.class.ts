@@ -14,15 +14,13 @@ export class ActiveServerAccessor {
 
   public static getExisting(): ServeResult | undefined {
     const context: typeof globalThis = globalThis;
-    if (!ActiveServerAccessor.hasActiveServersProperty(context)) {
+    if (!ActiveServerAccessor.#hasActiveServersProperty(context)) {
       return undefined;
     }
     return context[activeServerKey];
   }
 
-  private static hasActiveServersProperty<T extends typeof globalThis>(
-    context: T
-  ): context is WithActiveServerProperty<T> {
+  static #hasActiveServersProperty<T extends typeof globalThis>(context: T): context is WithActiveServerProperty<T> {
     return activeServerKey in context;
   }
 }
