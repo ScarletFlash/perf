@@ -16,4 +16,9 @@ export namespace Paths {
   export const rawAssetsDirectory: string = join(applicationSourcesDirectory, './assets/');
 
   export const esBuildWasmDependency: string = join(nodeModules, './esbuild-wasm/esbuild.wasm');
+  export const codeIconDependency: string = join(
+    nodeModules,
+    'monaco-editor/min/vs/base/browser/ui/codicons/codicon/codicon.ttf'
+  );
+  export const editorStylesDependency: string = join(nodeModules, 'monaco-editor/min/vs/editor/editor.main.css');
 }

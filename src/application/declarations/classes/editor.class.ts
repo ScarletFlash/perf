@@ -30,7 +30,7 @@ for (const item of dataSet) {
 for (let index = 0; index < dataSet.length; index++) {
   result.push(dataSet[index]);
 }
-    `,
+`,
     language: 'typescript',
     autoDetectHighContrast: false,
     automaticLayout: false,
