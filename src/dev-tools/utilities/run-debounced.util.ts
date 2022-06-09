@@ -7,5 +7,7 @@ export function runDebounced(callback: () => void): void {
 
   timeout = setTimeout(() => {
     callback();
+
+    console.log('timeout');
   }, 500);
 }

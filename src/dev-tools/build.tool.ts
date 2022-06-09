@@ -21,7 +21,7 @@ export async function buildScript(outputDirectoryPath?: string): Promise<void> {
         recursive: true
       })
     )
-    .then(() => cp(Paths.esBuildWasm, targetEsBuildWasmPath));
+    .then(() => cp(Paths.esBuildWasmDependency, targetEsBuildWasmPath));
 }
 
 (async () => await buildScript())();

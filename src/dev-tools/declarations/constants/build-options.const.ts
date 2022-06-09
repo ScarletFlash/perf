@@ -14,9 +14,6 @@ export const buildOptions: Omit<BuildOptions, 'outdir'> = {
   entryPoints: {
     index: `${Paths.applicationSourcesDirectory}/index.ts`,
     'editor.worker': `${Paths.nodeModules}/monaco-editor/esm/vs/editor/editor.worker.js`,
-    'json.worker': `${Paths.nodeModules}/monaco-editor/esm/vs/language/json/json.worker`,
-    'css.worker': `${Paths.nodeModules}/monaco-editor/esm/vs/language/css/css.worker`,
-    'html.worker': `${Paths.nodeModules}/monaco-editor/esm/vs/language/html/html.worker`,
     'ts.worker': `${Paths.nodeModules}/monaco-editor/esm/vs/language/typescript/ts.worker`,
     'esbuild.worker': `${Paths.nodeModules}/esbuild-wasm/esm/browser.min.js`
   },
