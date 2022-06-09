@@ -1,25 +1,15 @@
 {
   "version": "0.2",
   "language": "en",
-  "ignoreRegExpList": [
-    "CStyleComment"
-  ],
-  "ignorePaths": [
-    "**/node_modules/**",
-    "**/dist/**"
-  ],
-  "dictionaries": [
-    "en_us",
-    "en-gb",
-    "typescript",
-    "node",
-    "bash",
-    "softwareTerms"
-  ],
+  "ignoreRegExpList": ["CStyleComment"],
+  "ignorePaths": ["**/node_modules/**", "**/dist/**"],
+  "dictionaries": ["en_us", "en-gb", "typescript", "node", "bash", "softwareTerms"],
   "dictionaryDefinitions": [],
   "import": [],
   "words": [
     "autofix",
+    "codicon",
+    "codicons",
     "Disconnectable",
     "esbuild",
     "iife",
