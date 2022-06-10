@@ -1,86 +1,74 @@
-import { arrayHas2Elements } from '@application/utilities/array-has-2-elements.util';
-import type { PerformanceReport } from '../interfaces/performance-report.interface';
-
-(globalThis as any).SourceCodeMark = class Mark {
-  public static embeddedScriptPosition(): void {
-    return;
-  }
-};
-
-interface ScriptParts {
-  beforeMark: string;
-  afterMark: string;
-}
-
-interface IterationMarkNames {
-  iteration: number;
-  beforeRun: string;
-  afterRun: string;
-}
+import { WorkerReportMessageType } from '../enums/worker-report-message-type.enum';
+import { WorkerRequestMessageType } from '../enums/worker-request-message-type.enum';
+import type { WorkerReportMessage } from '../interfaces/worker-report-message.interface';
+import type { WorkerRequestMessage } from '../interfaces/worker-request-message.interface';
 
 export class WorkerProgramBuilder {
-  static get #scriptParts(): ScriptParts {
-    const rawScriptSourceCode: string = WorkerProgramBuilder.#rawScript.toString();
-    const scriptParts: string[] = `(${rawScriptSourceCode})()`.split(
-      'globalThis.SourceCodeMark.embeddedScriptPosition()'
-    );
-
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    if (!arrayHas2Elements(scriptParts)) {
-      throw new Error('[WorkerProgramBuilder] invalid script splitting result');
-    }
-
-    const [beforeMark, afterMark]: [string, string] = scriptParts;
-    return { beforeMark, afterMark };
+  public static getResultScript(payloadCode: string): Blob {
+    const runFunctionCode: string = WorkerProgramBuilder.#getRunFunctionCode(payloadCode);
+    const executionPayload: string = `(${WorkerProgramBuilder.#codeToRunAfterWorkerIsCreated()})(() => {${runFunctionCode}})`;
+    return new Blob([executionPayload], { type: 'text/javascript' });
   }
 
-  static readonly #rawScript: VoidFunction = () => {
-    class WorkerProgram {
-      constructor() {
-        const iterations: number[] = new Array(100).fill(null).map((_: void, index: number) => index);
-        const iterationsMarks: IterationMarkNames[] = iterations.map((index: number) =>
-          WorkerProgram.#getIterationMarks(index)
-        );
+  static #getRunFunctionCode(payloadCode: string): string {
+    const codeToRunBeforePayload: string = ((): void => {
+      const message: WorkerReportMessage = {
+        type: WorkerReportMessageType.ExecutionIsStarted,
+        payload: null
+      };
+      self.postMessage(message);
+    }).toString();
 
-        iterationsMarks.forEach(({ beforeRun, afterRun }: IterationMarkNames) => {
-          performance.mark(beforeRun);
-          this.#run();
-          performance.mark(afterRun);
-        });
+    const codeToRunAfterPayload: string = ((): void => {
+      const message: WorkerReportMessage = {
+        type: WorkerReportMessageType.ExecutionIsFinished,
+        payload: null
+      };
+      self.postMessage(message);
+    }).toString();
 
-        const executionTimeMs: number[] = iterationsMarks.map(
-          ({ iteration, beforeRun, afterRun }: IterationMarkNames) => {
-            const measure: PerformanceMeasure = performance.measure(`${iteration}__measure`, beforeRun, afterRun);
-            return measure.duration;
+    return `
+(${codeToRunBeforePayload})()
+${payloadCode}
+(${codeToRunAfterPayload})()
+`;
+  }
+
+  static #codeToRunAfterWorkerIsCreated(): string {
+    return ((runCallback: VoidFunction): void => {
+      const onWorkerIsCreated: WorkerReportMessage = {
+        type: WorkerReportMessageType.WorkerIsCreated,
+        payload: null
+      };
+      self.postMessage(onWorkerIsCreated);
+
+      self.addEventListener('message', ({ data }: MessageEvent) => {
+        const request: WorkerRequestMessage = data;
+
+        switch (request.type) {
+          case WorkerRequestMessageType.Execute: {
+            runCallback();
+            return;
           }
-        );
 
-        const performanceReport: PerformanceReport = {
-          executionTimeMs
-        };
+          case WorkerRequestMessageType.GenerateReport: {
+            const onWorkerReportReady: WorkerReportMessage = {
+              type: WorkerReportMessageType.ReportIsReady,
+              payload: {
+                performanceReport: {
+                  executionTimeMs: []
+                }
+              }
+            };
+            self.postMessage(onWorkerReportReady);
+            return;
+          }
 
-        postMessage(performanceReport);
-      }
-
-      static #getIterationMarks(iteration: number): IterationMarkNames {
-        return {
-          iteration,
-          beforeRun: `${iteration}__before-run`,
-          afterRun: `${iteration}__after-run`
-        };
-      }
-
-      #run(): void {
-        (globalThis as any).SourceCodeMark.embeddedScriptPosition();
-      }
-    }
-
-    new WorkerProgram();
-  };
-
-  public getResultScript(code: string): Blob {
-    const { beforeMark, afterMark }: ScriptParts = WorkerProgramBuilder.#scriptParts;
-    const resultScript: string = [beforeMark, code, afterMark].join('\n');
-    return new Blob([resultScript], { type: 'text/javascript' });
+          default: {
+            return;
+          }
+        }
+      });
+    }).toString();
   }
 }
