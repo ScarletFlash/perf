@@ -1,11 +1,13 @@
 import { WorkerReportMessageType } from '../enums/worker-report-message-type.enum';
 import { WorkerRequestMessageType } from '../enums/worker-request-message-type.enum';
 import type { WorkerReportMessage } from '../interfaces/worker-report-message.interface';
+import { ReportAccumulator } from './report-accumulator.class';
 import { WorkerProgramBuilder } from './worker-program-builder.class';
 
 export class CodeExecutor {
   readonly #worker: Worker;
   readonly #activeWorkerScriptUrl: string;
+  readonly #reportAccumulator: ReportAccumulator = new ReportAccumulator();
 
   #repeatCount: number = 0;
   #currentIteration: number = 0;
@@ -32,6 +34,7 @@ export class CodeExecutor {
     this.#worker.removeEventListener('message', this.#workerMessageListener);
     this.#worker.terminate();
     URL.revokeObjectURL(this.#activeWorkerScriptUrl);
+    this.#reportAccumulator.clear();
   }
 
   readonly #workerMessageListener: EventListener = (event: Event) => {
@@ -53,13 +56,14 @@ export class CodeExecutor {
       }
 
       case WorkerReportMessageType.ExecutionIsFinished: {
-        const shouldRunOneMoreTime: boolean = this.#currentIteration < this.#repeatCount;
-        shouldRunOneMoreTime ? this.#requestExecution() : this.#requestReport();
-        return;
-      }
+        if (message.payload === null) {
+          throw new Error('[CodeExecutor] invalid payload type');
+        }
 
-      case WorkerReportMessageType.ReportIsReady: {
-        this.destroy();
+        this.#reportAccumulator.pushItem(message.payload);
+
+        const shouldRunAgain: boolean = this.#currentIteration < this.#repeatCount;
+        shouldRunAgain ? this.#requestExecution() : this.destroy();
         return;
       }
 
@@ -80,13 +84,5 @@ export class CodeExecutor {
 
     this.#currentIteration++;
     this.#worker.postMessage({ type: WorkerRequestMessageType.Execute });
-  }
-
-  #requestReport(): void {
-    if (this.#currentIteration !== this.#repeatCount) {
-      throw new Error('[CodeExecutor] execution is not finished yet');
-    }
-
-    this.#worker.postMessage({ type: WorkerRequestMessageType.GenerateReport });
   }
 }

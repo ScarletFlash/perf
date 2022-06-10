@@ -3,35 +3,16 @@ import { WorkerRequestMessageType } from '../enums/worker-request-message-type.e
 import type { WorkerReportMessage } from '../interfaces/worker-report-message.interface';
 import type { WorkerRequestMessage } from '../interfaces/worker-request-message.interface';
 
+const enum PerformanceMark {
+  BeforeExecution = 'Start',
+  AfterExecution = 'End'
+}
+
 export class WorkerProgramBuilder {
   public static getResultScript(payloadCode: string): Blob {
-    const runFunctionCode: string = WorkerProgramBuilder.#getRunFunctionCode(payloadCode);
-    const executionPayload: string = `(${WorkerProgramBuilder.#codeToRunAfterWorkerIsCreated()})(() => {${runFunctionCode}})`;
+    const runCallback: string = `() => {${payloadCode}}`;
+    const executionPayload: string = `(${WorkerProgramBuilder.#codeToRunAfterWorkerIsCreated()})(${runCallback})`;
     return new Blob([executionPayload], { type: 'text/javascript' });
-  }
-
-  static #getRunFunctionCode(payloadCode: string): string {
-    const codeToRunBeforePayload: string = ((): void => {
-      const message: WorkerReportMessage = {
-        type: WorkerReportMessageType.ExecutionIsStarted,
-        payload: null
-      };
-      self.postMessage(message);
-    }).toString();
-
-    const codeToRunAfterPayload: string = ((): void => {
-      const message: WorkerReportMessage = {
-        type: WorkerReportMessageType.ExecutionIsFinished,
-        payload: null
-      };
-      self.postMessage(message);
-    }).toString();
-
-    return `
-(${codeToRunBeforePayload})()
-${payloadCode}
-(${codeToRunAfterPayload})()
-`;
   }
 
   static #codeToRunAfterWorkerIsCreated(): string {
@@ -47,20 +28,30 @@ ${payloadCode}
 
         switch (request.type) {
           case WorkerRequestMessageType.Execute: {
-            runCallback();
-            return;
-          }
+            const onExecutionIsStarted: WorkerReportMessage = {
+              type: WorkerReportMessageType.ExecutionIsStarted,
+              payload: null
+            };
+            self.postMessage(onExecutionIsStarted);
 
-          case WorkerRequestMessageType.GenerateReport: {
-            const onWorkerReportReady: WorkerReportMessage = {
-              type: WorkerReportMessageType.ReportIsReady,
+            performance.mark(PerformanceMark.BeforeExecution);
+            runCallback();
+            performance.mark(PerformanceMark.AfterExecution);
+
+            const { duration }: PerformanceMeasure = performance.measure(
+              'executionTimeMs',
+              PerformanceMark.BeforeExecution,
+              PerformanceMark.AfterExecution
+            );
+
+            const onExecutionIsFinished: WorkerReportMessage = {
+              type: WorkerReportMessageType.ExecutionIsFinished,
               payload: {
-                performanceReport: {
-                  executionTimeMs: []
-                }
+                executionTimeMs: duration
               }
             };
-            self.postMessage(onWorkerReportReady);
+            self.postMessage(onExecutionIsFinished);
+
             return;
           }
 
