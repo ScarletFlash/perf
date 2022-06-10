@@ -12,11 +12,6 @@ export class ExecutionService {
   readonly #transpiler: Transpiler = new Transpiler();
   readonly #executor: Executor = new Executor();
 
-  constructor() {
-    // eslint-disable-next-line no-console
-    console.log(this);
-  }
-
   public get performanceReport(): PerformanceReport {
     return this.#performanceReport;
   }
