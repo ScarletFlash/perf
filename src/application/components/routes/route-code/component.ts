@@ -1,5 +1,6 @@
 import { ExecutionService } from '@application/background-services/execution.service';
 import { WindowResizingService } from '@application/background-services/window-resizing.service';
+import { CodeEditorToolbarComponent } from '@application/components/widgets/code-editor-toolbar/component';
 import { Editor } from '@application/declarations/classes/editor.class';
 import type { Connectable } from '@application/declarations/interfaces/connectable.interface';
 import type { Disconnectable } from '@application/declarations/interfaces/disconnectable.interface';
@@ -26,7 +27,10 @@ export class RouteCodeComponent extends HTMLElement implements Connectable, Disc
     const style: HTMLStyleElement = document.createElement('style');
     style.innerHTML = componentStyles;
 
+    const editorToolbarComponent: CodeEditorToolbarComponent = RouteCodeComponent.#getEditorToolbarComponent();
+
     shadowRoot.appendChild(style);
+    shadowRoot.appendChild(editorToolbarComponent);
     shadowRoot.appendChild(this.#editorContainer);
   }
 
@@ -34,6 +38,14 @@ export class RouteCodeComponent extends HTMLElement implements Connectable, Disc
     const sectionElement: HTMLElement = document.createElement('section');
     sectionElement.classList.add('editor-container');
     return sectionElement;
+  }
+
+  static #getEditorToolbarComponent(): CodeEditorToolbarComponent {
+    const toolbarComponent: HTMLElement = document.createElement(CodeEditorToolbarComponent.selector);
+    if (toolbarComponent instanceof CodeEditorToolbarComponent) {
+      return toolbarComponent;
+    }
+    throw new Error('[RouteCodeComponent] CodeEditorToolbarComponent creation is failed');
   }
 
   readonly #onWindowSizeChangesListener: OnWindowSizeChangeCallback = () => {
