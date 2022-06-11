@@ -10,26 +10,19 @@ export class Editor {
 
   readonly #monacoEditorOptions: editor.IStandaloneEditorConstructionOptions = {
     value: `
-/** @perf_Common Iterate via Array.prototype.forEach */
 const dataSet: number[] = new Array(100_000).fill(null).map(() => Math.random());
 
-let result: unknown[];
+const result: unknown[] = [];
 
-/** @perf_BeforeEach Iterate via Array.prototype.forEach */
-result = [];
-
-/** @perf_Test Iterate via Array.prototype.forEach */
 dataSet.forEach((item: number) => result.push(item));
 
-/** @perf_Test Iterate via for...of */
-for (const item of dataSet) {
-  result.push(item);
-}
+// for (const item of dataSet) {
+//   result.push(item);
+// }
 
-/** @perf_Test Iterate via for */
-for (let index = 0; index < dataSet.length; index++) {
-  result.push(dataSet[index]);
-}
+// for (let index = 0; index < dataSet.length; index++) {
+//   result.push(dataSet[index]);
+// }
 `,
     language: 'typescript',
     autoDetectHighContrast: false,
@@ -102,30 +95,7 @@ for (let index = 0; index < dataSet.length; index++) {
     createdEditor.onDidChangeModelContent(() => {
       const currentContent: string = createdEditor.getValue();
       this.#onValueChangeCallbacks.forEach((callback: OnEditorValueChangeCallback) => callback(currentContent));
-
-      this.#addInvalidContentWorkaround(currentContent);
     });
-  }
-
-  /**
-   * @deprecated
-   *
-   * @description
-   * This method adds some editor content blinking instead of total line mess.
-   * Looks like there are some invalid Monaco Editor behavior. - Needs more investigation.
-   */
-  #addInvalidContentWorkaround(currentContent: string): void {
-    if (this.#monacoEditor === null) {
-      throw new Error('Editor is not created');
-    }
-
-    const currentContentKey: string = '____________________________temporary-property____________________________';
-
-    // would be deleted as soon as I manage setting monaco up
-    if (currentContent !== (this as any)[currentContentKey]) {
-      (this as any)[currentContentKey] = currentContent;
-      this.#monacoEditor.setValue(currentContent);
-    }
   }
 
   public destroy(): void {
