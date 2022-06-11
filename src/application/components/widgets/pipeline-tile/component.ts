@@ -1,3 +1,4 @@
+import { ContextualError } from '@application/declarations/classes/contextual-error.class';
 import type { AttributeListener } from '@application/declarations/interfaces/attribute-listener.interface';
 import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
 import { $color_active, $color_main } from '@styles/variables';
@@ -58,7 +59,7 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
     if (iconComponent instanceof IconComponent) {
       return iconComponent;
     }
-    throw new Error('[PipelineTileComponent] IconComponent creation is failed');
+    throw new ContextualError(PipelineTileComponent, 'IconComponent creation is failed');
   }
 
   static #getMarkerElement(): HTMLElement {

@@ -1,5 +1,6 @@
 import type { TransformResult } from 'esbuild-wasm';
 import { initialize, transform } from 'esbuild-wasm';
+import { ContextualError } from './contextual-error.class';
 
 export class Transpiler {
   #isInitialized: boolean = false;
@@ -12,7 +13,7 @@ export class Transpiler {
 
   public async transform(code: string): Promise<string> {
     if (!this.#isInitialized) {
-      throw new Error('[Transpiler] ESBuild initialization is not done.');
+      throw new ContextualError(this, 'ESBuild initialization is not done.');
     }
 
     const transformResult: TransformResult = await transform(code, {

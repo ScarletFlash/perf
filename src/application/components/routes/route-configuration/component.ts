@@ -1,3 +1,4 @@
+import { ContextualError } from '@application/declarations/classes/contextual-error.class';
 import type { AttributeListener } from '@application/declarations/interfaces/attribute-listener.interface';
 import { isPerfComponentSelector } from '@application/utilities/is-perf-component-selector.util';
 import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
@@ -40,7 +41,7 @@ export class RouteConfigurationComponent extends HTMLElement implements Attribut
 
     const resultValues: unknown = JSON.parse(newValue);
     if (!RouteConfigurationComponent.#isCustomElementsSelectorsList(resultValues)) {
-      throw new Error('[CurrentRouteComponent] selectors attribute contains invalid value');
+      throw new ContextualError(this, 'selectors attribute contains invalid value');
     }
 
     resultValues.forEach((selector: PerfComponentSelector) => this.#registeredSelectors.add(selector));

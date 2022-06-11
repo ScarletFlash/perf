@@ -1,5 +1,6 @@
 import type { ChartConfiguration, ChartDataset } from 'chart.js';
 import { Chart, registerables } from 'chart.js';
+import { ContextualError } from './contextual-error.class';
 
 export class BarChart extends Chart {
   readonly #dataSets: ChartDataset[];
@@ -11,7 +12,7 @@ export class BarChart extends Chart {
     const context: CanvasRenderingContext2D | null = canvas.getContext('2d');
 
     if (context === null) {
-      throw new Error('[BarChart] rendering context is unreachable');
+      throw new ContextualError(BarChart, 'rendering context is unreachable');
     }
 
     const datasets: ChartDataset[] = [

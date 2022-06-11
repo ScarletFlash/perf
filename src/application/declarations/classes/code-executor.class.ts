@@ -1,6 +1,7 @@
 import { WorkerReportMessageType } from '../enums/worker-report-message-type.enum';
 import { WorkerRequestMessageType } from '../enums/worker-request-message-type.enum';
 import type { WorkerReportMessage } from '../interfaces/worker-report-message.interface';
+import { ContextualError } from './contextual-error.class';
 import { ReportAccumulator } from './report-accumulator.class';
 import { WorkerProgramBuilder } from './worker-program-builder.class';
 
@@ -39,7 +40,7 @@ export class CodeExecutor {
 
   readonly #workerMessageListener: EventListener = (event: Event) => {
     if (!(event instanceof MessageEvent)) {
-      throw new Error('[CodeExecutor] invalid event type detected');
+      throw new ContextualError(this, 'invalid event type detected');
     }
 
     this.#handleMessage(event.data);
@@ -57,7 +58,7 @@ export class CodeExecutor {
 
       case WorkerReportMessageType.ExecutionIsFinished: {
         if (message.payload === null) {
-          throw new Error('[CodeExecutor] invalid payload type');
+          throw new ContextualError(this, 'invalid payload type');
         }
 
         this.#reportAccumulator.pushItem(message.payload);
@@ -68,14 +69,15 @@ export class CodeExecutor {
       }
 
       default: {
-        throw new Error('[CodeExecutor] unprocessable message type');
+        throw new ContextualError(this, 'unprocessable message type');
       }
     }
   }
 
   #requestExecution(): void {
     if (this.#currentIteration > this.#repeatCount) {
-      throw new Error(
+      throw new ContextualError(
+        this,
         `[CodeExecutor] current iteration is invalid: expected <${this.#repeatCount}; received: ${
           this.#currentIteration
         }`

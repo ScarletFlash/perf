@@ -1,3 +1,4 @@
+import { ContextualError } from '@application/declarations/classes/contextual-error.class';
 import type { AttributeListener } from '@application/declarations/interfaces/attribute-listener.interface';
 import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
 import componentStyles from './component.scss';
@@ -69,7 +70,7 @@ export class IconComponent extends HTMLElement implements AttributeListener {
     };
     const onLoadListener: EventListener = () => {
       const embeddedDocument: Document | null = this.#objectElement.getSVGDocument();
-      const invalidIconError: Error = new Error('[IconComponent] embedded icon is invalid');
+      const invalidIconError: Error = new ContextualError(this, 'embedded icon is invalid');
 
       if (embeddedDocument === null) {
         throw invalidIconError;
