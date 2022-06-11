@@ -1,7 +1,6 @@
 import { ContextualError } from '@application/declarations/classes/contextual-error.class';
 import type { OnHashChangeCallback } from '@application/declarations/types/on-hash-change-callback.type';
 import type { UrlHash } from '@application/declarations/types/url-hash.type';
-import { isUrlHash } from '@application/utilities/is-url-hash.util';
 
 export class UrlService {
   #currentHash: UrlHash | undefined;
@@ -16,6 +15,10 @@ export class UrlService {
     globalThis.addEventListener('hashchange', this.#hashChangeListener, {
       passive: true
     });
+  }
+
+  static #isUrlHash(input: string): input is UrlHash {
+    return input === '' || input.startsWith('#');
   }
 
   readonly #hashChangeListener: EventListener = (): void => {
@@ -48,7 +51,7 @@ export class UrlService {
   #handleHashChange(): void {
     const targetHash: string = new URL(globalThis.location.href).hash.toLowerCase();
 
-    if (!isUrlHash(targetHash)) {
+    if (!UrlService.#isUrlHash(targetHash)) {
       throw new ContextualError(this, 'targetHash is not UrlHash');
     }
 
