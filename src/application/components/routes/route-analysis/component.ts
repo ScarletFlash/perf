@@ -3,8 +3,8 @@ import { WindowResizingService } from '@application/background-services/window-r
 import { BarChart } from '@application/declarations/classes/bar-chart.class';
 import type { Connectable } from '@application/declarations/interfaces/connectable.interface';
 import type { Disconnectable } from '@application/declarations/interfaces/disconnectable.interface';
-import type { PerformanceReport } from '@application/declarations/interfaces/performance-report.interface';
 import type { OnWindowSizeChangeCallback } from '@application/declarations/types/on-window-size-change-callback.type';
+import type { PerformanceReport } from '@application/declarations/types/performance-report.type';
 import { Application } from '@framework/application';
 import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
 import componentStyles from './component.scss';
