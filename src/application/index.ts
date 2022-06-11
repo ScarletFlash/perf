@@ -6,6 +6,7 @@ import { UrlService } from './background-services/url.service';
 import { WindowResizingService } from './background-services/window-resizing.service';
 import { RouteAnalysisComponent } from './components/routes/route-analysis/component';
 import { RouteCodeComponent } from './components/routes/route-code/component';
+import { CodeEditorToolbarComponent } from './components/widgets/code-editor-toolbar/component';
 import { CurrentRouteComponent } from './components/widgets/current-route/component';
 import { FooterComponent } from './components/widgets/footer/component';
 import { HeaderComponent } from './components/widgets/header/component';
@@ -24,6 +25,7 @@ new Application()
     PipelineTileComponent,
     PipelineComponent,
     CurrentRouteComponent,
+    CodeEditorToolbarComponent,
 
     RouteCodeComponent,
     // RouteConfigurationComponent,
