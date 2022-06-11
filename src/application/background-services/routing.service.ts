@@ -1,3 +1,4 @@
+import { ContextualError } from '@application/declarations/classes/contextual-error.class';
 import type { Route } from '@application/declarations/interfaces/route.interface';
 import type { OnHashChangeCallback } from '@application/declarations/types/on-hash-change-callback.type';
 import type { OnRouteChangeCallback } from '@application/declarations/types/on-route-change-callback.type';
@@ -48,7 +49,7 @@ export class RoutingService {
       this.#currentRoute = targetRoute;
 
       if (targetRoute === undefined) {
-        throw new Error('[RoutingService] target route not found');
+        throw new ContextualError(this, 'target route not found');
       }
 
       this.#titleService.setTitle(targetRoute.title);

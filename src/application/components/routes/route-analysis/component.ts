@@ -1,6 +1,7 @@
 import { ExecutionService } from '@application/background-services/execution.service';
 import { WindowResizingService } from '@application/background-services/window-resizing.service';
 import { BarChart } from '@application/declarations/classes/bar-chart.class';
+import { ContextualError } from '@application/declarations/classes/contextual-error.class';
 import type { Connectable } from '@application/declarations/interfaces/connectable.interface';
 import type { Disconnectable } from '@application/declarations/interfaces/disconnectable.interface';
 import type { OnWindowSizeChangeCallback } from '@application/declarations/types/on-window-size-change-callback.type';
@@ -69,7 +70,7 @@ export class RouteAnalysisComponent extends HTMLElement implements Connectable, 
       .then(() => this.#executionService.generateExecutionReport())
       .then(() => {
         if (this.#barChart === undefined) {
-          throw new Error('[RouteAnalysisComponent] Bar chart creation failed');
+          throw new ContextualError(this, 'bar chart creation failed');
         }
 
         const { executionTimeMs }: PerformanceReport = this.#executionService.performanceReport;

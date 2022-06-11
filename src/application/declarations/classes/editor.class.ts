@@ -1,5 +1,6 @@
 import { editor } from 'monaco-editor';
 import type { OnEditorValueChangeCallback } from './../types/on-editor-value-change-callback.type';
+import { ContextualError } from './contextual-error.class';
 
 export class Editor {
   static #monacoEditorEnvironmentSettingsAreDefined: boolean = false;
@@ -80,7 +81,7 @@ dataSet.forEach((item: number) => result.push(item));
 
   public create(): void {
     if (this.#monacoEditor !== null) {
-      throw new Error('Editor is already running');
+      throw new ContextualError(this, 'Editor is already running');
     }
 
     editor.remeasureFonts();
@@ -111,7 +112,7 @@ dataSet.forEach((item: number) => result.push(item));
 
   public refreshSize(): void {
     if (this.#monacoEditor === null) {
-      throw new Error('Editor is not created');
+      throw new ContextualError(this, 'Editor is not created');
     }
 
     this.#monacoEditor.layout();

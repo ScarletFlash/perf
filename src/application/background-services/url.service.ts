@@ -1,3 +1,4 @@
+import { ContextualError } from '@application/declarations/classes/contextual-error.class';
 import type { OnHashChangeCallback } from '@application/declarations/types/on-hash-change-callback.type';
 import type { UrlHash } from '@application/declarations/types/url-hash.type';
 import { isUrlHash } from '@application/utilities/is-url-hash.util';
@@ -47,9 +48,8 @@ export class UrlService {
   #handleHashChange(): void {
     const targetHash: string = new URL(globalThis.location.href).hash.toLowerCase();
 
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!isUrlHash(targetHash)) {
-      throw new Error('[UrlService] targetHash is not UrlHash');
+      throw new ContextualError(this, 'targetHash is not UrlHash');
     }
 
     if (this.#currentHash === targetHash) {

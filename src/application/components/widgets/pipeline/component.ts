@@ -1,4 +1,5 @@
 import { RoutingService } from '@application/background-services/routing.service';
+import { ContextualError } from '@application/declarations/classes/contextual-error.class';
 import type { Connectable } from '@application/declarations/interfaces/connectable.interface';
 import type { Disconnectable } from '@application/declarations/interfaces/disconnectable.interface';
 import type { Route } from '@application/declarations/interfaces/route.interface';
@@ -92,7 +93,7 @@ export class PipelineComponent extends HTMLElement implements Connectable, Disco
     if (tileComponent instanceof PipelineTileComponent) {
       return tileComponent;
     }
-    throw new Error('[PipelineComponent] PipelineTileComponent creation is failed');
+    throw new ContextualError(PipelineComponent, 'PipelineTileComponent creation is failed');
   }
 
   readonly #routeChangeListener: OnRouteChangeCallback = (currentRoute: Route): void => {
