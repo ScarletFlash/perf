@@ -1,29 +1,17 @@
 import type { PerformanceReportItem } from '../interfaces/performance-report-item.interface';
-import type { PerformanceReport } from '../interfaces/performance-report.interface';
+import type { PerformanceReport } from '../types/performance-report.type';
 
 export class ReportAccumulator {
   readonly #reportItems: PerformanceReportItem[] = [];
 
-  public get report(): PerformanceReport {
+  public get items(): PerformanceReport {
     const initialReportData: PerformanceReport = {
       executionTimeMs: []
-
-      // maxRamBytesBefore: [],
-      // maxRamBytesAfter: [],
-
-      // usedRamBytesBefore: [],
-      // usedRamBytesAfter: []
     };
     return this.#reportItems.reduce((accumulatedData: PerformanceReport, currentItem: PerformanceReportItem) => {
       const { executionTimeMs } = accumulatedData;
 
       executionTimeMs.push(currentItem.executionTimeMs);
-
-      // maxRamBytesBefore.push(currentItem.maxRamBytesBefore);
-      // maxRamBytesAfter.push(currentItem.maxRamBytesAfter);
-
-      // usedRamBytesBefore.push(currentItem.usedRamBytesBefore);
-      // usedRamBytesAfter.push(currentItem.usedRamBytesAfter);
 
       return accumulatedData;
     }, initialReportData);

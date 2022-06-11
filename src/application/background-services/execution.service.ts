@@ -1,6 +1,6 @@
 import { Executor } from '@application/declarations/classes/executor.class';
 import { Transpiler } from '@application/declarations/classes/transpiler.class';
-import type { PerformanceReport } from '@application/declarations/interfaces/performance-report.interface';
+import type { PerformanceReport } from '@application/declarations/types/performance-report.type';
 
 export class ExecutionService {
   #sourceCode: string = '';

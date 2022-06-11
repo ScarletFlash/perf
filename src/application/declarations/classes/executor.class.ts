@@ -1,4 +1,4 @@
-import type { PerformanceReport } from '../interfaces/performance-report.interface';
+import type { PerformanceReport } from '../types/performance-report.type';
 import { CodeExecutor } from './code-executor.class';
 
 export class Executor {
