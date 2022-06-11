@@ -8,11 +8,13 @@
 - [x] :gear: DevTools configuration (ESLint, Prettier, etc)
 - [x] :gear: Core application components boilerplate
 - [x] :fire: WYSIWYG editor (for "code" page)
-- [ ] :fire: JSON UI editor (for "transpilation", "minification" pages)
-- [ ] :fire: Browser-based transpiler & minifier configurations
-- [ ] :gear: CI/CD
-- [ ] :fire: Essential performance monitoring
+- [x] :fire: Essential performance monitoring
 - [ ] :fire: Essential performance analysis (diagrams)
+- [x] :gear: CI
+- [ ] :gear: CD
+- [ ] :tada: **MVP**
+- [ ] :fire: JSON UI editor (for "configuration" page)
+- [ ] :fire: Browser-based transpiler & minifier configurations
 - [ ] :sun_with_face: UI styling
 - [ ] :gear: Unit-testing
 - [ ] :memo: Documentation
