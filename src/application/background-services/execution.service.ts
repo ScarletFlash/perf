@@ -1,4 +1,4 @@
-import { Executor } from '@application/declarations/classes/executor.class';
+import { CodeExecutor } from '@application/declarations/classes/code-executor.class';
 import { Transpiler } from '@application/declarations/classes/transpiler.class';
 import type { PerformanceReport } from '@application/declarations/types/performance-report.type';
 
@@ -10,7 +10,6 @@ export class ExecutionService {
   };
 
   readonly #transpiler: Transpiler = new Transpiler();
-  readonly #executor: Executor = new Executor();
 
   public get performanceReport(): PerformanceReport {
     return this.#performanceReport;
@@ -29,6 +28,12 @@ export class ExecutionService {
   }
 
   public async generateExecutionReport(): Promise<void> {
-    this.#performanceReport = await this.#executor.run(this.#transpiledCode);
+    const codeExecutor: CodeExecutor = new CodeExecutor(this.#transpiledCode);
+
+    codeExecutor.runTimes(100);
+
+    this.#performanceReport = await Promise.resolve({
+      executionTimeMs: []
+    });
   }
 }
