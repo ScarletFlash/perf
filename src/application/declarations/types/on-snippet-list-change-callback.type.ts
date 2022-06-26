@@ -1,3 +1,3 @@
-import type { CodeSnippet } from '../interfaces/code-snippet.interface';
+import type { CodeSnippet } from '../classes/code-snippet.class';
 
 export type OnSnippetListChangeCallback = (updatedSnippetList: CodeSnippet[]) => void;
