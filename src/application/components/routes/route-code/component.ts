@@ -1,6 +1,6 @@
 import { ExecutionService } from '@application/background-services/execution.service';
 import { WindowResizingService } from '@application/background-services/window-resizing.service';
-import { CodeEditorToolbarComponent } from '@application/components/widgets/code-editor-toolbar/component';
+import { ContextualError } from '@application/declarations/classes/contextual-error.class';
 import { Editor } from '@application/declarations/classes/editor.class';
 import type { Connectable } from '@application/declarations/interfaces/connectable.interface';
 import type { Disconnectable } from '@application/declarations/interfaces/disconnectable.interface';
@@ -8,6 +8,7 @@ import type { OnEditorValueChangeCallback } from '@application/declarations/type
 import type { OnWindowSizeChangeCallback } from '@application/declarations/types/on-window-size-change-callback.type';
 import { Application } from '@framework/application';
 import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
+import { CodeEditorTabsComponent } from 'src/application/components/widgets/code-editor-tabs/component';
 import componentStyles from './component.scss';
 
 export class RouteCodeComponent extends HTMLElement implements Connectable, Disconnectable {
@@ -27,10 +28,10 @@ export class RouteCodeComponent extends HTMLElement implements Connectable, Disc
     const style: HTMLStyleElement = document.createElement('style');
     style.innerHTML = componentStyles;
 
-    const editorToolbarComponent: CodeEditorToolbarComponent = RouteCodeComponent.#getEditorToolbarComponent();
+    const editorTabsComponent: CodeEditorTabsComponent = RouteCodeComponent.#getEditorTabsComponent();
 
     shadowRoot.appendChild(style);
-    shadowRoot.appendChild(editorToolbarComponent);
+    shadowRoot.appendChild(editorTabsComponent);
     shadowRoot.appendChild(this.#editorContainer);
   }
 
@@ -40,12 +41,12 @@ export class RouteCodeComponent extends HTMLElement implements Connectable, Disc
     return sectionElement;
   }
 
-  static #getEditorToolbarComponent(): CodeEditorToolbarComponent {
-    const toolbarComponent: HTMLElement = document.createElement(CodeEditorToolbarComponent.selector);
-    if (toolbarComponent instanceof CodeEditorToolbarComponent) {
-      return toolbarComponent;
+  static #getEditorTabsComponent(): CodeEditorTabsComponent {
+    const tabsComponent: HTMLElement = document.createElement(CodeEditorTabsComponent.selector);
+    if (tabsComponent instanceof CodeEditorTabsComponent) {
+      return tabsComponent;
     }
-    throw new Error('[RouteCodeComponent] CodeEditorToolbarComponent creation is failed');
+    throw new ContextualError(RouteCodeComponent, 'CodeEditorTabsComponent creation failed');
   }
 
   readonly #onWindowSizeChangesListener: OnWindowSizeChangeCallback = () => {

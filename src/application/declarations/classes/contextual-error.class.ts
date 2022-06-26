@@ -1,6 +1,7 @@
 export class ContextualError<T extends object> extends Error {
   constructor(context: T, message: string) {
-    const resultMessage: string = String(`[${context.constructor.name}] ${message}`).trim();
+    const className: string = typeof context === 'function' ? context.name : context.constructor.name;
+    const resultMessage: string = String(`[${className}] ${message}`).trim();
     super(resultMessage);
   }
 
