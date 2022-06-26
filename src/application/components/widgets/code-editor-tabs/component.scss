@@ -1,0 +1,12 @@
+@use './../../../styles/variables' as *;
+@import './../../../styles/global';
+
+.tabs {
+  width: 100%;
+  height: $height_footer;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
