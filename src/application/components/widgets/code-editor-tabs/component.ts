@@ -63,8 +63,6 @@ export class CodeEditorTabsComponent extends HTMLElement implements Connectable,
   }
 
   #renderTabs(updatedSnippetList: CodeSnippet[]): void {
-    console.log(updatedSnippetList);
-
     const renderedTabs: CodeEditorTabsItemComponent[] = Array.from(this.#wrapperElement.children).filter(
       (childElement: Element): childElement is CodeEditorTabsItemComponent =>
         childElement instanceof CodeEditorTabsItemComponent
@@ -79,8 +77,6 @@ export class CodeEditorTabsComponent extends HTMLElement implements Connectable,
       const existingTab: CodeEditorTabsItemComponent | undefined = renderedTabs[index];
       const existingId: CodeSnippetId | undefined = existingTab === undefined ? undefined : existingTab.codeSnippetId;
 
-      console.log({ targetId, existingId });
-
       if (targetId === existingId) {
         continue;
       }
@@ -92,7 +88,6 @@ export class CodeEditorTabsComponent extends HTMLElement implements Connectable,
       }
 
       const newTab: CodeEditorTabsItemComponent = CodeEditorTabsComponent.#getTabItemComponent(targetSnippet);
-      console.log({ newTab });
       this.#wrapperElement.appendChild(newTab);
     }
   }
