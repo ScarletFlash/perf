@@ -21,7 +21,7 @@ export class CodeSnippet {
   }
 
   public get id(): CodeSnippetId {
-    return `${this.#name}@${this.type}`;
+    return CodeSnippet.getId(`${this.#name}@${this.type}`);
   }
 
   public get code(): string {
@@ -35,7 +35,7 @@ export class CodeSnippet {
   public static getId(rawValue: string): CodeSnippetId {
     const incompatibleError: Error = new ContextualError(CodeSnippet, 'raw value is not compatible with CodeSnippetId');
 
-    const idParts: string[] = rawValue.split('@');
+    const idParts: string[] = rawValue.replaceAll(' ', '_').split('@');
 
     if (idParts.length !== 2) {
       throw incompatibleError;
