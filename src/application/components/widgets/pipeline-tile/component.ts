@@ -96,7 +96,7 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
     }
 
     if (name === 'isActive') {
-      const targetState: boolean = Boolean(newValue);
+      const targetState: boolean = newValue === 'true';
       this.setActivationState(targetState);
     }
 

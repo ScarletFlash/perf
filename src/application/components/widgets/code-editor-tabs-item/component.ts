@@ -82,7 +82,7 @@ export class CodeEditorTabsItemComponent extends HTMLElement implements Connecta
     }
 
     if (name === ObservedAttributeName.IsRemovable) {
-      const isRemovable: boolean = Boolean(newValue);
+      const isRemovable: boolean = newValue === 'true';
       const buttonShouldBeVisible: boolean = isRemovable;
       this.#toggleRemoveTabButtonVisibility(buttonShouldBeVisible);
     }
