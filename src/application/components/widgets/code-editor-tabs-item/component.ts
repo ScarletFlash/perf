@@ -6,11 +6,20 @@ import type { CodeSnippetId } from '@application/declarations/types/code-snippet
 import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
 import componentStyles from './component.scss';
 
+enum ObservedAttributeName {
+  IsRemovable = 'is_removable',
+  CodeSnippetId = 'code_snippet_id',
+  CodeSnippetName = 'code_snippet_name'
+}
+
 export class CodeEditorTabsItemComponent extends HTMLElement implements Connectable, Disconnectable, AttributeListener {
   public static readonly selector: PerfComponentSelector = 'perf-code-editor-tabs-item';
 
+  public static readonly observedAttributeName: typeof ObservedAttributeName = ObservedAttributeName;
+
   readonly #removeTabButton: HTMLButtonElement = CodeEditorTabsItemComponent.#getRemoveButtonElement();
   readonly #wrapperElement: HTMLElement = CodeEditorTabsItemComponent.#getWrapperElement();
+  readonly #nameElement: HTMLSpanElement = CodeEditorTabsItemComponent.#getNameElement();
 
   #codeSnippetId?: CodeSnippetId;
 
@@ -22,12 +31,18 @@ export class CodeEditorTabsItemComponent extends HTMLElement implements Connecta
     const style: HTMLStyleElement = document.createElement('style');
     style.innerHTML = componentStyles;
 
+    this.#wrapperElement.appendChild(this.#nameElement);
+
     shadowRoot.appendChild(style);
     shadowRoot.appendChild(this.#wrapperElement);
   }
 
-  public static get observedAttributes(): string[] {
-    return ['isRemovable', 'codeSnippetId'];
+  public static get observedAttributes(): ObservedAttributeName[] {
+    return [
+      ObservedAttributeName.IsRemovable,
+      ObservedAttributeName.CodeSnippetId,
+      ObservedAttributeName.CodeSnippetName
+    ];
   }
 
   public get codeSnippetId(): CodeSnippetId | undefined {
@@ -47,12 +62,18 @@ export class CodeEditorTabsItemComponent extends HTMLElement implements Connecta
     return wrapperElement;
   }
 
+  static #getNameElement(): HTMLSpanElement {
+    const nameElement: HTMLSpanElement = document.createElement('span');
+    nameElement.classList.add('tabs-item__name');
+    return nameElement;
+  }
+
   public connectedCallback(): void {
-    throw new Error('Method not implemented.');
+    return;
   }
 
   public disconnectedCallback(): void {
-    throw new Error('Method not implemented.');
+    return;
   }
 
   public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
@@ -60,14 +81,18 @@ export class CodeEditorTabsItemComponent extends HTMLElement implements Connecta
       return;
     }
 
-    if (name === 'isRemovable') {
+    if (name === ObservedAttributeName.IsRemovable) {
       const isRemovable: boolean = Boolean(newValue);
       const buttonShouldBeVisible: boolean = isRemovable;
       this.#toggleRemoveTabButtonVisibility(buttonShouldBeVisible);
     }
 
-    if (name === 'codeSnippetId') {
+    if (name === ObservedAttributeName.CodeSnippetId) {
       this.#codeSnippetId = CodeSnippet.getId(newValue);
+    }
+
+    if (name === ObservedAttributeName.CodeSnippetName) {
+      this.#nameElement.innerText = newValue;
     }
   }
 
