@@ -21,6 +21,9 @@
 - [ ] :tada: **PUBLIC RELEASE**
 - [ ] :fire: Build-in snippet collection
 - [ ] :fire: External snippet executions
+- ...
+- [ ] :bulb: Replace local subscription implementations with universal one (tech debt)
+- [ ] :bulb: Replace WebComponent instance creation with build-in type-strict static method (tech debt)
 
 <p align="center">
   <img width="64px" src="https://raw.githubusercontent.com/ScarletFlash/perf/main/src/application/assets/logo_small.svg" />

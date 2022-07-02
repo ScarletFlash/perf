@@ -37,14 +37,20 @@ export class CodeEditorTabsComponent extends HTMLElement implements Connectable,
     return wrapperElement;
   }
 
-  static #getTabItemComponent({ type, id }: CodeSnippet): CodeEditorTabsItemComponent {
+  static #getTabItemComponent({ type, id, name }: CodeSnippet): CodeEditorTabsItemComponent {
     const itemComponent: HTMLElement = document.createElement(CodeEditorTabsItemComponent.selector);
 
     if (itemComponent instanceof CodeEditorTabsItemComponent) {
-      itemComponent.setAttribute('isRemovable', String(type === CodeSnippetType.Test));
-      itemComponent.setAttribute('codeSnippetId', id);
+      const observedAttributeName: typeof CodeEditorTabsItemComponent.observedAttributeName =
+        CodeEditorTabsItemComponent.observedAttributeName;
+
+      itemComponent.setAttribute(observedAttributeName.IsRemovable, String(type === CodeSnippetType.Test));
+      itemComponent.setAttribute(observedAttributeName.CodeSnippetId, id);
+      itemComponent.setAttribute(observedAttributeName.CodeSnippetName, name);
       return itemComponent;
     }
+
+    console.log({ itemComponent });
 
     throw new ContextualError(CodeEditorTabsComponent, 'CodeEditorTabsItemComponent creation is failed');
   }

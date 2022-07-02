@@ -39,10 +39,12 @@ export class PipelineComponent extends HTMLElement implements Connectable, Disco
     const contentElement: HTMLElement = PipelineComponent.#getContentElement();
     this.#tiles = this.#routingService.routes.map(({ urlHash, descriptionText, descriptionIconSrc }: Route) => {
       const tileComponent: PipelineTileComponent = PipelineComponent.#getTileComponent();
+      const observedAttributeName: typeof PipelineTileComponent.observedAttributeName =
+        PipelineTileComponent.observedAttributeName;
 
-      tileComponent.setAttribute('text', descriptionText);
-      tileComponent.setAttribute('icon', descriptionIconSrc);
-      tileComponent.setAttribute('url', urlHash);
+      tileComponent.setAttribute(observedAttributeName.Text, descriptionText);
+      tileComponent.setAttribute(observedAttributeName.Icon, descriptionIconSrc);
+      tileComponent.setAttribute(observedAttributeName.URL, urlHash);
 
       return tileComponent;
     });

@@ -3,8 +3,15 @@ import type { AttributeListener } from '@application/declarations/interfaces/att
 import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
 import componentStyles from './component.scss';
 
+enum ObservedAttributeName {
+  Source = 'src',
+  Color = 'color'
+}
+
 export class IconComponent extends HTMLElement implements AttributeListener {
   public static readonly selector: PerfComponentSelector = 'perf-icon';
+
+  public static readonly observedAttributeName: typeof ObservedAttributeName = ObservedAttributeName;
 
   #colorStyle: string = 'initial';
   #svgElement: SVGElement | null = null;
@@ -22,8 +29,8 @@ export class IconComponent extends HTMLElement implements AttributeListener {
     shadowRoot.appendChild(this.#objectElement);
   }
 
-  public static get observedAttributes(): string[] {
-    return ['src', 'color'];
+  public static get observedAttributes(): ObservedAttributeName[] {
+    return [ObservedAttributeName.Source, ObservedAttributeName.Color];
   }
 
   static #getIconElement(): HTMLObjectElement {
