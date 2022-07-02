@@ -5,8 +5,17 @@ import { $color_active, $color_main } from '@styles/variables';
 import { IconComponent } from './../icon/component';
 import componentStyles from './component.scss';
 
+enum ObservedAttributeName {
+  Text = 'text',
+  Icon = 'icon',
+  IsActive = 'is_active',
+  URL = 'url'
+}
+
 export class PipelineTileComponent extends HTMLElement implements AttributeListener {
   public static readonly selector: PerfComponentSelector = 'perf-pipeline-tile';
+
+  public static readonly observedAttributeName: typeof ObservedAttributeName = ObservedAttributeName;
 
   readonly #tileElement: HTMLElement = PipelineTileComponent.#getTileElement();
   readonly #iconComponent: IconComponent = PipelineTileComponent.#getIconElement();
@@ -33,8 +42,13 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
     shadowRoot.appendChild(this.#tileElement);
   }
 
-  public static get observedAttributes(): string[] {
-    return ['text', 'icon', 'isActive', 'url'];
+  public static get observedAttributes(): ObservedAttributeName[] {
+    return [
+      ObservedAttributeName.Text,
+      ObservedAttributeName.Icon,
+      ObservedAttributeName.IsActive,
+      ObservedAttributeName.URL
+    ];
   }
 
   public get url(): string {
@@ -74,7 +88,7 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
     }
 
     if (name === 'icon') {
-      this.#iconComponent.setAttribute('src', newValue);
+      this.#iconComponent.setAttribute(IconComponent.observedAttributeName.Source, newValue);
     }
 
     if (name === 'text') {

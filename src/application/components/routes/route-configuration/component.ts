@@ -4,8 +4,14 @@ import { isPerfComponentSelector } from '@application/utilities/is-perf-componen
 import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
 import componentStyles from './component.scss';
 
+enum ObservedAttributeName {
+  Selectors = 'selectors'
+}
+
 export class RouteConfigurationComponent extends HTMLElement implements AttributeListener {
   public static readonly selector: PerfComponentSelector = 'perf-route-configuration';
+
+  public static readonly observedAttributeName: typeof ObservedAttributeName = ObservedAttributeName;
 
   readonly #registeredSelectors: Set<PerfComponentSelector> = new Set<PerfComponentSelector>();
 
@@ -22,8 +28,8 @@ export class RouteConfigurationComponent extends HTMLElement implements Attribut
     shadowRoot.appendChild(wrapperSectionElement);
   }
 
-  public static get observedAttributes(): string[] {
-    return ['selectors'];
+  public static get observedAttributes(): ObservedAttributeName[] {
+    return [ObservedAttributeName.Selectors];
   }
 
   static #isCustomElementsSelectorsList(serializedValue: unknown): serializedValue is PerfComponentSelector[] {
