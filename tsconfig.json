@@ -2,5 +2,9 @@
   "extends": "./tsconfig.base.json",
   "exclude": ["node_modules"],
   "compileOnSave": false,
-  "references": [{ "path": "./tsconfig.browser.json" }, { "path": "./tsconfig.node.json" }]
+  "references": [
+    { "path": "./tsconfig.browser.json" },
+    { "path": "./tsconfig.node.json" },
+    { "path": "./tsconfig.spec.json" }
+  ]
 }

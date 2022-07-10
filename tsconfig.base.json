@@ -27,5 +27,6 @@
     "target": "ESNext",
     "useDefineForClassFields": true,
     "disableReferencedProjectLoad": false
-  }
+  },
+  "exclude": ["**/*.spec.ts", "node_modules"]
 }

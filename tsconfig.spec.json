@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.base.json",
+  "include": ["./src/**/*.spec.ts"],
+  "exclude": [],
+  "compilerOptions": {
+    "emitDecoratorMetadata": false,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "../out-tsc/spec",
+    "types": ["jest", "node"],
+    "lib": ["DOM", "ESNext"],
+    "target": "ESNext",
+    "module": "CommonJS",
+    "sourceMap": true
+  }
+}

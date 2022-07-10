@@ -16,9 +16,10 @@
     "check:eslint": "eslint './src/**/*.ts' --config ./.eslintrc",
     "check:prettier": "prettier --loglevel log --config ./.prettierrc --ignore-path ./.prettierignore --write ./**/*.{json,js,ts}",
     "check:cspell": "cspell lint './src/**/*.*.ts' --config cspell.json",
+    "check:jest": "jest --config ./jest.config.ts",
     "check:compiler:browser": "tsc --project tsconfig.browser.json --noEmit",
     "check:compiler:node": "tsc --project tsconfig.node.json --noEmit",
-    "check": "npm run check:eslint && npm run check:prettier && npm run check:cspell && npm run check:compiler:browser && npm run check:compiler:node",
+    "check": "npm run check:eslint && npm run check:prettier && npm run check:cspell && npm run check:compiler:browser && npm run check:compiler:node && npm run check:jest",
     "⚒️": "Other",
     "autofix": "eslint './src/**/*.ts' --config ./.eslintrc --fix"
   },
@@ -28,6 +29,7 @@
     "monaco-editor": "0"
   },
   "devDependencies": {
+    "@types/jest": "latest",
     "@types/node": "latest",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
@@ -43,7 +45,9 @@
     "eslint-plugin-jsdoc": "latest",
     "eslint-plugin-prefer-arrow": "latest",
     "eslint-plugin-prettier": "latest",
+    "jest": "latest",
     "prettier": "latest",
+    "ts-jest": "latest",
     "ts-node": "latest",
     "typescript": "latest"
   }
