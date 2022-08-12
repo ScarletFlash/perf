@@ -9,6 +9,23 @@ type ComponentConstructor = CustomElementConstructor & {
 };
 
 export class Application {
+  static #isComponentInstance<T extends ComponentConstructor>(
+    input: unknown,
+    componentConstructor: T
+  ): input is InstanceType<T> {
+    return input instanceof componentConstructor;
+  }
+
+  public static getComponentInstance<T extends ComponentConstructor>(componentConstructor: T): InstanceType<T> {
+    const componentInstance: HTMLElement = document.createElement(componentConstructor.selector);
+
+    if (Application.#isComponentInstance(componentInstance, componentConstructor)) {
+      return componentInstance;
+    }
+
+    throw new Error(`[Application] Creation of component of type ${componentConstructor.name} is failed.`);
+  }
+
   public static getBackgroundService<T extends object>(serviceConstructor: ServiceConstructor<T>): T {
     const context: ContextWithRegistry = getContextWithRunningServicesAccessKey();
     const foundService: object | undefined = context[RUNNING_SERVICES_ACCESS_KEY].get(serviceConstructor);
