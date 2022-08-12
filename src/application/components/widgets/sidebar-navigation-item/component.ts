@@ -1,5 +1,5 @@
-import { ContextualError } from '@application/declarations/classes/contextual-error.class';
 import type { AttributeListener } from '@application/declarations/interfaces/attribute-listener.interface';
+import { Application } from '@framework/application';
 import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
 import { $color_active, $color_main } from '@styles/variables';
 import { IconComponent } from './../icon/component';
@@ -12,14 +12,15 @@ enum ObservedAttributeName {
   URL = 'url'
 }
 
-export class PipelineTileComponent extends HTMLElement implements AttributeListener {
-  public static readonly selector: PerfComponentSelector = 'perf-pipeline-tile';
+export class SidebarNavigationItemComponent extends HTMLElement implements AttributeListener {
+  public static readonly selector: PerfComponentSelector = 'perf-sidebar-navigation-item';
 
   public static readonly observedAttributeName: typeof ObservedAttributeName = ObservedAttributeName;
 
-  readonly #tileElement: HTMLElement = PipelineTileComponent.#getTileElement();
-  readonly #iconComponent: IconComponent = PipelineTileComponent.#getIconElement();
-  readonly #textElement: HTMLSpanElement = PipelineTileComponent.#getTextElement();
+  readonly #tileElement: HTMLElement = SidebarNavigationItemComponent.#getTileElement();
+  readonly #backgroundElement: HTMLElement = SidebarNavigationItemComponent.#getBackgroundElement();
+  readonly #iconComponent: IconComponent = SidebarNavigationItemComponent.#getIconElement();
+  readonly #textElement: HTMLSpanElement = SidebarNavigationItemComponent.#getTextElement();
 
   #isActive: boolean = false;
   #url: string = '';
@@ -30,9 +31,7 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
     const shadowRoot: ShadowRoot = this.attachShadow({ mode: 'closed' });
     const style: HTMLStyleElement = document.createElement('style');
 
-    const markerElement: HTMLElement = PipelineTileComponent.#getMarkerElement();
-
-    this.#tileElement.appendChild(markerElement);
+    this.#tileElement.appendChild(this.#backgroundElement);
     this.#tileElement.appendChild(this.#iconComponent);
     this.#tileElement.appendChild(this.#textElement);
 
@@ -61,6 +60,12 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
     return tileElement;
   }
 
+  static #getBackgroundElement(): HTMLElement {
+    const backgroundElement: HTMLElement = document.createElement('div');
+    backgroundElement.classList.add('tile__background');
+    return backgroundElement;
+  }
+
   static #getTextElement(): HTMLSpanElement {
     const textElement: HTMLSpanElement = document.createElement('span');
     textElement.classList.add('tile__text');
@@ -68,18 +73,10 @@ export class PipelineTileComponent extends HTMLElement implements AttributeListe
   }
 
   static #getIconElement(): IconComponent {
-    const iconComponent: HTMLElement = document.createElement(IconComponent.selector);
+    const iconComponent: IconComponent = Application.getComponentInstance(IconComponent);
     iconComponent.classList.add('tile__icon');
-    if (iconComponent instanceof IconComponent) {
-      return iconComponent;
-    }
-    throw new ContextualError(PipelineTileComponent, 'IconComponent creation is failed');
-  }
-
-  static #getMarkerElement(): HTMLElement {
-    const markerElement: HTMLElement = document.createElement('div');
-    markerElement.classList.add('tile__marker');
-    return markerElement;
+    iconComponent.setAttribute('color', '#ffffff');
+    return iconComponent;
   }
 
   public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {

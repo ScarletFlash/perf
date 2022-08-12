@@ -11,7 +11,7 @@ export class CurrentRouteComponent extends HTMLElement implements Connectable, D
   public static readonly selector: PerfComponentSelector = 'perf-current-route';
 
   readonly #routingService: RoutingService = Application.getBackgroundService(RoutingService);
-  readonly #wrapperSectionElement: HTMLElement = CurrentRouteComponent.#getRouteContainerElement();
+  readonly #routeContainerElement: HTMLElement = CurrentRouteComponent.#getRouteContainerElement();
 
   constructor() {
     super();
@@ -22,11 +22,11 @@ export class CurrentRouteComponent extends HTMLElement implements Connectable, D
     style.innerHTML = componentStyles;
 
     shadowRoot.appendChild(style);
-    shadowRoot.appendChild(this.#wrapperSectionElement);
+    shadowRoot.appendChild(this.#routeContainerElement);
   }
 
   static #getRouteContainerElement(): HTMLElement {
-    const routeContainerElement: HTMLElement = document.createElement('section');
+    const routeContainerElement: HTMLElement = document.createElement('main');
     routeContainerElement.classList.add('route-container');
     return routeContainerElement;
   }
@@ -45,9 +45,9 @@ export class CurrentRouteComponent extends HTMLElement implements Connectable, D
 
   #renderContentBySelector(targetComponentSelector: string): void {
     const targetComponent: HTMLElement = document.createElement(targetComponentSelector);
-    if (this.#wrapperSectionElement.childElementCount > 0) {
-      Array.from(this.#wrapperSectionElement.children).forEach((childElement: Element) => childElement.remove());
+    if (this.#routeContainerElement.childElementCount > 0) {
+      Array.from(this.#routeContainerElement.children).forEach((childElement: Element) => childElement.remove());
     }
-    this.#wrapperSectionElement.appendChild(targetComponent);
+    this.#routeContainerElement.appendChild(targetComponent);
   }
 }

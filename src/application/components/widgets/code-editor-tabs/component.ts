@@ -57,19 +57,15 @@ export class CodeEditorTabsComponent extends HTMLElement implements Connectable,
   }
 
   static #getTabItemComponent({ type, id, name }: CodeSnippet): CodeEditorTabsItemComponent {
-    const itemComponent: HTMLElement = document.createElement(CodeEditorTabsItemComponent.selector);
+    const itemComponent: CodeEditorTabsItemComponent = Application.getComponentInstance(CodeEditorTabsItemComponent);
 
-    if (itemComponent instanceof CodeEditorTabsItemComponent) {
-      const observedAttributeName: typeof CodeEditorTabsItemComponent.observedAttributeName =
-        CodeEditorTabsItemComponent.observedAttributeName;
+    const observedAttributeName: typeof CodeEditorTabsItemComponent.observedAttributeName =
+      CodeEditorTabsItemComponent.observedAttributeName;
 
-      itemComponent.setAttribute(observedAttributeName.IsRemovable, String(type === CodeSnippetType.Test));
-      itemComponent.setAttribute(observedAttributeName.CodeSnippetId, id);
-      itemComponent.setAttribute(observedAttributeName.CodeSnippetName, name);
-      return itemComponent;
-    }
-
-    throw new ContextualError(CodeEditorTabsComponent, 'CodeEditorTabsItemComponent creation is failed');
+    itemComponent.setAttribute(observedAttributeName.IsRemovable, String(type === CodeSnippetType.Test));
+    itemComponent.setAttribute(observedAttributeName.CodeSnippetId, id);
+    itemComponent.setAttribute(observedAttributeName.CodeSnippetName, name);
+    return itemComponent;
   }
 
   readonly #onSnippetListChangeCallback: OnSnippetListChangeCallback = (updatedSnippetList: CodeSnippet[]) =>

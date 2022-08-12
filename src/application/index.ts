@@ -14,8 +14,9 @@ import { CurrentRouteComponent } from './components/widgets/current-route/compon
 import { FooterComponent } from './components/widgets/footer/component';
 import { HeaderComponent } from './components/widgets/header/component';
 import { IconComponent } from './components/widgets/icon/component';
-import { PipelineTileComponent } from './components/widgets/pipeline-tile/component';
-import { PipelineComponent } from './components/widgets/pipeline/component';
+import { SidebarNavigationItemComponent } from './components/widgets/sidebar-navigation-item/component';
+import { SidebarNavigationComponent } from './components/widgets/sidebar-navigation/component';
+import { SidebarComponent } from './components/widgets/sidebar/component';
 import globalStyles from './index.scss';
 
 new Application()
@@ -33,12 +34,13 @@ new Application()
     IconComponent,
     HeaderComponent,
     FooterComponent,
-    PipelineTileComponent,
-    PipelineComponent,
     CurrentRouteComponent,
     CodeEditorTabsComponent,
     CodeEditorTabsItemComponent,
     RouteCodeComponent,
     // RouteConfigurationComponent,
-    RouteAnalysisComponent
+    RouteAnalysisComponent,
+    SidebarNavigationItemComponent,
+    SidebarNavigationComponent,
+    SidebarComponent
   ]);

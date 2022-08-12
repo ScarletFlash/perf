@@ -1,6 +1,11 @@
 @use './../../../styles/variables' as *;
 @import './../../../styles/global';
 
+:host {
+  width: calc(100% - #{$width_sidebar});
+  display: block;
+}
+
 .route-container {
   position: relative;
   width: 100%;

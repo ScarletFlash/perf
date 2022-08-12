@@ -1,0 +1,66 @@
+@use './../../../styles/variables' as *;
+@import './../../../styles/global';
+
+.tile {
+  position: relative;
+  background: $color_background-alternative;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+
+  padding: 1rem;
+
+  text-decoration: none;
+  color: $color_background;
+
+  &__icon {
+    z-index: 2;
+
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  &__text {
+    color: inherit;
+    font-size: 1rem;
+
+    padding: 0 0 0 0.5rem;
+
+    z-index: 2;
+  }
+
+  &__background {
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0.5rem;
+
+    transform: translate(-0.5rem, 0.5rem);
+
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
+    transition-property: background, box-shadow, transform;
+
+    will-change: background, box-shadow, transform;
+
+    z-index: 1;
+  }
+
+  &_active &__background {
+    transform: translate(0);
+
+    box-shadow: $color_active 0 0 0.5rem;
+    background: $color_active;
+  }
+}
