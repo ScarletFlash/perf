@@ -34,7 +34,7 @@ export class RouteCodeComponent extends HTMLElement implements Connectable, Disc
     const style: HTMLStyleElement = document.createElement('style');
     style.innerHTML = componentStyles;
 
-    const editorTabsComponent: CodeEditorTabsComponent = RouteCodeComponent.#getEditorTabsComponent();
+    const editorTabsComponent: CodeEditorTabsComponent = Application.getComponentInstance(CodeEditorTabsComponent);
 
     shadowRoot.appendChild(style);
     shadowRoot.appendChild(editorTabsComponent);
@@ -45,14 +45,6 @@ export class RouteCodeComponent extends HTMLElement implements Connectable, Disc
     const sectionElement: HTMLElement = document.createElement('section');
     sectionElement.classList.add('editor-container');
     return sectionElement;
-  }
-
-  static #getEditorTabsComponent(): CodeEditorTabsComponent {
-    const tabsComponent: HTMLElement = document.createElement(CodeEditorTabsComponent.selector);
-    if (tabsComponent instanceof CodeEditorTabsComponent) {
-      return tabsComponent;
-    }
-    throw new ContextualError(RouteCodeComponent, 'CodeEditorTabsComponent creation failed');
   }
 
   readonly #onWindowSizeChangesListener: OnWindowSizeChangeCallback = () => {

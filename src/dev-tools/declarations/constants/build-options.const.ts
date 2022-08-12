@@ -23,7 +23,7 @@ export const buildOptions: Omit<BuildOptions, 'outdir'> = {
   platform: 'browser',
   format: 'iife',
   charset: 'utf8',
-  minify: true,
+  minify: false,
   target: 'esnext',
   treeShaking: true,
   tsconfig: Paths.tsConfig,

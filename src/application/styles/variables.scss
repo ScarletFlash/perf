@@ -1,10 +1,13 @@
 @use 'sass:color';
 
-$color_background: #eceff1;
+$color_background: #ffffff;
+$color_background-alternative: #1e1e1e;
 $color_main: #263238;
 $color_active: #c95043;
-$color_pipeline_elements: color.mix($color_main, $color_background, 25%);
+$color_pipeline-elements: color.mix($color_main, $color_background, 25%);
 
 $height_header: 64px;
 $height_footer: 24px;
 $height_pipeline-background-elements: 16px;
+
+$width_sidebar: 400px;
