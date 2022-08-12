@@ -118,6 +118,14 @@ dataSet.forEach((item: number) => result.push(item));
     this.#monacoEditor.layout();
   }
 
+  public setValue(code: string): void {
+    if (this.#monacoEditor === null) {
+      throw new ContextualError(this, 'Editor is not created');
+    }
+
+    this.#monacoEditor.setValue(code);
+  }
+
   public subscribeToValueChanges(callback: OnEditorValueChangeCallback): void {
     this.#onValueChangeCallbacks.add(callback);
   }

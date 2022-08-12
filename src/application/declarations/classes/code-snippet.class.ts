@@ -21,7 +21,7 @@ export class CodeSnippet {
   }
 
   public get id(): CodeSnippetId {
-    return CodeSnippet.getId(`${this.#name}@${this.type}`);
+    return CodeSnippet.getId(`${this.#name}⁞${this.type}`);
   }
 
   public get code(): string {
@@ -33,16 +33,20 @@ export class CodeSnippet {
   }
 
   public static getId(rawValue: string): CodeSnippetId {
-    const incompatibleError: Error = new ContextualError(CodeSnippet, 'raw value is not compatible with CodeSnippetId');
+    const incompatibleError: Error = new ContextualError(
+      CodeSnippet,
+      `raw value (${rawValue}) is not compatible with CodeSnippetId`
+    );
 
-    const idParts: string[] = rawValue.replaceAll(' ', '_').split('@');
+    const idParts: string[] = rawValue.replaceAll(' ', '_').split('⁞');
 
-    if (idParts.length !== 2) {
+    if (idParts.length < 2) {
       throw incompatibleError;
     }
 
     const rawName: string = idParts[0];
     const rawType: string = idParts[1];
+    const rawCreationTimeMark: number = Number.parseInt(idParts[2], 10);
 
     if (rawName.length === 0) {
       throw incompatibleError;
@@ -52,7 +56,9 @@ export class CodeSnippet {
       throw incompatibleError;
     }
 
-    return `${rawName}@${rawType}`;
+    const creationTimeMark: number = Number.isNaN(rawCreationTimeMark) ? 12345 : rawCreationTimeMark;
+
+    return `${rawName}⁞${rawType}⁞${creationTimeMark}`;
   }
 
   public updateCode(code: string): void {
