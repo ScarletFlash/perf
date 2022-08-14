@@ -6,8 +6,11 @@ import type { AttributeListener } from '@application/declarations/interfaces/att
 import type { Connectable } from '@application/declarations/interfaces/connectable.interface';
 import type { Disconnectable } from '@application/declarations/interfaces/disconnectable.interface';
 import type { CodeSnippetId } from '@application/declarations/types/code-snippet-id.type';
+import { $color_background } from '@application/styles/variables';
+import { getElementWithAllChildren } from '@application/utilities/get-element-with-all-children.util';
 import { Application } from '@framework/application';
 import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
+import { IconComponent } from '../icon/component';
 import componentStyles from './component.scss';
 
 enum ObservedAttributeName {
@@ -57,9 +60,16 @@ export class CodeEditorTabsItemComponent extends HTMLElement implements Connecta
   }
 
   static #getRemoveButtonElement(): HTMLButtonElement {
+    const iconComponent: IconComponent = Application.getComponentInstance(IconComponent);
+
+    const observedAttributeName: typeof IconComponent.observedAttributeName = IconComponent.observedAttributeName;
+    iconComponent.setAttribute(observedAttributeName.Source, '/assets/images/cross-icon.svg');
+    iconComponent.setAttribute(observedAttributeName.Color, $color_background);
+
     const buttonElement: HTMLButtonElement = document.createElement('button');
     buttonElement.classList.add('tabs-item__remove-button');
-    buttonElement.innerText = 'x';
+    buttonElement.appendChild(iconComponent);
+
     return buttonElement;
   }
 
@@ -122,7 +132,7 @@ export class CodeEditorTabsItemComponent extends HTMLElement implements Connecta
       throw new ContextualError(this, 'SnippetId is not defined');
     }
 
-    const isRemoveButtonClick: boolean = target === this.#removeTabButton;
+    const isRemoveButtonClick: boolean = getElementWithAllChildren(this.#removeTabButton).has(target);
     if (isRemoveButtonClick) {
       this.#codeSnippetsService.removeSnippet(snippetId);
       event.stopImmediatePropagation();

@@ -19,6 +19,8 @@
   @include no_scrollbar;
 
   &__items-container {
+    background: $color_main;
+
     position: relative;
 
     height: 100%;
@@ -28,6 +30,7 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
+    gap: 1px;
 
     z-index: 2;
   }

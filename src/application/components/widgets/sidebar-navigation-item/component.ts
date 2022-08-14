@@ -1,7 +1,7 @@
 import type { AttributeListener } from '@application/declarations/interfaces/attribute-listener.interface';
 import { Application } from '@framework/application';
 import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
-import { $color_active, $color_main } from '@styles/variables';
+import { $color_background } from '@styles/variables';
 import { IconComponent } from './../icon/component';
 import componentStyles from './component.scss';
 
@@ -75,7 +75,7 @@ export class SidebarNavigationItemComponent extends HTMLElement implements Attri
   static #getIconElement(): IconComponent {
     const iconComponent: IconComponent = Application.getComponentInstance(IconComponent);
     iconComponent.classList.add('tile__icon');
-    iconComponent.setAttribute('color', '#ffffff');
+    iconComponent.setAttribute('color', $color_background);
     return iconComponent;
   }
 
@@ -113,10 +113,8 @@ export class SidebarNavigationItemComponent extends HTMLElement implements Attri
     const activeModifierName: string = 'tile_active';
     if (this.#isActive) {
       this.#tileElement.classList.add(activeModifierName);
-      this.#iconComponent.setNewColor($color_active);
       return;
     }
     this.#tileElement.classList.remove(activeModifierName);
-    this.#iconComponent.setNewColor($color_main);
   }
 }
