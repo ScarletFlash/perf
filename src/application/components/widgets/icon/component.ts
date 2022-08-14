@@ -77,15 +77,14 @@ export class IconComponent extends HTMLElement implements AttributeListener {
     };
     const onLoadListener: EventListener = () => {
       const embeddedDocument: Document | null = this.#objectElement.getSVGDocument();
-      const invalidIconError: Error = new ContextualError(this, 'embedded icon is invalid');
 
       if (embeddedDocument === null) {
-        throw invalidIconError;
+        throw new ContextualError(this, 'embedded icon is invalid null');
       }
 
-      const svgElement: SVGElement | null = embeddedDocument.querySelector('svg');
-      if (!(embeddedDocument instanceof SVGElement)) {
-        throw invalidIconError;
+      const svgElement: SVGSVGElement | null = embeddedDocument.querySelector('svg');
+      if (svgElement === null) {
+        throw new ContextualError(this, 'embedded icon is not svg');
       }
 
       this.#svgElement = svgElement;

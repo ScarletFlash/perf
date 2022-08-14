@@ -5,7 +5,6 @@
   width: fit-content;
   height: 100%;
 
-  margin: 0 2px;
   padding: 0 1rem;
 
   display: flex;
@@ -14,11 +13,13 @@
   align-items: center;
 
   color: #ffffff;
+  background: $color_background-alternative;
 
   cursor: pointer;
 
   &__name {
     white-space: nowrap;
+    user-select: none;
 
     &_static {
       font-weight: 600;
@@ -26,6 +27,22 @@
   }
 
   &__remove-button {
-    cursor: inherit;
+    cursor: pointer;
+
+    width: 1.2rem;
+    height: 1.2rem;
+
+    border-radius: 2px;
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: 0.5rem;
+
+    will-change: background;
+    transition: 0.1s background;
+
+    &:hover {
+      background: rgba($color: $color_background, $alpha: 0.1);
+    }
   }
 }
