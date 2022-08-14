@@ -17,7 +17,7 @@
 
     background: $color_active;
     transition-duration: 0.3s;
-    transition-timing-function: ease-in-out;
+    transition-timing-function: cubic-bezier(0.05, 0.44, 0.54, 0.94);
     transition-property: transform, width;
 
     will-change: transform, width;
