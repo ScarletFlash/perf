@@ -22,6 +22,8 @@
 
   will-change: border-color;
 
+  user-select: none;
+
   &:hover {
     border-color: rgba($color: $color_active, $alpha: 0.5);
   }

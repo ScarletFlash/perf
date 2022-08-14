@@ -1,0 +1,72 @@
+@use './../../../styles/variables' as *;
+@use './../../../styles/mixins' as *;
+@import './../../../styles/global';
+
+:host {
+  display: block;
+
+  margin-top: 2rem;
+}
+
+.execution-control {
+  background: $color_main;
+
+  @include border;
+  border-color: $color_main;
+  border-radius: 2px;
+
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: space-between;
+
+  // &__button {
+  //   height: 100%;
+  // }
+
+  &__info {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    padding: 1rem;
+  }
+}
+
+.play-button {
+  background: $color_background-alternative;
+  border: none;
+  padding: 0;
+
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1rem;
+
+  will-change: background;
+  transition: 0.1s background;
+
+  &__icon {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  &__title {
+    color: $color_background;
+    font-size: 1rem;
+    padding: 0.5rem 0 0;
+  }
+
+  &:hover {
+    background: $color_background-hover;
+  }
+}

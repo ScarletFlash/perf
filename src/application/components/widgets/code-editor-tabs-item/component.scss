@@ -17,6 +17,13 @@
 
   cursor: pointer;
 
+  will-change: background;
+  transition: 0.1s background;
+
+  &:hover {
+    background: $color_background-hover;
+  }
+
   &__name {
     white-space: nowrap;
     user-select: none;
@@ -42,7 +49,7 @@
     transition: 0.1s background;
 
     &:hover {
-      background: rgba($color: $color_background, $alpha: 0.1);
+      background: $color_background-hover-light;
     }
   }
 }
