@@ -15,7 +15,7 @@ export class SidebarComponent extends HTMLElement {
     const wrapperElement: HTMLElement = document.createElement('aside');
 
     const headerElement: HTMLElement = Application.getComponentInstance(HeaderComponent);
-    headerElement.classList.add('.header');
+    headerElement.classList.add('header');
     wrapperElement.appendChild(headerElement);
 
     const navigationElement: HTMLElement = Application.getComponentInstance(SidebarNavigationComponent);

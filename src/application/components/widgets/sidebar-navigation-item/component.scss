@@ -1,4 +1,5 @@
 @use './../../../styles/variables' as *;
+@use './../../../styles/mixins' as *;
 @import './../../../styles/global';
 
 .tile {
@@ -8,18 +9,28 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-end;
 
   padding: 1rem;
 
   text-decoration: none;
   color: $color_background;
+  border-radius: 0.5rem;
+
+  @include border;
+  border-color: transparent;
+
+  will-change: border-color;
+
+  &:hover {
+    border-color: rgba($color: $color_active, $alpha: 0.5);
+  }
 
   &__icon {
     z-index: 2;
 
-    width: 1.2rem;
-    height: 1.2rem;
+    width: 1.6rem;
+    height: 1.6rem;
   }
 
   &__text {
@@ -34,13 +45,15 @@
   &__background {
     position: absolute;
 
-    width: 100%;
-    height: 100%;
+    pointer-events: none;
 
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
+    width: calc(100% + 2px);
+    height: calc(100% + 2px);
+
+    top: -1px;
+    left: -1px;
+    bottom: 1px;
+    right: 1px;
 
     background: transparent;
     box-shadow: none;
@@ -62,5 +75,10 @@
 
     box-shadow: $color_active 0 0 0.5rem;
     background: $color_active;
+  }
+
+  &_active,
+  &_active:hover {
+    border-color: rgba($color: $color_active, $alpha: 1);
   }
 }

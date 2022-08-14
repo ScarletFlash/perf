@@ -1,0 +1,25 @@
+@use './../../../styles/variables' as *;
+@import './../../../styles/global';
+
+:host {
+  display: block;
+
+  height: 2px;
+  width: 100%;
+
+  overflow: hidden;
+
+  .marker {
+    height: 100%;
+    width: 0;
+
+    border-radius: 1px 1px 0 0;
+
+    background: $color_active;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
+    transition-property: transform, width;
+
+    will-change: transform, width;
+  }
+}

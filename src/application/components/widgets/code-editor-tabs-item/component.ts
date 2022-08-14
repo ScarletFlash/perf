@@ -1,4 +1,5 @@
 import { CodeSnippetsService } from '@application/background-services/code-snippets.service';
+import { TabsSelectionService } from '@application/background-services/tabs-selection.service';
 import { CodeSnippet } from '@application/declarations/classes/code-snippet.class';
 import { ContextualError } from '@application/declarations/classes/contextual-error.class';
 import type { AttributeListener } from '@application/declarations/interfaces/attribute-listener.interface';
@@ -21,6 +22,7 @@ export class CodeEditorTabsItemComponent extends HTMLElement implements Connecta
   public static readonly observedAttributeName: typeof ObservedAttributeName = ObservedAttributeName;
 
   readonly #codeSnippetsService: CodeSnippetsService = Application.getBackgroundService(CodeSnippetsService);
+  readonly #tabsSelectionService: TabsSelectionService = Application.getBackgroundService(TabsSelectionService);
 
   readonly #removeTabButton: HTMLButtonElement = CodeEditorTabsItemComponent.#getRemoveButtonElement();
   readonly #wrapperElement: HTMLElement = CodeEditorTabsItemComponent.#getWrapperElement();
@@ -56,7 +58,7 @@ export class CodeEditorTabsItemComponent extends HTMLElement implements Connecta
 
   static #getRemoveButtonElement(): HTMLButtonElement {
     const buttonElement: HTMLButtonElement = document.createElement('button');
-    buttonElement.classList.add('tabs_item__remove-button');
+    buttonElement.classList.add('tabs-item__remove-button');
     buttonElement.innerText = 'x';
     return buttonElement;
   }
@@ -67,8 +69,8 @@ export class CodeEditorTabsItemComponent extends HTMLElement implements Connecta
     return wrapperElement;
   }
 
-  static #getNameElement(): HTMLSpanElement {
-    const nameElement: HTMLSpanElement = document.createElement('span');
+  static #getNameElement(): HTMLElement {
+    const nameElement: HTMLElement = document.createElement('div');
     nameElement.classList.add('tabs-item__name');
     return nameElement;
   }
@@ -89,6 +91,10 @@ export class CodeEditorTabsItemComponent extends HTMLElement implements Connecta
     if (name === ObservedAttributeName.IsRemovable) {
       const isRemovable: boolean = newValue === 'true';
       const buttonShouldBeVisible: boolean = isRemovable;
+
+      const staticClass: string = 'tabs-item__name_static';
+      isRemovable ? this.#nameElement.classList.remove(staticClass) : this.#nameElement.classList.add(staticClass);
+
       this.#toggleRemoveTabButtonVisibility(buttonShouldBeVisible);
     }
 
@@ -124,7 +130,25 @@ export class CodeEditorTabsItemComponent extends HTMLElement implements Connecta
     }
 
     this.#codeSnippetsService.activateSnippet(snippetId);
+
+    this.#updateMarkerPosition();
   };
+
+  #updateMarkerPosition(): void {
+    const parentElement: HTMLElement | null = this.parentElement;
+
+    if (parentElement === null) {
+      throw new ContextualError(this, 'Tab item should be inside tabs container');
+    }
+
+    const { width: currentElementWidthPx, left: currentElementOffsetPx }: DOMRect = this.getBoundingClientRect();
+    const { left: parentElementOffsetPx } = parentElement.getBoundingClientRect();
+
+    this.#tabsSelectionService.selectWithParams({
+      widthStyle: `${currentElementWidthPx}px`,
+      offsetXStyle: `${currentElementOffsetPx - parentElementOffsetPx}px`
+    });
+  }
 
   #toggleRemoveTabButtonVisibility(shouldBeVisible: boolean): void {
     const existsInView: boolean = Array.from(this.#wrapperElement.children).includes(this.#removeTabButton);

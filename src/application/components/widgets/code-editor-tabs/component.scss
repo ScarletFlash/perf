@@ -1,14 +1,21 @@
 @use './../../../styles/variables' as *;
+@use './../../../styles/mixins' as *;
 @import './../../../styles/global';
 
 .tabs {
+  position: relative;
+
   width: 100%;
-  height: $height_footer;
+  height: $height_code-editor-tabs;
 
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+
+  overflow: auto hidden;
+
+  @include border(bottom);
 
   &__items-container {
     width: 100%;
@@ -18,5 +25,24 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
+
+    z-index: 2;
+  }
+
+  &__add-new {
+    position: sticky;
+    top: 0;
+    right: 0;
+
+    z-index: 2;
+  }
+
+  &__selector {
+    position: absolute;
+
+    left: 0;
+    bottom: 0;
+
+    z-index: 1;
   }
 }

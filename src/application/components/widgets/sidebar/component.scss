@@ -1,7 +1,9 @@
 @use './../../../styles/variables' as *;
+@use './../../../styles/mixins' as *;
 @import './../../../styles/global';
 
 :host {
+  position: relative;
   background: $color_background-alternative;
   width: $width_sidebar;
   height: 100%;
@@ -13,9 +15,9 @@
 
   overflow: hidden auto;
 
-  padding: 0 1rem;
+  padding: 1rem;
 
-  border-right: 1px solid $color_main;
+  @include border(right);
 
   .header {
     width: 100%;
@@ -23,5 +25,7 @@
     position: sticky;
     top: 0;
     left: 0;
+
+    z-index: 1;
   }
 }

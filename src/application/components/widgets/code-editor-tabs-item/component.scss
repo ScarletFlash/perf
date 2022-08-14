@@ -3,11 +3,29 @@
 
 .tabs-item {
   width: fit-content;
-  max-width: 100px;
-  height: $height_footer;
+  height: 100%;
+
+  margin: 0 2px;
+  padding: 0 1rem;
 
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
+
+  color: #ffffff;
+
+  cursor: pointer;
+
+  &__name {
+    white-space: nowrap;
+
+    &_static {
+      font-weight: 600;
+    }
+  }
+
+  &__remove-button {
+    cursor: inherit;
+  }
 }
