@@ -13,6 +13,8 @@ import { CodeEditorTabsItemComponent } from './components/widgets/code-editor-ta
 import { CodeEditorTabsSelectorComponent } from './components/widgets/code-editor-tabs-selector/component';
 import { CodeEditorTabsComponent } from './components/widgets/code-editor-tabs/component';
 import { CurrentRouteComponent } from './components/widgets/current-route/component';
+import { ExecutionControlInfoItemComponent } from './components/widgets/execution-control-info-item/component';
+import { ExecutionControlComponent } from './components/widgets/execution-control/component';
 import { FooterComponent } from './components/widgets/footer/component';
 import { HeaderComponent } from './components/widgets/header/component';
 import { IconComponent } from './components/widgets/icon/component';
@@ -44,6 +46,8 @@ new Application()
     RouteCodeComponent,
     // RouteConfigurationComponent,
     RouteAnalysisComponent,
+    ExecutionControlInfoItemComponent,
+    ExecutionControlComponent,
     SidebarNavigationItemComponent,
     SidebarNavigationComponent,
     SidebarComponent

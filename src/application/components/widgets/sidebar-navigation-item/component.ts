@@ -75,7 +75,7 @@ export class SidebarNavigationItemComponent extends HTMLElement implements Attri
   static #getIconElement(): IconComponent {
     const iconComponent: IconComponent = Application.getComponentInstance(IconComponent);
     iconComponent.classList.add('tile__icon');
-    iconComponent.setAttribute('color', $color_background);
+    iconComponent.setAttribute(IconComponent.observedAttributeName.Color, $color_background);
     return iconComponent;
   }
 
@@ -84,20 +84,20 @@ export class SidebarNavigationItemComponent extends HTMLElement implements Attri
       return;
     }
 
-    if (name === 'icon') {
+    if (name === ObservedAttributeName.Icon) {
       this.#iconComponent.setAttribute(IconComponent.observedAttributeName.Source, newValue);
     }
 
-    if (name === 'text') {
+    if (name === ObservedAttributeName.Text) {
       this.#textElement.innerText = newValue;
     }
 
-    if (name === 'isActive') {
+    if (name === ObservedAttributeName.IsActive) {
       const targetState: boolean = newValue === 'true';
       this.setActivationState(targetState);
     }
 
-    if (name === 'url') {
+    if (name === ObservedAttributeName.URL) {
       this.#tileElement.setAttribute('href', newValue);
       this.#url = newValue;
     }

@@ -19,13 +19,32 @@
 
   @include border(right);
 
-  .header {
+  .sidebar {
     width: 100%;
-    height: $height_header;
-    position: sticky;
-    top: 0;
-    left: 0;
+    height: 100%;
 
-    z-index: 1;
+    position: relative;
+
+    &__header {
+      width: 100%;
+      height: $height_header;
+      position: sticky;
+      top: 0;
+      left: 0;
+
+      z-index: 1;
+    }
+
+    &__navigation {
+    }
+
+    &__execution-control {
+      width: 100%;
+      position: sticky;
+      bottom: 100px;
+      left: 0;
+
+      z-index: 1;
+    }
   }
 }
