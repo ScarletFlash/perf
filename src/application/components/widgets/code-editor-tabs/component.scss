@@ -16,10 +16,13 @@
   overflow: auto hidden;
 
   @include border(bottom);
+  @include no_scrollbar;
 
   &__items-container {
-    width: 100%;
+    position: relative;
+
     height: 100%;
+    width: fit-content;
 
     display: flex;
     flex-direction: row;

@@ -34,7 +34,7 @@ export class CodeEditorTabsComponent extends HTMLElement implements Connectable,
 
     wrapperElement.appendChild(this.#itemsContainerElement);
     wrapperElement.appendChild(this.#addButtonElement);
-    wrapperElement.appendChild(this.#selectorElement);
+    this.#itemsContainerElement.appendChild(this.#selectorElement);
 
     shadowRoot.appendChild(style);
     shadowRoot.appendChild(wrapperElement);
