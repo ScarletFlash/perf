@@ -1,1 +1,11 @@
 @use './variables' as *;
+
+@mixin border($direction: none) {
+  $style-params: 1px solid $color_main;
+
+  @if $direction == none {
+    border: $style-params;
+  } @else {
+    border-#{$direction}: $style-params;
+  }
+}

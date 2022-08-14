@@ -10,6 +10,7 @@ import { getRandomUnicodeCharFromRange } from '@application/utilities/get-random
 import { Application } from '@framework/application';
 import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
 import { CodeEditorTabsItemComponent } from '../code-editor-tabs-item/component';
+import { CodeEditorTabsSelectorComponent } from '../code-editor-tabs-selector/component';
 import componentStyles from './component.scss';
 
 export class CodeEditorTabsComponent extends HTMLElement implements Connectable, Disconnectable {
@@ -19,6 +20,7 @@ export class CodeEditorTabsComponent extends HTMLElement implements Connectable,
 
   readonly #itemsContainerElement: HTMLElement = CodeEditorTabsComponent.#getItemsContainerElement();
   readonly #addButtonElement: HTMLElement = CodeEditorTabsComponent.#getAddButtonElement();
+  readonly #selectorElement: HTMLElement = CodeEditorTabsComponent.#getSelectorComponent();
 
   constructor() {
     super();
@@ -32,6 +34,7 @@ export class CodeEditorTabsComponent extends HTMLElement implements Connectable,
 
     wrapperElement.appendChild(this.#itemsContainerElement);
     wrapperElement.appendChild(this.#addButtonElement);
+    wrapperElement.appendChild(this.#selectorElement);
 
     shadowRoot.appendChild(style);
     shadowRoot.appendChild(wrapperElement);
@@ -54,6 +57,14 @@ export class CodeEditorTabsComponent extends HTMLElement implements Connectable,
     buttonElement.classList.add('tabs__add-new');
     buttonElement.innerText = '+';
     return buttonElement;
+  }
+
+  static #getSelectorComponent(): CodeEditorTabsSelectorComponent {
+    const selectorComponent: CodeEditorTabsSelectorComponent = Application.getComponentInstance(
+      CodeEditorTabsSelectorComponent
+    );
+    selectorComponent.classList.add('tabs__selector');
+    return selectorComponent;
   }
 
   static #getTabItemComponent({ type, id, name }: CodeSnippet): CodeEditorTabsItemComponent {

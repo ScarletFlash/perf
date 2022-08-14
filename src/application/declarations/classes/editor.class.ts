@@ -10,21 +10,7 @@ export class Editor {
   #monacoEditor: editor.IStandaloneCodeEditor | null = null;
 
   readonly #monacoEditorOptions: editor.IStandaloneEditorConstructionOptions = {
-    value: `
-const dataSet: number[] = new Array(100_000).fill(null).map(() => Math.random());
-
-const result: unknown[] = [];
-
-dataSet.forEach((item: number) => result.push(item));
-
-// for (const item of dataSet) {
-//   result.push(item);
-// }
-
-// for (let index = 0; index < dataSet.length; index++) {
-//   result.push(dataSet[index]);
-// }
-`,
+    value: '',
     language: 'typescript',
     autoDetectHighContrast: false,
     automaticLayout: false,

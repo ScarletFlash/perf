@@ -1,11 +1,16 @@
 @use './../../../styles/variables' as *;
 @import '/assets/editor.main.css';
 
+:host {
+  display: block;
+  background: $color_background-alternative;
+}
+
 .editor-container {
   position: relative;
 
   width: 100%;
-  height: 100%;
+  height: calc(100% - #{$height_code-editor-tabs});
 
   overflow: hidden;
 
