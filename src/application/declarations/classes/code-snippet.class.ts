@@ -2,19 +2,19 @@ import { CodeSnippetType } from '../enums/code-snippet-type.enum';
 import type { CodeSnippetId } from '../types/code-snippet-id.type';
 import { ContextualError } from './contextual-error.class';
 
-interface CodeSnippetInit {
-  type: CodeSnippetType;
+interface CodeSnippetInit<T extends CodeSnippetType> {
+  type: T;
   code: string;
   name: string;
 }
 
-export class CodeSnippet {
+export class CodeSnippet<T extends CodeSnippetType = CodeSnippetType> {
   #name: string = '';
   #code: string = '';
 
-  public readonly type: CodeSnippetType;
+  public readonly type: T;
 
-  constructor({ type, name, code }: CodeSnippetInit) {
+  constructor({ type, name, code }: CodeSnippetInit<T>) {
     this.type = type;
     this.#name = name;
     this.#code = code;
