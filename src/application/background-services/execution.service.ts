@@ -43,10 +43,12 @@ export class ExecutionService {
   }
 
   public toggleExecutionState(): void {
-    const targetStatus: ExecutionStatus =
-      this.#executionStatus === ExecutionStatus.StandBy ? ExecutionStatus.Running : ExecutionStatus.StandBy;
-    this.#executionStatus = targetStatus;
-    this.#onExecutionStateChangeCallbacks.forEach((callback: OnExecutionStateChange) => callback(targetStatus));
+    const isAlreadyExecuting: boolean = this.#executionStatus === ExecutionStatus.Running;
+    isAlreadyExecuting ? this.#stopExecution() : this.#startExecution();
+
+    this.#onExecutionStateChangeCallbacks.forEach((callback: OnExecutionStateChange) =>
+      callback(this.#executionStatus)
+    );
   }
 
   public subscribeToExecutionStateChanges(callback: OnExecutionStateChange): void {
@@ -55,5 +57,14 @@ export class ExecutionService {
 
   public unsubscribeFromExecutionStateChanges(callback: OnExecutionStateChange): void {
     this.#onExecutionStateChangeCallbacks.delete(callback);
+  }
+
+  #startExecution(): void {
+    this.#executionStatus = ExecutionStatus.Running;
+    this.transpile().then(() => this.generateExecutionReport());
+  }
+
+  #stopExecution(): void {
+    this.#executionStatus = ExecutionStatus.StandBy;
   }
 }

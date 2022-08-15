@@ -1,9 +1,14 @@
+import { CodeSnippetsService } from '@application/background-services/code-snippets.service';
 import { ExecutionService } from '@application/background-services/execution.service';
+import type { CodeSnippet } from '@application/declarations/classes/code-snippet.class';
 import { ContextualError } from '@application/declarations/classes/contextual-error.class';
+import { CodeSnippetType } from '@application/declarations/enums/code-snippet-type.enum';
 import { ExecutionStatus } from '@application/declarations/enums/execution-status.enum';
 import type { Connectable } from '@application/declarations/interfaces/connectable.interface';
 import type { Disconnectable } from '@application/declarations/interfaces/disconnectable.interface';
+import type { SnippetListChangeInfo } from '@application/declarations/interfaces/snippet-list-change-info.interface';
 import type { OnExecutionStateChange } from '@application/declarations/types/on-execution-state-change.type';
+import type { OnSnippetListChangeCallback } from '@application/declarations/types/on-snippet-list-change-callback.type';
 import { $color_active, $color_background } from '@application/styles/variables';
 import { Application } from '@framework/application';
 import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
@@ -34,6 +39,7 @@ export class ExecutionControlComponent extends HTMLElement implements Connectabl
   readonly #playButtonIconComponent: IconComponent = ExecutionControlComponent.#getPlayButtonIconComponent();
 
   readonly #executionService: ExecutionService = Application.getBackgroundService(ExecutionService);
+  readonly #codeSnippetsService: CodeSnippetsService = Application.getBackgroundService(CodeSnippetsService);
 
   readonly #testCasesCountInfoItemComponent: ExecutionControlInfoItemComponent =
     ExecutionControlComponent.#getAdditionalInfoItemElement({
@@ -139,11 +145,13 @@ export class ExecutionControlComponent extends HTMLElement implements Connectabl
 
   public connectedCallback(): void {
     this.#executionService.subscribeToExecutionStateChanges(this.#onExecutionStatusChange);
+    this.#codeSnippetsService.subscribeToSnippetListChanges(this.#onCodeSnippetsListChange);
     this.#playButton.addEventListener('click', this.#playButtonClickListener);
   }
 
   public disconnectedCallback(): void {
     this.#executionService.unsubscribeFromExecutionStateChanges(this.#onExecutionStatusChange);
+    this.#codeSnippetsService.unsubscribeFromSnippetListChanges(this.#onCodeSnippetsListChange);
     this.#playButton.removeEventListener('click', this.#playButtonClickListener);
   }
 
@@ -176,5 +184,18 @@ export class ExecutionControlComponent extends HTMLElement implements Connectabl
       PlayButtonIconElementSrc.Run
     );
     this.#playButtonIconComponent.setAttribute(IconComponent.observedAttributeName.Color, $color_active);
+  };
+
+  readonly #onCodeSnippetsListChange: OnSnippetListChangeCallback = ({
+    updatedSnippetList
+  }: SnippetListChangeInfo): void => {
+    const testCasesCount: number = updatedSnippetList.filter(
+      ({ type }: CodeSnippet) => type === CodeSnippetType.Test
+    ).length;
+
+    this.#testCasesCountInfoItemComponent.setAttribute(
+      ExecutionControlInfoItemComponent.observedAttributeName.Value,
+      String(testCasesCount)
+    );
   };
 }

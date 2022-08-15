@@ -1,3 +1,3 @@
-import type { CodeSnippet } from '../classes/code-snippet.class';
+import type { SnippetListChangeInfo } from '../interfaces/snippet-list-change-info.interface';
 
-export type OnSnippetListChangeCallback = (updatedSnippetList: CodeSnippet[]) => void;
+export type OnSnippetListChangeCallback = (snippetListChangeInfo: SnippetListChangeInfo) => void;
