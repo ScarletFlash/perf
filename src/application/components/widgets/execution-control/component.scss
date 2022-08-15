@@ -69,4 +69,8 @@
   &:hover {
     background: $color_background-hover;
   }
+
+  &_active {
+    background: $color_active;
+  }
 }

@@ -1,5 +1,7 @@
 import { CodeExecutor } from '@application/declarations/classes/code-executor.class';
 import { Transpiler } from '@application/declarations/classes/transpiler.class';
+import { ExecutionStatus } from '@application/declarations/enums/execution-status.enum';
+import type { OnExecutionStateChange } from '@application/declarations/types/on-execution-state-change.type';
 import type { PerformanceReport } from '@application/declarations/types/performance-report.type';
 
 export class ExecutionService {
@@ -9,7 +11,10 @@ export class ExecutionService {
     executionTimeMs: []
   };
 
+  #executionStatus: ExecutionStatus = ExecutionStatus.StandBy;
+
   readonly #transpiler: Transpiler = new Transpiler();
+  readonly #onExecutionStateChangeCallbacks: Set<OnExecutionStateChange> = new Set<OnExecutionStateChange>();
 
   public get performanceReport(): PerformanceReport {
     return this.#performanceReport;
@@ -35,5 +40,20 @@ export class ExecutionService {
     this.#performanceReport = await Promise.resolve({
       executionTimeMs: []
     });
+  }
+
+  public toggleExecutionState(): void {
+    const targetStatus: ExecutionStatus =
+      this.#executionStatus === ExecutionStatus.StandBy ? ExecutionStatus.Running : ExecutionStatus.StandBy;
+    this.#executionStatus = targetStatus;
+    this.#onExecutionStateChangeCallbacks.forEach((callback: OnExecutionStateChange) => callback(targetStatus));
+  }
+
+  public subscribeToExecutionStateChanges(callback: OnExecutionStateChange): void {
+    this.#onExecutionStateChangeCallbacks.add(callback);
+  }
+
+  public unsubscribeFromExecutionStateChanges(callback: OnExecutionStateChange): void {
+    this.#onExecutionStateChangeCallbacks.delete(callback);
   }
 }
