@@ -1,6 +1,9 @@
 @use 'sass:color';
 
-$color_background: #ffffff;
+$color_dark: #000000;
+$color_light: #ffffff;
+
+$color_background: $color_light;
 $color_background-hover: color.scale(
   $color: $color_background,
   $lightness: -85%

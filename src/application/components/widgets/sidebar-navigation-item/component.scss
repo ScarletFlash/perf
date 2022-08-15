@@ -74,9 +74,9 @@
 
   &_active &__background {
     transform: translate(0);
-
-    box-shadow: $color_active 0 0 0.5rem;
     background: $color_active;
+
+    @include box-shadow($color_active);
   }
 
   &_active,
