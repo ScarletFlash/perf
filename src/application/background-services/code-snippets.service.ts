@@ -17,6 +17,27 @@ export class CodeSnippetsService {
     return Array.from(this.#codeSnippetById.values());
   }
 
+  public get testCaseSnippets(): CodeSnippet<CodeSnippetType.Test>[] {
+    return this.codeSnippets.filter((codeSnippet: CodeSnippet): codeSnippet is CodeSnippet<CodeSnippetType.Test> => {
+      const { type }: CodeSnippet = codeSnippet;
+      return type === CodeSnippetType.Test;
+    });
+  }
+
+  public get preludeSnippet(): CodeSnippet<CodeSnippetType.Prelude> {
+    const preludeSnippet: CodeSnippet<CodeSnippetType.Prelude> | undefined = this.codeSnippets.find(
+      (codeSnippet: CodeSnippet): codeSnippet is CodeSnippet<CodeSnippetType.Prelude> => {
+        const { type }: CodeSnippet = codeSnippet;
+        return type === CodeSnippetType.Prelude;
+      }
+    );
+
+    if (preludeSnippet === undefined) {
+      throw new ContextualError(this, 'Prelude should be defined');
+    }
+    return preludeSnippet;
+  }
+
   public addSnippet(snippet: CodeSnippet): void {
     this.#codeSnippetById.set(snippet.id, snippet);
     this.#handleListChange();
@@ -54,12 +75,11 @@ export class CodeSnippetsService {
   }
 
   #handleListChange(): void {
-    const updatedSnippetList: CodeSnippet[] = this.codeSnippets;
     const snippetsCount: SnippetsCount = {
       [CodeSnippetType.Prelude]: 1,
-      [CodeSnippetType.Test]: updatedSnippetList.length - 1
+      [CodeSnippetType.Test]: this.testCaseSnippets.length
     };
-    const snippetListChangeInfo: SnippetListChangeInfo = { updatedSnippetList, snippetsCount };
+    const snippetListChangeInfo: SnippetListChangeInfo = { updatedSnippetList: this.codeSnippets, snippetsCount };
     this.#onSnippetListChangeCallbacks.forEach((callback: OnSnippetListChangeCallback) =>
       callback(snippetListChangeInfo)
     );

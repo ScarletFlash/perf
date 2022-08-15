@@ -1,6 +1,7 @@
 import { WorkerReportMessageType } from '../enums/worker-report-message-type.enum';
 import { WorkerRequestMessageType } from '../enums/worker-request-message-type.enum';
 import type { WorkerReportMessage } from '../interfaces/worker-report-message.interface';
+import type { OnExecutionDoneCallback } from '../types/on-execution-done-callback.type';
 import { ContextualError } from './contextual-error.class';
 import { ReportAccumulator } from './report-accumulator.class';
 import { WorkerProgramBuilder } from './worker-program-builder.class';
@@ -24,9 +25,12 @@ export class CodeExecutor {
     this.#worker.addEventListener('message', this.#workerMessageListener);
   }
 
-  public runTimes(repeatCount: number): void {
+  #onDone: OnExecutionDoneCallback = () => void 0;
+
+  public runTimes(repeatCount: number, onDone: OnExecutionDoneCallback): void {
     this.#repeatCount = repeatCount;
     this.#currentIteration = 0;
+    this.#onDone = onDone;
 
     this.#requestExecution();
   }
@@ -35,6 +39,9 @@ export class CodeExecutor {
     this.#worker.removeEventListener('message', this.#workerMessageListener);
     this.#worker.terminate();
     URL.revokeObjectURL(this.#activeWorkerScriptUrl);
+
+    this.#onDone(this.#reportAccumulator.items);
+
     this.#reportAccumulator.clear();
   }
 
