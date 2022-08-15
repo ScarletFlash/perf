@@ -13,22 +13,25 @@ export class SidebarComponent extends HTMLElement {
 
     const shadowRoot: ShadowRoot = this.attachShadow({ mode: 'closed' });
 
-    const wrapperElement: HTMLElement = SidebarComponent.#getSidebarElement();
+    const sidebarElement: HTMLElement = SidebarComponent.#getSidebarElement();
 
     const headerElement: HeaderComponent = SidebarComponent.#getHeaderComponent();
-    wrapperElement.appendChild(headerElement);
+    sidebarElement.appendChild(headerElement);
+
+    const contentElement: HTMLElement = SidebarComponent.#getContentElement();
+    sidebarElement.appendChild(contentElement);
 
     const navigationElement: HTMLElement = SidebarComponent.#getNavigationComponent();
-    wrapperElement.appendChild(navigationElement);
+    contentElement.appendChild(navigationElement);
 
     const executionControlElement: HTMLElement = SidebarComponent.#getExecutionControlComponent();
-    wrapperElement.appendChild(executionControlElement);
+    contentElement.appendChild(executionControlElement);
 
     const style: HTMLStyleElement = document.createElement('style');
     style.innerHTML = componentStyles;
 
     shadowRoot.appendChild(style);
-    shadowRoot.appendChild(wrapperElement);
+    shadowRoot.appendChild(sidebarElement);
   }
 
   static #getHeaderComponent(): HeaderComponent {
@@ -39,14 +42,14 @@ export class SidebarComponent extends HTMLElement {
 
   static #getNavigationComponent(): SidebarNavigationComponent {
     const navigationElement: SidebarNavigationComponent = Application.getComponentInstance(SidebarNavigationComponent);
-    navigationElement.classList.add('sidebar__navigation');
+    navigationElement.classList.add('menu__navigation');
     return navigationElement;
   }
 
   static #getExecutionControlComponent(): ExecutionControlComponent {
     const executionControlElement: ExecutionControlComponent =
       Application.getComponentInstance(ExecutionControlComponent);
-    executionControlElement.classList.add('sidebar__execution-control');
+    executionControlElement.classList.add('menu__execution-control');
     return executionControlElement;
   }
 
@@ -54,5 +57,11 @@ export class SidebarComponent extends HTMLElement {
     const sidebarElement: HTMLElement = document.createElement('aside');
     sidebarElement.classList.add('sidebar');
     return sidebarElement;
+  }
+
+  static #getContentElement(): HTMLElement {
+    const contentElement: HTMLElement = document.createElement('section');
+    contentElement.classList.add('sidebar__content', 'menu');
+    return contentElement;
   }
 }
