@@ -8,43 +8,44 @@
   width: $width_sidebar;
   height: 100%;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: stretch;
-
   overflow: hidden auto;
 
   padding: 1rem;
 
   @include border(right);
+}
 
-  .sidebar {
+.sidebar {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+
+  &__header {
     width: 100%;
-    height: 100%;
+    height: $height_header;
+  }
 
-    position: relative;
+  &__content {
+    width: 100%;
+    height: auto;
+    min-height: calc(100% - #{$height_header});
+  }
+}
 
-    &__header {
-      width: 100%;
-      height: $height_header;
-      position: sticky;
-      top: 0;
-      left: 0;
+.menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
 
-      z-index: 1;
-    }
+  &__navigation {
+  }
 
-    &__navigation {
-    }
-
-    &__execution-control {
-      width: 100%;
-      position: sticky;
-      bottom: 100px;
-      left: 0;
-
-      z-index: 1;
-    }
+  &__execution-control {
+    width: 100%;
   }
 }
