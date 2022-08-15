@@ -1,5 +1,8 @@
 import type { CodeSnippet } from '@application/declarations/classes/code-snippet.class';
 import { ContextualError } from '@application/declarations/classes/contextual-error.class';
+import { CodeSnippetType } from '@application/declarations/enums/code-snippet-type.enum';
+import type { SnippetListChangeInfo } from '@application/declarations/interfaces/snippet-list-change-info.interface';
+import type { SnippetsCount } from '@application/declarations/interfaces/snippets-count.interface';
 import type { CodeSnippetId } from '@application/declarations/types/code-snippet-id.type';
 import type { OnActiveSnippetChangeCallback } from '@application/declarations/types/on-active-snippet-change-callback.type';
 import type { OnSnippetListChangeCallback } from '@application/declarations/types/on-snippet-list-change-callback.type';
@@ -51,7 +54,15 @@ export class CodeSnippetsService {
   }
 
   #handleListChange(): void {
-    this.#onSnippetListChangeCallbacks.forEach((callback: OnSnippetListChangeCallback) => callback(this.codeSnippets));
+    const updatedSnippetList: CodeSnippet[] = this.codeSnippets;
+    const snippetsCount: SnippetsCount = {
+      [CodeSnippetType.Prelude]: 1,
+      [CodeSnippetType.Test]: updatedSnippetList.length - 1
+    };
+    const snippetListChangeInfo: SnippetListChangeInfo = { updatedSnippetList, snippetsCount };
+    this.#onSnippetListChangeCallbacks.forEach((callback: OnSnippetListChangeCallback) =>
+      callback(snippetListChangeInfo)
+    );
   }
 
   #handleActiveSnippetChange(activeSnippetId: CodeSnippetId): void {

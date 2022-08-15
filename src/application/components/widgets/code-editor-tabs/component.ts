@@ -4,6 +4,7 @@ import { ContextualError } from '@application/declarations/classes/contextual-er
 import { CodeSnippetType } from '@application/declarations/enums/code-snippet-type.enum';
 import type { Connectable } from '@application/declarations/interfaces/connectable.interface';
 import type { Disconnectable } from '@application/declarations/interfaces/disconnectable.interface';
+import type { SnippetListChangeInfo } from '@application/declarations/interfaces/snippet-list-change-info.interface';
 import type { CodeSnippetId } from '@application/declarations/types/code-snippet-id.type';
 import type { OnSnippetListChangeCallback } from '@application/declarations/types/on-snippet-list-change-callback.type';
 import { getRandomUnicodeCharFromRange } from '@application/utilities/get-random-unicode-char-from-range.util';
@@ -79,8 +80,9 @@ export class CodeEditorTabsComponent extends HTMLElement implements Connectable,
     return itemComponent;
   }
 
-  readonly #onSnippetListChangeCallback: OnSnippetListChangeCallback = (updatedSnippetList: CodeSnippet[]) =>
-    this.#renderTabs(updatedSnippetList);
+  readonly #onSnippetListChangeCallback: OnSnippetListChangeCallback = ({
+    updatedSnippetList
+  }: SnippetListChangeInfo) => this.#renderTabs(updatedSnippetList);
 
   public connectedCallback(): void {
     this.#addButtonElement.addEventListener('click', this.#buttonClickListener);
