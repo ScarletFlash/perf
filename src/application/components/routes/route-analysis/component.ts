@@ -1,11 +1,18 @@
+import { CodeSnippetsService } from '@application/background-services/code-snippets.service';
 import { ExecutionService } from '@application/background-services/execution.service';
 import { WindowResizingService } from '@application/background-services/window-resizing.service';
-import { BarChart } from '@application/declarations/classes/bar-chart.class';
+import { ContextualError } from '@application/declarations/classes/contextual-error.class';
+import { PerformanceReportAccumulator } from '@application/declarations/classes/performance-report-accumulator.class';
 import type { Connectable } from '@application/declarations/interfaces/connectable.interface';
 import type { Disconnectable } from '@application/declarations/interfaces/disconnectable.interface';
+import type { ExecutionTimeChartData } from '@application/declarations/interfaces/execution-time-chart-data.interface';
+import type { SnippetIterationExecutionInfo } from '@application/declarations/interfaces/snippet-iteration-execution-info.interface';
+import type { SnippetPerformanceReport } from '@application/declarations/interfaces/snippet-performance-report.interface';
+import type { OnExecutionInfoChangesCallback } from '@application/declarations/types/on-execution-info-changes-callback.type';
 import type { OnWindowSizeChangeCallback } from '@application/declarations/types/on-window-size-change-callback.type';
 import { Application } from '@framework/application';
 import type { PerfComponentSelector } from '@framework/declarations/types/perf-component-selector.type';
+import { ExecutionTimeChart } from 'src/application/declarations/classes/execution-time-chart.class';
 import componentStyles from './component.scss';
 
 export class RouteAnalysisComponent extends HTMLElement implements Connectable, Disconnectable {
@@ -13,15 +20,14 @@ export class RouteAnalysisComponent extends HTMLElement implements Connectable, 
 
   readonly #chartsContainer: HTMLElement = RouteAnalysisComponent.#getChartsContainerElement();
 
-  readonly #runButton: HTMLButtonElement = RouteAnalysisComponent.#getButtonElement(
-    'Run code and get report in console'
-  );
-
   readonly #chartCanvas: HTMLCanvasElement = RouteAnalysisComponent.#getChartCanvasElement();
-  #barChart: BarChart | undefined = undefined;
-  readonly #windowResizingService: WindowResizingService = Application.getBackgroundService(WindowResizingService);
+  #executionTimeChart: ExecutionTimeChart | undefined = undefined;
 
+  readonly #windowResizingService: WindowResizingService = Application.getBackgroundService(WindowResizingService);
   readonly #executionService: ExecutionService = Application.getBackgroundService(ExecutionService);
+  readonly #codeSnippetsService: CodeSnippetsService = Application.getBackgroundService(CodeSnippetsService);
+
+  readonly #performanceReportAccumulator: PerformanceReportAccumulator = new PerformanceReportAccumulator();
 
   constructor() {
     super();
@@ -34,7 +40,6 @@ export class RouteAnalysisComponent extends HTMLElement implements Connectable, 
 
     shadowRoot.appendChild(style);
     shadowRoot.appendChild(this.#chartsContainer);
-    shadowRoot.appendChild(this.#runButton);
   }
 
   static #getChartCanvasElement(): HTMLCanvasElement {
@@ -48,62 +53,57 @@ export class RouteAnalysisComponent extends HTMLElement implements Connectable, 
     return containerElement;
   }
 
-  static #getButtonElement(text: string): HTMLButtonElement {
-    const buttonElement: HTMLButtonElement = document.createElement('button');
-    buttonElement.innerText = text;
-    return buttonElement;
-  }
-
   readonly #onWindowSizeChangesListener: OnWindowSizeChangeCallback = () => {
-    if (this.#barChart === undefined) {
+    if (this.#executionTimeChart === undefined) {
       return;
     }
 
-    this.#barChart.resize();
+    this.#executionTimeChart.resize();
   };
 
-  readonly #onRunButtonClickListener: EventListener = () => {
-    // this.#executionService
-    //   .transpile()
-    //   .then(() => this.#executionService.generateExecutionReport())
-    //   .then(() => {
-    //     if (this.#barChart === undefined) {
-    //       throw new ContextualError(this, 'bar chart creation failed');
-    //     }
-    //     const { executionTimeMs }: PerformanceReport = this.#executionService.performanceReport;
-    //     // eslint-disable-next-line no-console
-    //     console.log({ executionTimeMs });
-    //     this.#barChart.setValue([
-    //       {
-    //         label: 'Execution Time (ms)',
-    //         data: executionTimeMs,
-    //         backgroundColor: ['rgba(255, 159, 64, 0.2)'],
-    //         borderColor: ['rgba(255, 159, 64, 1)'],
-    //         borderWidth: 1
-    //       }
-    //     ]);
-    //     const labels: string[] = executionTimeMs.map((_: number, index: number) => String(index + 1));
-    //     this.#barChart.setLabels(labels);
-    //     this.#barChart.refresh();
-    //   });
+  readonly #onExecutionInfoChanges: OnExecutionInfoChangesCallback = (executionInfo: SnippetIterationExecutionInfo) => {
+    // eslint-disable-next-line no-console
+    console.log(executionInfo);
   };
 
   public connectedCallback(): void {
-    this.#barChart = new BarChart(this.#chartCanvas);
-    this.#barChart.resize();
+    this.#executionTimeChart = new ExecutionTimeChart(this.#chartCanvas);
+    this.#executionTimeChart.resize();
     this.#windowResizingService.subscribeToWindowSizeChanges(this.#onWindowSizeChangesListener);
+    this.#executionService.subscribeToExecutionInfoChanges(this.#onExecutionInfoChanges);
 
-    this.#runButton.addEventListener('click', this.#onRunButtonClickListener);
+    this.#renderAccumulatedPerformanceReport();
   }
 
   public disconnectedCallback(): void {
-    this.#runButton.removeEventListener('click', this.#onRunButtonClickListener);
-
-    if (this.#barChart === undefined) {
+    if (this.#executionTimeChart === undefined) {
       return;
     }
 
-    this.#barChart.destroy();
+    this.#executionTimeChart.destroy();
     this.#windowResizingService.unsubscribeFromWindowSizeChanges(this.#onWindowSizeChangesListener);
+    this.#executionService.unsubscribeFromExecutionInfoChanges(this.#onExecutionInfoChanges);
+  }
+
+  #renderAccumulatedPerformanceReport(): void {
+    if (this.#executionTimeChart === undefined) {
+      throw new ContextualError(this, 'Bar chart should be defined');
+    }
+
+    const { accumulatedExecutionInfo, eachSnippetIterationsCount }: ExecutionService = this.#executionService;
+    this.#performanceReportAccumulator.resetFromIterationInfoList(accumulatedExecutionInfo);
+    this.#executionTimeChart.setIterationsCount(eachSnippetIterationsCount);
+
+    const chartData: ExecutionTimeChartData[] = this.#performanceReportAccumulator.reports.map(
+      ({ codeSnippetId, report }: SnippetPerformanceReport) => {
+        const codeSnippetName: string = this.#codeSnippetsService.getSnippetName(codeSnippetId);
+        const executionTimeMs: number[] = report.executionTimeMs;
+        return {
+          codeSnippetName,
+          executionTimeMs
+        };
+      }
+    );
+    this.#executionTimeChart.setValue(chartData);
   }
 }

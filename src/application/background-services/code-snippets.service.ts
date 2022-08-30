@@ -58,6 +58,11 @@ export class CodeSnippetsService {
     this.#handleListChange();
   }
 
+  public getSnippetName(snippetId: CodeSnippetId): string {
+    const targetSnippet: CodeSnippet = this.#getSnippetById(snippetId);
+    return targetSnippet.name;
+  }
+
   public subscribeToSnippetListChanges(callback: OnSnippetListChangeCallback): void {
     this.#onSnippetListChangeCallbacks.add(callback);
   }

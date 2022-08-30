@@ -1,7 +1,10 @@
 import type { CodeSnippetType } from '../enums/code-snippet-type.enum';
+import type { IterationExecutionInfo } from '../interfaces/iteration-execution-info.interface';
+import type { SnippetIterationExecutionInfo } from '../interfaces/snippet-iteration-execution-info.interface';
 import type { CodeSnippetId } from '../types/code-snippet-id.type';
-import type { OnExecutionDoneCallback } from '../types/on-execution-done-callback.type';
-import type { PerformanceReport } from '../types/performance-report.type';
+import type { OnExecutionInfoChangesCallback } from '../types/on-execution-info-changes-callback.type';
+import type { OnIterationExecutionDoneCallback } from '../types/on-iteration-execution-done-callback.type';
+import type { OnSnippetIterationExecutionDoneCallback } from '../types/on-snippet-iiteration-execution-done-callback.type';
 import { CodeExecutor } from './code-executor.class';
 import type { CodeSnippet } from './code-snippet.class';
 import { ContextualError } from './contextual-error.class';
@@ -17,12 +20,7 @@ interface CodeToExecute {
   codeSnippetId: CodeSnippetId;
 }
 
-interface SnippetExecutionInfo {
-  performanceReport: PerformanceReport;
-  codeSnippetId: CodeSnippetId;
-}
-
-type OnSnippetExecutionDone = (snippetExecutionInfo: SnippetExecutionInfo) => void;
+type OnSnippetIterationExecutionDone = (executionInfo: SnippetIterationExecutionInfo) => void;
 
 export class ExecutionQueue {
   readonly #transpiler: Transpiler = new Transpiler();
@@ -32,6 +30,9 @@ export class ExecutionQueue {
   #executionIsRequested: boolean = false;
 
   #checkExecutionAvailabilityIntervalId: number | undefined;
+
+  readonly #onExecutionInfoChangesCallbacks: Set<OnExecutionInfoChangesCallback> =
+    new Set<OnExecutionInfoChangesCallback>();
 
   public async add({ preludeSnippet, testCaseSnippets }: QueueAddData): Promise<void> {
     const transpilationItems: Promise<CodeToExecute>[] = testCaseSnippets.map(
@@ -55,21 +56,35 @@ export class ExecutionQueue {
     this.#codeToExecute.splice(0, deleteCount);
   }
 
-  public run(): void {
+  public run(eachSnippetIterationsCount: number): void {
     this.#executionIsRequested = true;
 
+    const checkIntervalMs: number = 1_000;
     this.#checkExecutionAvailabilityIntervalId = setInterval(() => {
       if (!this.#executionIsRequested || this.#executionIsActive) {
         return;
       }
 
-      const onSnippetExecutionDone: OnSnippetExecutionDone = (_snippetExecutionInfo: SnippetExecutionInfo) => void 0;
+      const onIterationExecutionDone: OnSnippetIterationExecutionDone = (
+        iterationExecutionInfo: SnippetIterationExecutionInfo
+      ) => {
+        const { iterationIndex, totalIterationsCount }: SnippetIterationExecutionInfo = iterationExecutionInfo;
+
+        const allIterationsAreExecuted: boolean = iterationIndex === totalIterationsCount;
+        if (allIterationsAreExecuted) {
+          this.#executionIsActive = false;
+        }
+
+        this.#onExecutionInfoChangesCallbacks.forEach((callback: OnExecutionInfoChangesCallback) =>
+          callback(iterationExecutionInfo)
+        );
+      };
 
       if (this.#codeToExecute.length === 0) {
         return;
       }
-      this.#executeOneSnippet(onSnippetExecutionDone);
-    }, 1_000);
+      this.#executeFirstSnippetInQueue(onIterationExecutionDone, eachSnippetIterationsCount);
+    }, checkIntervalMs);
   }
 
   public stop(): void {
@@ -78,7 +93,18 @@ export class ExecutionQueue {
     clearInterval(this.#checkExecutionAvailabilityIntervalId);
   }
 
-  #executeOneSnippet(onSnippetExecutionDone: OnSnippetExecutionDone): void {
+  public subscribeToExecutionInfoChanges(callback: OnExecutionInfoChangesCallback): void {
+    this.#onExecutionInfoChangesCallbacks.add(callback);
+  }
+
+  public unsubscribeFromExecutionInfoChanges(callback: OnExecutionInfoChangesCallback): void {
+    this.#onExecutionInfoChangesCallbacks.delete(callback);
+  }
+
+  #executeFirstSnippetInQueue(
+    onIterationExecutionDone: OnSnippetIterationExecutionDoneCallback,
+    eachSnippetIterationsCount: number
+  ): void {
     const itemToExecute: CodeToExecute | undefined = this.#codeToExecute.at(0);
 
     if (itemToExecute === undefined) {
@@ -87,12 +113,20 @@ export class ExecutionQueue {
     this.#codeToExecute.splice(0, 1);
 
     const { code, codeSnippetId }: CodeToExecute = itemToExecute;
-    const onDone: OnExecutionDoneCallback = (performanceReport: PerformanceReport) => {
-      this.#executionIsActive = false;
-      onSnippetExecutionDone({ codeSnippetId, performanceReport });
+    const onDone: OnIterationExecutionDoneCallback = ({
+      performanceReportItem,
+      iterationIndex,
+      totalIterationsCount
+    }: IterationExecutionInfo) => {
+      onIterationExecutionDone({
+        codeSnippetId,
+        performanceReportItem,
+        iterationIndex,
+        totalIterationsCount
+      });
     };
 
     this.#executionIsActive = true;
-    new CodeExecutor(code).runTimes(100, onDone);
+    new CodeExecutor(code).runTimes(eachSnippetIterationsCount, onDone);
   }
 }

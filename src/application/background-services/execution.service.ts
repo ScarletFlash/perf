@@ -1,25 +1,39 @@
 import { ExecutionQueue } from '@application/declarations/classes/execution-queue.class';
-import { ExecutionStatus } from '@application/declarations/enums/execution-status.enum';
+import { ExecutionState } from '@application/declarations/enums/execution-state.enum';
+import type { SnippetIterationExecutionInfo } from '@application/declarations/interfaces/snippet-iteration-execution-info.interface';
+import type { OnExecutionInfoChangesCallback } from '@application/declarations/types/on-execution-info-changes-callback.type';
 import type { OnExecutionStateChange } from '@application/declarations/types/on-execution-state-change.type';
 import { Application } from '@framework/application';
 import { CodeSnippetsService } from './code-snippets.service';
 
 export class ExecutionService {
-  #executionStatus: ExecutionStatus = ExecutionStatus.StandBy;
+  public readonly eachSnippetIterationsCount: number = 100;
+
+  #executionState: ExecutionState = ExecutionState.StandBy;
 
   readonly #codeSnippetsService: CodeSnippetsService = Application.getBackgroundService(CodeSnippetsService);
 
   readonly #onExecutionStateChangeCallbacks: Set<OnExecutionStateChange> = new Set<OnExecutionStateChange>();
+  readonly #onExecutionInfoChangesCallbacks: Set<OnExecutionInfoChangesCallback> =
+    new Set<OnExecutionInfoChangesCallback>();
 
   readonly #executionQueue: ExecutionQueue = new ExecutionQueue();
 
-  public toggleExecutionState(): void {
-    const isAlreadyExecuting: boolean = this.#executionStatus === ExecutionStatus.Running;
-    isAlreadyExecuting ? this.#stopExecution() : this.#startExecution();
+  readonly #accumulatedExecutionInfo: SnippetIterationExecutionInfo[] = [];
 
-    this.#onExecutionStateChangeCallbacks.forEach((callback: OnExecutionStateChange) =>
-      callback(this.#executionStatus)
-    );
+  constructor() {
+    this.#executionQueue.subscribeToExecutionInfoChanges(this.#onExecutionInfoChanges);
+  }
+
+  public get accumulatedExecutionInfo(): SnippetIterationExecutionInfo[] {
+    return this.#accumulatedExecutionInfo.concat();
+  }
+
+  public async toggleExecutionState(): Promise<void> {
+    const isAlreadyExecuting: boolean = this.#executionState === ExecutionState.Running;
+    isAlreadyExecuting ? this.#stopExecution() : await this.#startExecution();
+
+    this.#onExecutionStateChangeCallbacks.forEach((callback: OnExecutionStateChange) => callback(this.#executionState));
   }
 
   public subscribeToExecutionStateChanges(callback: OnExecutionStateChange): void {
@@ -30,17 +44,34 @@ export class ExecutionService {
     this.#onExecutionStateChangeCallbacks.delete(callback);
   }
 
-  #startExecution(): void {
+  public subscribeToExecutionInfoChanges(callback: OnExecutionInfoChangesCallback): void {
+    this.#onExecutionInfoChangesCallbacks.add(callback);
+  }
+
+  public unsubscribeFromExecutionInfoChanges(callback: OnExecutionInfoChangesCallback): void {
+    this.#onExecutionInfoChangesCallbacks.delete(callback);
+  }
+
+  readonly #onExecutionInfoChanges: OnExecutionInfoChangesCallback = (executionInfo: SnippetIterationExecutionInfo) => {
+    this.#accumulatedExecutionInfo.push(executionInfo);
+    this.#onExecutionInfoChangesCallbacks.forEach((callback: OnExecutionInfoChangesCallback) =>
+      callback(executionInfo)
+    );
+  };
+
+  async #startExecution(): Promise<void> {
+    this.#accumulatedExecutionInfo.splice(0, this.#accumulatedExecutionInfo.length);
+
     const { testCaseSnippets, preludeSnippet }: CodeSnippetsService = this.#codeSnippetsService;
-    this.#executionQueue.add({ testCaseSnippets, preludeSnippet }).then(() => {
-      this.#executionQueue.run();
-      this.#executionStatus = ExecutionStatus.Running;
-    });
+
+    await this.#executionQueue.add({ testCaseSnippets, preludeSnippet });
+
+    this.#executionQueue.run(this.eachSnippetIterationsCount);
+    this.#executionState = ExecutionState.Running;
   }
 
   #stopExecution(): void {
     this.#executionQueue.clear();
-
-    this.#executionStatus = ExecutionStatus.StandBy;
+    this.#executionState = ExecutionState.StandBy;
   }
 }

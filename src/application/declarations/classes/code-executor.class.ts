@@ -1,15 +1,13 @@
 import { WorkerReportMessageType } from '../enums/worker-report-message-type.enum';
 import { WorkerRequestMessageType } from '../enums/worker-request-message-type.enum';
 import type { WorkerReportMessage } from '../interfaces/worker-report-message.interface';
-import type { OnExecutionDoneCallback } from '../types/on-execution-done-callback.type';
+import type { OnIterationExecutionDoneCallback } from '../types/on-iteration-execution-done-callback.type';
 import { ContextualError } from './contextual-error.class';
-import { ReportAccumulator } from './report-accumulator.class';
 import { WorkerProgramBuilder } from './worker-program-builder.class';
 
 export class CodeExecutor {
   readonly #worker: Worker;
   readonly #activeWorkerScriptUrl: string;
-  readonly #reportAccumulator: ReportAccumulator = new ReportAccumulator();
 
   #repeatCount: number = 0;
   #currentIteration: number = 0;
@@ -25,13 +23,12 @@ export class CodeExecutor {
     this.#worker.addEventListener('message', this.#workerMessageListener);
   }
 
-  #onDone: OnExecutionDoneCallback = () => void 0;
+  #onIterationDone: OnIterationExecutionDoneCallback = () => void 0;
 
-  public runTimes(repeatCount: number, onDone: OnExecutionDoneCallback): void {
+  public runTimes(repeatCount: number, onIterationDone: OnIterationExecutionDoneCallback): void {
     this.#repeatCount = repeatCount;
     this.#currentIteration = 0;
-    this.#onDone = onDone;
-
+    this.#onIterationDone = onIterationDone;
     this.#requestExecution();
   }
 
@@ -39,10 +36,6 @@ export class CodeExecutor {
     this.#worker.removeEventListener('message', this.#workerMessageListener);
     this.#worker.terminate();
     URL.revokeObjectURL(this.#activeWorkerScriptUrl);
-
-    this.#onDone(this.#reportAccumulator.items);
-
-    this.#reportAccumulator.clear();
   }
 
   readonly #workerMessageListener: EventListener = (event: Event) => {
@@ -68,7 +61,11 @@ export class CodeExecutor {
           throw new ContextualError(this, 'invalid payload type');
         }
 
-        this.#reportAccumulator.pushItem(message.payload);
+        this.#onIterationDone({
+          iterationIndex: this.#currentIteration,
+          totalIterationsCount: this.#repeatCount,
+          performanceReportItem: message.payload
+        });
 
         const shouldRunAgain: boolean = this.#currentIteration < this.#repeatCount;
         shouldRunAgain ? this.#requestExecution() : this.destroy();
