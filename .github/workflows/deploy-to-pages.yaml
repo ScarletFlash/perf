@@ -1,0 +1,82 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - $default-branch
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  install_dependencies:
+    name: Install Dependencies
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: 'npm'
+    - name: Install dependencies by lockfile
+      run: npm ci
+    - name: Pack prepared workspace to archive
+      run: tar --totals --create --file workspace.tar ./
+    - name: Share prepared workspace with other jobs
+      uses: actions/upload-artifact@v3
+      with:
+        name: workspace
+        path: workspace.tar
+
+  build:
+    name: Build static content
+    needs: [install_dependencies]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download prepared workspace
+        uses: actions/download-artifact@v3
+        with:
+          name: workspace
+      - name: Restore workspace from archive
+        run: tar --totals --extract --file workspace.tar && rm --force workspace.tar
+      - name: Build static content
+        run: npm run build
+      - name: Pack build result to archive
+        run: tar --totals --create --file dist.tar ./dist
+      - name: Share build result with other jobs
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: dist.tar
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: [build]
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+      - name: Download prepared static files
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
+      - name: Restore static files from archive
+        run: tar --totals --extract --file dist.tar && rm --force dist.tar
+      - name: Upload static content
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: 'dist'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
