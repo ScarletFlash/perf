@@ -4,7 +4,7 @@ import type { SnippetIterationExecutionInfo } from '../interfaces/snippet-iterat
 import type { CodeSnippetId } from '../types/code-snippet-id.type';
 import type { OnExecutionInfoChangesCallback } from '../types/on-execution-info-changes-callback.type';
 import type { OnIterationExecutionDoneCallback } from '../types/on-iteration-execution-done-callback.type';
-import type { OnSnippetIterationExecutionDoneCallback } from '../types/on-snippet-iiteration-execution-done-callback.type';
+import type { OnSnippetIterationExecutionDoneCallback } from '../types/on-snippet-iteration-execution-done-callback.type';
 import { CodeExecutor } from './code-executor.class';
 import type { CodeSnippet } from './code-snippet.class';
 import { ContextualError } from './contextual-error.class';
