@@ -1,3 +1,3 @@
-import type { ExecutionStatus } from '../enums/execution-status.enum';
+import type { ExecutionState } from '../enums/execution-state.enum';
 
-export type OnExecutionStateChange = (executionStatus: ExecutionStatus) => void;
+export type OnExecutionStateChange = (executionState: ExecutionState) => void;

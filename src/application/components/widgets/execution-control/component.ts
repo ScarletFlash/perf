@@ -3,7 +3,7 @@ import { ExecutionService } from '@application/background-services/execution.ser
 import type { CodeSnippet } from '@application/declarations/classes/code-snippet.class';
 import { ContextualError } from '@application/declarations/classes/contextual-error.class';
 import { CodeSnippetType } from '@application/declarations/enums/code-snippet-type.enum';
-import { ExecutionStatus } from '@application/declarations/enums/execution-status.enum';
+import { ExecutionState } from '@application/declarations/enums/execution-state.enum';
 import type { Connectable } from '@application/declarations/interfaces/connectable.interface';
 import type { Disconnectable } from '@application/declarations/interfaces/disconnectable.interface';
 import type { SnippetListChangeInfo } from '@application/declarations/interfaces/snippet-list-change-info.interface';
@@ -47,29 +47,29 @@ export class ExecutionControlComponent extends HTMLElement implements Connectabl
       initialValue: 0
     });
 
-  readonly #executionErrorsCountInfoItemComponent: ExecutionControlInfoItemComponent =
-    ExecutionControlComponent.#getAdditionalInfoItemElement({
-      title: 'Errors',
-      initialValue: 0
-    });
+  // readonly #executionErrorsCountInfoItemComponent: ExecutionControlInfoItemComponent =
+  //   ExecutionControlComponent.#getAdditionalInfoItemElement({
+  //     title: 'Errors',
+  //     initialValue: 0
+  //   });
 
-  readonly #executionErrorsCountInfoItemComponent1: ExecutionControlInfoItemComponent =
-    ExecutionControlComponent.#getAdditionalInfoItemElement({
-      title: 'Errors',
-      initialValue: 0
-    });
+  // readonly #executionErrorsCountInfoItemComponent1: ExecutionControlInfoItemComponent =
+  //   ExecutionControlComponent.#getAdditionalInfoItemElement({
+  //     title: 'Errors',
+  //     initialValue: 0
+  //   });
 
-  readonly #executionErrorsCountInfoItemComponent2: ExecutionControlInfoItemComponent =
-    ExecutionControlComponent.#getAdditionalInfoItemElement({
-      title: 'Errors',
-      initialValue: 0
-    });
+  // readonly #executionErrorsCountInfoItemComponent2: ExecutionControlInfoItemComponent =
+  //   ExecutionControlComponent.#getAdditionalInfoItemElement({
+  //     title: 'Errors',
+  //     initialValue: 0
+  //   });
 
-  readonly #executionErrorsCountInfoItemComponent3: ExecutionControlInfoItemComponent =
-    ExecutionControlComponent.#getAdditionalInfoItemElement({
-      title: 'Errors',
-      initialValue: 0
-    });
+  // readonly #executionErrorsCountInfoItemComponent3: ExecutionControlInfoItemComponent =
+  //   ExecutionControlComponent.#getAdditionalInfoItemElement({
+  //     title: 'Errors',
+  //     initialValue: 0
+  //   });
 
   constructor() {
     super();
@@ -81,10 +81,10 @@ export class ExecutionControlComponent extends HTMLElement implements Connectabl
 
     const additionalInfoElement: HTMLElement = ExecutionControlComponent.#getAdditionalInfoElement();
     additionalInfoElement.appendChild(this.#testCasesCountInfoItemComponent);
-    additionalInfoElement.appendChild(this.#executionErrorsCountInfoItemComponent);
-    additionalInfoElement.appendChild(this.#executionErrorsCountInfoItemComponent1);
-    additionalInfoElement.appendChild(this.#executionErrorsCountInfoItemComponent2);
-    additionalInfoElement.appendChild(this.#executionErrorsCountInfoItemComponent3);
+    // additionalInfoElement.appendChild(this.#executionErrorsCountInfoItemComponent);
+    // additionalInfoElement.appendChild(this.#executionErrorsCountInfoItemComponent1);
+    // additionalInfoElement.appendChild(this.#executionErrorsCountInfoItemComponent2);
+    // additionalInfoElement.appendChild(this.#executionErrorsCountInfoItemComponent3);
 
     const wrapperElement: HTMLElement = document.createElement('section');
     wrapperElement.classList.add('execution-control');
@@ -163,8 +163,8 @@ export class ExecutionControlComponent extends HTMLElement implements Connectabl
     this.#executionService.toggleExecutionState();
   };
 
-  readonly #onExecutionStatusChange: OnExecutionStateChange = (updatedStatus: ExecutionStatus): void => {
-    const isRunning: boolean = updatedStatus === ExecutionStatus.Running;
+  readonly #onExecutionStatusChange: OnExecutionStateChange = (updatedStatus: ExecutionState): void => {
+    const isRunning: boolean = updatedStatus === ExecutionState.Running;
     const classWhenRunning: string = 'play-button_active';
 
     if (isRunning) {
